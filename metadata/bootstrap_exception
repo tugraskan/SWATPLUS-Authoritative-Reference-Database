@@ -1,0 +1,12 @@
+This marker file documents that the repository is still in its initial
+bootstrap state.
+
+While this file exists, scripts/validate_change_log.py skips per-record
+"coverage" validation against the merge base -- the initial import of the
+authoritative files from Ames/OSU (and the four external files) is not expected
+to carry a change-log row for every individual record.
+
+Remove this file once ordinary, row-by-row edits begin. From that point on,
+every added or modified authoritative record must have a matching entry in
+metadata/database_changes.csv, enforced in CI against the pull request's merge
+base.

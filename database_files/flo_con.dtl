@@ -1,0 +1,36 @@
+flo_con.dtl: manual edit 2024-04-12 11:24
+3
+
+name                     conds      alts      acts  #filter high flow: the nominal discharge go to the channel (1) the exceeding part return to the natural channel(2) add some extra flow for environmental flow
+bolgare_div                2         3         2  
+var                        obj   obj_num           lim_var                       lim_op     lim_const         alt1      alt2   alt3
+jday                      null        0              null                        null             150           >=       <      -
+jday                      null        0              null                        null             260           <	       -      >=
+act_typ                    obj   obj_num              name            option         const        const2                fp  outcome           
+flow_control               cha       1       summer         min_cms           1.82          0              null  y n n    
+flow_control               cha       1        winter           min_cms           1.02          0              null  n y y
+
+name                  conds      alts      acts  #filter high flow: the nominal discharge go to the channel (1) the exceeding part return to the natural channel(2) add some extra flow for environmental flow
+bolgare_div_new            4         4         4  
+var                        obj   obj_num           lim_var         			     lim_op     lim_const      alt1      alt2   alt3	alt4
+jday                    null        0              null                        null             150           >=       <    	>=		<
+jday                    null        0              null                        null             260           <	       >=       <		>=
+channel_flo				cha			22			   null						   null				1.82		  >		   -		<=		-
+channel_flo				cha			22			   null						   null				1.02		  -		   >		-		<=
+act_typ              obj   	obj_num     name           option         const        const2            fp  outcome           
+flow_control               cha       1       summer         min_cms          1.82          0              null      y         n       n		n
+flow_control               cha       1       winter         min_cms          1.02          0              null      n         y       n		n
+flow_control               cha       1       summer_all     all_flo      	   0             0              null      n         n       y		n
+flow_control               cha       1       winter_all     all_flo      	   0             0              null      n         n       n		y
+
+name                  conds      alts      acts  # return the minimum environmental flow to the main river
+mef_div		            1         2         2  
+var                     obj      obj_num           lim_var         			  lim_op         lim_const      alt1      alt2
+channel_flo				cha			95			   null						   null				0.32		  >		   <=
+act_typ              obj   	obj_num     name           option         const        const2            fp  outcome           
+flow_control               cha       1       mef_only      min_cms          0.32           0              null      y         n
+flow_control               cha       1       mef_all       all_flo      	   0             0              null      n         y
+
+
+
+

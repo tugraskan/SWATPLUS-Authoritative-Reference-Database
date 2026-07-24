@@ -1,0 +1,59 @@
+"""File-level validation rules (spec tests 14, 15, 23) + real-repo integration."""
+
+from __future__ import annotations
+
+import json
+
+import validate_database_files as vdb
+
+
+def _min_repo(tmp_path, manifest_files, db_files=None):
+    (tmp_path / "database_files").mkdir()
+    (tmp_path / "metadata").mkdir()
+    (tmp_path / "DATABASE_VERSION").write_text("2026.1.0\n")
+    manifest = {
+        "database_version": "2026.1.0", "repository": "x",
+        "manifest_schema_version": 1,
+        "bootstrap_swatplus_repository": "swat-model/swatplus",
+        "bootstrap_swatplus_commit": "x", "bootstrap_source_priority": [],
+        "compatibility_matrix": "metadata/compatibility_matrix.csv",
+        "files": manifest_files,
+    }
+    (tmp_path / "metadata" / "database_manifest.json").write_text(json.dumps(manifest))
+    for name, content in (db_files or {}).items():
+        (tmp_path / "database_files" / name).write_text(content)
+    return tmp_path
+
+
+def test_burn_ops_rejected(tmp_path):
+    _min_repo(tmp_path, [], {"burn.ops": "burn.ops: x\nname\nx\n"})
+    P = vdb.validate(tmp_path)
+    assert any("use fire.ops, not burn.ops" in e for e in P.errors)
+
+
+def test_pesticide_pst_rejected(tmp_path):
+    _min_repo(tmp_path, [], {"pesticide.pst": "pesticide.pst: x\nname\nx\n"})
+    P = vdb.validate(tmp_path)
+    assert any("pesticide.pes" in e for e in P.errors)
+
+
+def test_sqlite_rejected(tmp_path):
+    _min_repo(tmp_path, [], {"swatplus_datasets.sqlite": "binary"})
+    P = vdb.validate(tmp_path)
+    assert any("SQLite" in e for e in P.errors)
+
+
+def test_available_but_missing_file_flagged(tmp_path):
+    entry = dict(name="plants.plt", category="hru_parameter_database",
+                 status="available", required=True, canonical_record_key="name",
+                 source_format="SWAT+ text database", direct_read=False,
+                 bootstrap_provenance_key="plants.plt",
+                 external_provenance_key=None, notes="")
+    _min_repo(tmp_path, [entry])  # file not created
+    P = vdb.validate(tmp_path)
+    assert any("plants.plt" in e and "missing" in e for e in P.errors)
+
+
+def test_real_repo_validates_clean(repo_root):
+    P = vdb.validate(repo_root, verify_bootstrap_checksums=True)
+    assert P.errors == [], "unexpected errors:\n" + "\n".join(P.errors)

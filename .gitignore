@@ -1,0 +1,15 @@
+# Build / release artifacts
+/dist/
+swatplus-authoritative-reference-database-*.zip
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+*.egg-info/
+
+# Never commit a generated SQLite database in this phase
+*.sqlite
+*.sqlite3
+swatplus_datasets.sqlite

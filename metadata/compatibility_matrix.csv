@@ -1,0 +1,3 @@
+database_version,authoritative_commit,swatplus_repository,swatplus_ref,swatplus_commit,swatplus_revision,editor_repository,editor_ref,editor_commit,editor_version,test_status,test_date,test_suite,notes
+2026.1.0,,swat-model/swatplus,main,cb442f7c05fc3bfc34349c446010f452d2737ca0,60.5.7,swat-model/swatplus-editor,,,2.3.3,not_tested,,,Source provenance only (Ames-sourced files). NOT a tested-compatibility claim.
+2026.1.0,,swat-model/swatplus,main,cb442f7c05fc3bfc34349c446010f452d2737ca0,60.5.4,swat-model/swatplus-editor,,,2.2.0,not_tested,,,Source provenance only (OSU-sourced files). NOT a tested-compatibility claim.

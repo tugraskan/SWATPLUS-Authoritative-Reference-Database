@@ -1,0 +1,79 @@
+name: release-text-database
+
+# Builds a validated text-file release ZIP when a database-v* tag is pushed.
+# No SQLite database is published in this phase.
+
+on:
+  push:
+    tags:
+      - "database-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dev dependencies
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Validate authoritative files
+        run: python scripts/validate_database_files.py --repo-root .
+
+      - name: Validate change log
+        run: python scripts/validate_change_log.py --repo-root .
+
+      - name: Run unit tests
+        run: python -m pytest -q
+
+      - name: Verify tag matches DATABASE_VERSION
+        run: |
+          VERSION=$(cat DATABASE_VERSION)
+          TAG="${GITHUB_REF_NAME#database-v}"
+          echo "DATABASE_VERSION=$VERSION  tag=$TAG"
+          if [ "$VERSION" != "$TAG" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match DATABASE_VERSION $VERSION"
+            exit 1
+          fi
+
+      - name: Build release package
+        run: python scripts/build_release_package.py --repo-root .
+
+      - name: Compose release notes
+        run: |
+          VERSION=$(cat DATABASE_VERSION)
+          {
+            echo "## SWAT+ Authoritative Reference Database $VERSION"
+            echo
+            echo "Text-file reference database release. No SQLite database is"
+            echo "published in this phase."
+            echo
+            echo "**Bootstrap source:** swat-model/swatplus @"
+            echo "cb442f7c05fc3bfc34349c446010f452d2737ca0 (Ames_sub1 first,"
+            echo "Osu_1hru fallback)."
+            echo
+            echo "**Compatibility test status:** not_tested (see"
+            echo "metadata/compatibility_matrix.csv). Source-file header"
+            echo "versions are provenance only, not a tested-compatibility claim."
+            echo
+            echo "Per-file provenance is in bootstrap_sources.json /"
+            echo "external_sources.json inside the package."
+          } > release_notes.md
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release_notes.md
+          files: |
+            swatplus-authoritative-reference-database-*.zip
+            dist/database_manifest.json
+            dist/checksums.txt
