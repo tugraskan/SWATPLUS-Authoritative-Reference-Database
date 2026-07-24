@@ -113,11 +113,18 @@ python -m pytest -q
 Releases are versioned `YEAR.MAJOR.MINOR` (see `DATABASE_VERSION`, currently
 `2026.1.0`) and tagged `database-v<version>`. Pushing such a tag runs validation
 and tests, verifies the tag matches `DATABASE_VERSION`, and publishes a
-text-file ZIP with metadata and checksums:
+text-file ZIP with metadata and checksums. To build a package locally:
 
 ```bash
 python scripts/build_release_package.py --repo-root .
 ```
+
+The first release, **[`database-v2026.1.0`][rel]**, is published with the
+text-file ZIP (`swatplus-authoritative-reference-database-2026.1.0.zip`),
+`database_manifest.json`, and `checksums.txt` attached. Compatibility test
+status is `not_tested` (source-file header versions are provenance only).
+
+[rel]: https://github.com/tugraskan/SWATPLUS-Authoritative-Reference-Database/releases/tag/database-v2026.1.0
 
 ## Not built yet
 
