@@ -44,9 +44,11 @@ swatplus_version,editor_version,review_status,notes
   or `unknown` in this phase. Do not claim tested compatibility that has not
   happened.
 
-The `metadata/bootstrap_exception` marker temporarily disables per-record
-coverage for the initial bootstrap import. Once ordinary edits begin, delete
-that marker (see the file's contents).
+The `metadata/bootstrap_exception` marker, which temporarily disabled
+per-record change-log coverage during the initial bootstrap import, has been
+removed. Every new or modified authoritative record now requires a matching
+`database_changes.csv` entry, enforced by CI against the pull request's merge
+base.
 
 ## Stable row keys
 
