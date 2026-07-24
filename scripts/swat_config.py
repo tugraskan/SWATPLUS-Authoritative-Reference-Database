@@ -137,7 +137,7 @@ EXPECTED_FILES = [
          record_key="table_name", fmt=FMT_DECISION, direct_read=False, origin="bootstrap"),
     dict(name="scen_lu.dtl", category="decision_table", required=False,
          record_key="table_name", fmt=FMT_DECISION, direct_read=False,
-         origin="unavailable_expected"),
+         origin="external"),
     dict(name="flo_con.dtl", category="decision_table", required=False,
          record_key="table_name", fmt=FMT_DECISION, direct_read=False, origin="external"),
 
@@ -224,6 +224,25 @@ EXTERNAL_FILES = [
         notes="Flow-control decision table from a published model "
               "(soft_cal_crop_paper). Reproducible: fetchable from the "
               "recorded public commit.",
+    ),
+    dict(
+        name="scen_lu.dtl",
+        status="available",
+        origin_type="local_drive",
+        source_repository=None,
+        # Per the file's own header line: "scen_dtl Generated from
+        # M:\Constructor\HUC8_models\models\12070204.accdb".
+        source_location=r"M:\Constructor\HUC8_models\models\12070204.accdb "
+                        r"(HUC8 12070204 model; land-use/channel scenario "
+                        r"decision tables generated 2025-02-14)",
+        source_ref=None,
+        reproducible=False,
+        notes="Land-use and channel change-scenario decision tables "
+              "(historical channel/land-use evolution, CEAP surface "
+              "vulnerability index, conservation practice scenarios) "
+              "supplied by the maintainer from an internal NAM (National "
+              "Assessment Model) HUC8 project run; origin not "
+              "independently reproducible.",
     ),
 ]
 

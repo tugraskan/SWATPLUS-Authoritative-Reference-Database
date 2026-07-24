@@ -52,6 +52,7 @@ def test_external_provenance_separate_from_bootstrap(repo_root):
     ext = json.loads((repo_root / "metadata" / "external_sources.json").read_text())
     boot_names = {f["file_name"] for f in boot["files"]}
     ext_names = {f["file_name"] for f in ext["files"]}
-    # the four external files must NOT appear in bootstrap provenance
-    assert ext_names == {"pathogens.pth", "metals.mtl", "salt.slt", "flo_con.dtl"}
+    # the five external files must NOT appear in bootstrap provenance
+    assert ext_names == {"pathogens.pth", "metals.mtl", "salt.slt",
+                         "flo_con.dtl", "scen_lu.dtl"}
     assert boot_names.isdisjoint(ext_names)

@@ -267,9 +267,9 @@ def parse_decision_file(path: str | Path) -> ParsedDecisionFile:
         n, ln = non_empty[i]
         toks = ln.split()
         low = [t.lower() for t in toks]
-        # a block-header row starts with the column label "name" (any case)
-        # followed by conds/alts/acts labels.
-        if low and low[0] == "name" and "conds" in low:
+        # a block-header row starts with the table-name column label -- seen
+        # as "name" or "dtbl_name" (any case) -- followed by conds/alts/acts.
+        if low and low[0] in ("name", "dtbl_name") and "conds" in low:
             if i + 1 < len(non_empty):
                 dn, dln = non_empty[i + 1]
                 dtoks = dln.split()

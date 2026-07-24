@@ -65,7 +65,7 @@ to manure handling. `manure_db.frt` references entries in `manure_om.frt` via it
 
 ## Externally supplied files
 
-Four expected files had no approved Ames/OSU source and were supplied from
+Five expected files had no approved Ames/OSU source and were supplied from
 outside those sources. Their provenance is kept **separate** from bootstrap
 provenance in `metadata/external_sources.json`:
 
@@ -73,11 +73,11 @@ provenance in `metadata/external_sources.json`:
 |---|---|---|---|
 | `flo_con.dtl` | `biopsichas/soft_cal_crop_paper` @ `f58c684` | yes (public commit) | available |
 | `salt.slt` | maintainer local drive | no | available |
+| `scen_lu.dtl` | maintainer's internal NAM HUC8 model run (`12070204.accdb`) | no | available |
 | `pathogens.pth` | maintainer local drive | no | needs_review (example/seed) |
 | `metals.mtl` | maintainer local drive | no | needs_review (example/seed) |
 
-`scen_lu.dtl` remains **unavailable** — no approved source was found and no data
-was invented.
+Every expected file now has an authoritative source; none remain unavailable.
 
 ## Source versions are provenance, not tested compatibility
 

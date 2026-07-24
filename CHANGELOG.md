@@ -20,10 +20,11 @@ Initial workflow setup and authoritative import.
   (`refdata/Ames_sub1` first, `refdata/Osu_1hru` fallback).
 * Two direct-read databases discovered by inspecting the SWAT+ source and
   included as authoritative: `puddle.ops` and `transplant.plt`.
-* Four externally supplied files with separate provenance
+* Five externally supplied files with separate provenance
   (`metadata/external_sources.json`): `flo_con.dtl` (reproducible public
-  commit), `salt.slt`, and the example/seed `pathogens.pth` and `metals.mtl`
-  (marked `needs_review`).
+  commit), `salt.slt`, `scen_lu.dtl` (maintainer's internal NAM HUC8 model
+  run), and the example/seed `pathogens.pth` and `metals.mtl` (marked
+  `needs_review`).
 * Metadata: `database_manifest.json`, `bootstrap_sources.json`,
   `external_sources.json`, `compatibility_matrix.csv` (all `not_tested`),
   `excluded_files.json`, and `database_changes.csv`.
@@ -33,7 +34,6 @@ Initial workflow setup and authoritative import.
 
 ### Notes
 
-* `scen_lu.dtl` remains unavailable — no approved source; no data invented.
 * Source-file header versions are provenance only, not tested compatibility.
 * No SQLite database is built or committed. No SWAT+ or SWAT+ Editor code is
   changed.

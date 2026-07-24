@@ -289,14 +289,14 @@
     {
       "name": "scen_lu.dtl",
       "category": "decision_table",
-      "status": "unavailable",
+      "status": "available",
       "required": false,
       "canonical_record_key": "table_name",
       "source_format": "SWAT+ text database",
       "direct_read": false,
       "bootstrap_provenance_key": null,
-      "external_provenance_key": null,
-      "notes": "Expected file with no approved bootstrap source found"
+      "external_provenance_key": "scen_lu.dtl",
+      "notes": "Supplied from outside the approved Ames/OSU sources; see external_sources.json"
     },
     {
       "name": "flo_con.dtl",
