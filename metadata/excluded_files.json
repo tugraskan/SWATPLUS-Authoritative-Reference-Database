@@ -1,0 +1,61 @@
+{
+  "description": "Files found in the Ames_sub1 / Osu_1hru sources that are NOT selected as authoritative shared reference databases. Recorded so they are not silently ignored. The exhaustive per-file classification is in docs/source_inventory.md; this file documents the notable look-alikes that could be mistaken for a shared reference database.",
+  "reviewed_by": "maintainer",
+  "review_date": "2026-07-24",
+  "files": [
+    {
+      "file_name": "landuse.lum",
+      "source_path": "refdata/Ames_sub1/landuse.lum",
+      "classification": "project-specific input",
+      "exclusion_reason": "Project land-use mapping (.lum), not one of the shared .lum reference tables (cntable/cons_practice/ovn_table)."
+    },
+    {
+      "file_name": "calibration.cal",
+      "source_path": "refdata/Osu_1hru/calibration.cal",
+      "classification": "project-specific input",
+      "exclusion_reason": "Project calibration values; the shared calibration reference is cal_parms.cal, not calibration.cal."
+    },
+    {
+      "file_name": "salt_hru.ini",
+      "source_path": "refdata/Ames_sub1/salt_hru.ini",
+      "classification": "project-specific input",
+      "exclusion_reason": "Project salt initialization, distinct from the salt.slt salt-parameter database."
+    },
+    {
+      "file_name": "salt_aqu.ini",
+      "source_path": "refdata/Ames_sub1/salt_aqu.ini",
+      "classification": "project-specific input",
+      "exclusion_reason": "Project salt initialization, distinct from the salt.slt salt-parameter database."
+    },
+    {
+      "file_name": "salt_channel.ini",
+      "source_path": "refdata/Ames_sub1/salt_channel.ini",
+      "classification": "project-specific input",
+      "exclusion_reason": "Project salt initialization, distinct from the salt.slt salt-parameter database."
+    },
+    {
+      "file_name": "management.sch",
+      "source_path": "refdata/Ames_sub1/management.sch",
+      "classification": "project-specific input",
+      "exclusion_reason": "Project management schedule, not a shared reference database."
+    },
+    {
+      "file_name": "plant.ini",
+      "source_path": "refdata/Ames_sub1/plant.ini",
+      "classification": "project-specific input",
+      "exclusion_reason": "Project plant-community initialization, not the shared plants.plt database."
+    },
+    {
+      "file_name": "nutrients.sol",
+      "source_path": "refdata/Osu_1hru/nutrients.sol",
+      "classification": "project-specific input",
+      "exclusion_reason": "Project soil-nutrient inputs, not a shared reference database."
+    },
+    {
+      "file_name": "treatment.trt",
+      "source_path": "refdata/Ames_sub1/treatment.trt",
+      "classification": "project-specific input",
+      "exclusion_reason": "Project treatment inputs, not a shared reference database."
+    }
+  ]
+}

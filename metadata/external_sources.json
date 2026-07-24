@@ -1,0 +1,70 @@
+{
+  "description": "Files supplied from outside the approved Ames/OSU bootstrap sources. Kept separate from bootstrap provenance. See CONTRIBUTING.md / README.md.",
+  "files": [
+    {
+      "file_name": "pathogens.pth",
+      "selected_source": "external",
+      "origin_type": "local_drive",
+      "source_repository": null,
+      "source_location": "W:\\mydocs_temp\\modular_swatplus\\data\\ceap_connectivity test\\pathogens.pth",
+      "source_ref": null,
+      "reproducible": false,
+      "status": "needs_review",
+      "import_date": "2026-07-24",
+      "content_sha256": "4a54c15c6757829f7b696e6ca9bcd2b9f1d295949a72759f49492da6d4c52e85",
+      "notes": "Example/seed bacteria properties supplied by maintainer; origin not independently reproducible. Values need curation before being treated as authoritative."
+    },
+    {
+      "file_name": "metals.mtl",
+      "selected_source": "external",
+      "origin_type": "local_drive",
+      "source_repository": null,
+      "source_location": "W:\\Arnold\\SWAT_PLUS_USERS\\Ames_sub1 _cs\\metals.mtl",
+      "source_ref": null,
+      "reproducible": false,
+      "status": "needs_review",
+      "import_date": "2026-07-24",
+      "content_sha256": "943193f154c743027fb88c78ebd797a6925d24c065324bfebeacc36000267f6a",
+      "notes": "Example heavy-metal database (single 'lead' row) supplied by maintainer; origin not independently reproducible. Example grade - needs curation before authoritative use."
+    },
+    {
+      "file_name": "salt.slt",
+      "selected_source": "external",
+      "origin_type": "local_drive",
+      "source_repository": null,
+      "source_location": "W:\\mydocs_temp\\modular_swatplus\\data\\ceap_connectivity test\\salt.slt",
+      "source_ref": null,
+      "reproducible": false,
+      "status": "available",
+      "import_date": "2026-07-24",
+      "content_sha256": "f3727b5d79adffc9571013c701a6019bd757867db3bc9ef918add822066f2f7d",
+      "notes": "Salt input parameters (TDS/EC factor and solubility products) supplied by maintainer; origin not independently reproducible."
+    },
+    {
+      "file_name": "flo_con.dtl",
+      "selected_source": "external",
+      "origin_type": "public_repository",
+      "source_repository": "biopsichas/soft_cal_crop_paper",
+      "source_location": "Data/Models/CS9/flo_con.dtl",
+      "source_ref": "f58c684de648bddb39e4470786563c8f55be5ca6",
+      "reproducible": true,
+      "status": "available",
+      "import_date": "2026-07-24",
+      "content_sha256": "9d216cd6508ccbfaf08853696c60577e550f241d8633dbaa017200b6b3a730b2",
+      "notes": "Flow-control decision table from a published model (soft_cal_crop_paper). Reproducible: fetchable from the recorded public commit."
+    },
+    {
+      "file_name": "scen_lu.dtl",
+      "selected_source": "external",
+      "origin_type": "local_drive",
+      "source_repository": null,
+      "source_location": "M:\\Constructor\\HUC8_models\\models\\12070204.accdb (HUC8 12070204 model; land-use/channel scenario decision tables generated 2025-02-14)",
+      "source_ref": null,
+      "reproducible": false,
+      "status": "available",
+      "import_date": "2026-07-24",
+      "content_sha256": "0ad5e902494f0e5fbf89729a235e404a66666042e09fc96527db1800163370a1",
+      "notes": "Land-use and channel change-scenario decision tables (historical channel/land-use evolution, CEAP surface vulnerability index, conservation practice scenarios) supplied by the maintainer from an internal NAM (National Assessment Model) HUC8 project run; origin not independently reproducible."
+    }
+  ]
+}
