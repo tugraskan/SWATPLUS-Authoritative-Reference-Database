@@ -9,7 +9,18 @@ are versioned `YEAR.MAJOR.MINOR` and tagged `database-v<version>`.
 
 ## [Unreleased]
 
-_Nothing yet._
+### Removed
+
+* The one-time `scripts/inventory_reference_files.py`,
+  `scripts/bootstrap_database_files.py`, `scripts/import_external_files.py`,
+  and their now-orphaned helper `scripts/manifest_builder.py`, along with the
+  tests written specifically for them (`tests/test_source_priority.py`,
+  `tests/test_inventory.py`). The initial bootstrap and external import are
+  complete and merged; these scripts have no further job in this repository's
+  normal workflow (they never ran in CI) and their logic remains available in
+  git history if a future re-bootstrap is ever needed. Adding a new database
+  file going forward — whether a real upstream file or another external
+  supply — is an ordinary pull request, not a script run.
 
 ## [2026.1.0] — Initial bootstrap
 

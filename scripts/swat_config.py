@@ -2,9 +2,7 @@
 
 This module is the single source of truth for:
 
-* the expected authoritative files and their categories / required-ness;
-* which files SWAT+ reads by a hard-coded filename (direct-read databases)
-  rather than through ``file.cio`` (discovered by inspecting the SWAT+ source);
+* the expected authoritative files, their categories, and required-ness;
 * the format class of each file (flat name-keyed table, count-prefixed table,
   decision table, or constants block); and
 * column schemas for the subset of files whose headers have been verified
@@ -18,36 +16,18 @@ requires strict field validation "where the format is known".
 
 Nothing in this module contacts the network or the SWAT+ checkout; it is pure
 data so that both the scripts and the tests can import it cheaply.
+
+Note: the one-time bootstrap/inventory/external-import scripts (and the
+constants that only they consumed -- the pinned-commit/source-priority
+constants, the direct-read filename list, and the external-file provenance
+table) have been retired now that the initial import is complete and merged.
+That history -- the pinned commit, which direct-read databases were
+discovered, and every external file's origin -- is preserved permanently in
+``metadata/bootstrap_sources.json``, ``metadata/external_sources.json``, and
+git history; it doesn't need to be duplicated here as unused code.
 """
 
 from __future__ import annotations
-
-# ---------------------------------------------------------------------------
-# Bootstrap provenance constants
-# ---------------------------------------------------------------------------
-
-#: Pinned SWAT+ source used for the initial bootstrap.
-BOOTSTRAP_SWATPLUS_REPOSITORY = "swat-model/swatplus"
-BOOTSTRAP_SWATPLUS_BRANCH = "main"
-BOOTSTRAP_SWATPLUS_COMMIT = "cb442f7c05fc3bfc34349c446010f452d2737ca0"
-
-#: Ames first, OSU only as a fallback.  Order matters.
-BOOTSTRAP_SOURCE_PRIORITY = ["Ames_sub1", "Osu_1hru"]
-
-#: Files SWAT+ opens by a literal, hard-coded filename (verified in the SWAT+
-#: source, not driven by ``file.cio``).  These MUST be included even though the
-#: standard ``file.cio`` database list does not name them.
-#:
-#:   manure_db.frt      -> src/manure_db_read.f90     inquire(file="manure_db.frt")
-#:   manure_om.frt      -> src/manure_orgmin_read.f90 inquire(file="manure_om.frt")
-#:   puddle.ops         -> src/mgt_read_puddle.f90    inquire(file="puddle.ops")
-#:   transplant.plt     -> src/plant_transplant_read.f90 inquire(file="transplant.plt")
-DIRECT_READ_FILES = [
-    "manure_db.frt",
-    "manure_om.frt",
-    "puddle.ops",
-    "transplant.plt",
-]
 
 # ---------------------------------------------------------------------------
 # Format classes
@@ -73,9 +53,11 @@ NAME_KEYED_FORMATS = {FMT_FLAT, FMT_COUNT}
 #   record_key       stable identity column ("name", "table_name", or None)
 #   fmt              format class (see above)
 #   direct_read      True -> hard-coded filename in SWAT+ source
-#   origin           "bootstrap"  (imported from Ames/OSU) or
-#                    "external"   (supplied outside the approved sources) or
-#                    "unavailable_expected" (expected but no approved source)
+#   origin           "bootstrap" (imported from Ames/OSU) or "external"
+#                    (supplied outside the approved sources) -- informational
+#                    only; the authoritative record of each file's provenance
+#                    is metadata/bootstrap_sources.json or
+#                    metadata/external_sources.json, not this field.
 
 EXPECTED_FILES = [
     # -- calibration --
@@ -165,88 +147,10 @@ EXPECTED_FILES = [
 #: Convenience lookup by file name.
 EXPECTED_BY_NAME = {f["name"]: f for f in EXPECTED_FILES}
 
-
-# ---------------------------------------------------------------------------
-# Externally supplied files (Option C).
-# ---------------------------------------------------------------------------
-# These are NOT bootstrapped from the approved Ames/OSU sources.  Their
-# provenance lives in metadata/external_sources.json (kept separate from the
-# pure bootstrap provenance) and they are imported by import_external_files.py.
-#
-#   status "needs_review" -> values are example / seed grade, not curated.
-#   reproducible          -> whether a reviewer can independently re-fetch the
-#                            origin (a public commit) or not (a local drive).
-
-EXTERNAL_FILES = [
-    dict(
-        name="pathogens.pth",
-        status="needs_review",
-        origin_type="local_drive",
-        source_repository=None,
-        source_location=r"W:\mydocs_temp\modular_swatplus\data\ceap_connectivity test\pathogens.pth",
-        source_ref=None,
-        reproducible=False,
-        notes="Example/seed bacteria properties supplied by maintainer; "
-              "origin not independently reproducible. Values need curation "
-              "before being treated as authoritative.",
-    ),
-    dict(
-        name="metals.mtl",
-        status="needs_review",
-        origin_type="local_drive",
-        source_repository=None,
-        source_location=r"W:\Arnold\SWAT_PLUS_USERS\Ames_sub1 _cs\metals.mtl",
-        source_ref=None,
-        reproducible=False,
-        notes="Example heavy-metal database (single 'lead' row) supplied by "
-              "maintainer; origin not independently reproducible. Example "
-              "grade - needs curation before authoritative use.",
-    ),
-    dict(
-        name="salt.slt",
-        status="available",
-        origin_type="local_drive",
-        source_repository=None,
-        source_location=r"W:\mydocs_temp\modular_swatplus\data\ceap_connectivity test\salt.slt",
-        source_ref=None,
-        reproducible=False,
-        notes="Salt input parameters (TDS/EC factor and solubility products) "
-              "supplied by maintainer; origin not independently reproducible.",
-    ),
-    dict(
-        name="flo_con.dtl",
-        status="available",
-        origin_type="public_repository",
-        source_repository="biopsichas/soft_cal_crop_paper",
-        source_location="Data/Models/CS9/flo_con.dtl",
-        source_ref="f58c684de648bddb39e4470786563c8f55be5ca6",
-        reproducible=True,
-        notes="Flow-control decision table from a published model "
-              "(soft_cal_crop_paper). Reproducible: fetchable from the "
-              "recorded public commit.",
-    ),
-    dict(
-        name="scen_lu.dtl",
-        status="available",
-        origin_type="local_drive",
-        source_repository=None,
-        # Per the file's own header line: "scen_dtl Generated from
-        # M:\Constructor\HUC8_models\models\12070204.accdb".
-        source_location=r"M:\Constructor\HUC8_models\models\12070204.accdb "
-                        r"(HUC8 12070204 model; land-use/channel scenario "
-                        r"decision tables generated 2025-02-14)",
-        source_ref=None,
-        reproducible=False,
-        notes="Land-use and channel change-scenario decision tables "
-              "(historical channel/land-use evolution, CEAP surface "
-              "vulnerability index, conservation practice scenarios) "
-              "supplied by the maintainer from an internal NAM (National "
-              "Assessment Model) HUC8 project run; origin not "
-              "independently reproducible.",
-    ),
-]
-
-EXTERNAL_BY_NAME = {f["name"]: f for f in EXTERNAL_FILES}
+# Per-file provenance for the five externally supplied files (pathogens.pth,
+# metals.mtl, salt.slt, flo_con.dtl, scen_lu.dtl) -- including which are
+# needs_review example/seed data and which origins are independently
+# reproducible -- lives permanently in metadata/external_sources.json.
 
 
 # ---------------------------------------------------------------------------
