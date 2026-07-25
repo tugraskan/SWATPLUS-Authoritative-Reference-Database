@@ -32,7 +32,7 @@ The pinned bootstrap source is `swat-model/swatplus` @
 ```
 database_files/     the authoritative SWAT+ reference text files
 metadata/           manifest, provenance, change log, compatibility matrix, exclusions
-scripts/            inventory, bootstrap, external import, validation, release
+scripts/            validation, change-log validation, release packaging
 tests/              unit + integration tests
 docs/               source inventory, bootstrap report, editor-integration findings
 .github/            validation + release workflows, PR template
@@ -78,6 +78,15 @@ provenance in `metadata/external_sources.json`:
 | `metals.mtl` | maintainer local drive | no | needs_review (example/seed) |
 
 Every expected file now has an authoritative source; none remain unavailable.
+
+The scripts that performed the one-time inventory, bootstrap, and external
+import (`inventory_reference_files.py`, `bootstrap_database_files.py`,
+`import_external_files.py`) have been removed now that the initial import is
+complete and merged — they have no further job to do, and their logic is
+preserved in git history if a future re-bootstrap (e.g. against a newer
+pinned SWAT+ commit) is ever needed. Curating the `needs_review` files, or
+adding any future new database file, is an ordinary edit through the normal
+pull-request workflow below — no special tooling required.
 
 ## Source versions are provenance, not tested compatibility
 
