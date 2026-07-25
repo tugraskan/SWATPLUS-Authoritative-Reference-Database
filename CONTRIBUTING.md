@@ -64,6 +64,46 @@ line number. Renaming a record is a `removed` + `added` pair, documented as such
 * Filename case must match the manifest exactly.
 * Never commit a SQLite database as an authoritative source.
 
+## Column schemas, and what to do when SWAT+ changes a file's format
+
+Every name-keyed database file has an entry in `FILE_SCHEMAS`
+(`scripts/swat_config.py`) listing its columns in order and which of them must
+be numeric. That entry is what lets validation catch a row with the wrong
+number of columns, a text value where a number belongs, or a header row that no
+longer matches the file. A test enforces that **every** name-keyed file has a
+schema, so adding a new database file means adding its schema in the same pull
+request.
+
+A schema entry supports:
+
+* `columns` — the column names, in order, exactly as they appear in the file's
+  header row.
+* `numeric` — indices (0-based) of columns whose values must parse as numbers.
+* `text_tail` — set when the **last** column is free text (a `description`).
+  Such a column may contain spaces or be left empty, so the row is required to
+  have at least `len(columns) - 1` fields rather than an exact count.
+
+If validation reports:
+
+```text
+ERROR: <file>, line 2: column header does not match the expected schema: ...
+```
+
+then the file's format no longer matches what this repository expects. That is
+almost always one of two things:
+
+1. **The header was damaged** in editing — fix the file.
+2. **An upstream SWAT+ release changed the format** (added, removed, or renamed
+   a column, or changed a column's type). In that case:
+   * update the file's `FILE_SCHEMAS` entry to the new layout;
+   * note in the pull request which SWAT+ release changed it, so the schema can
+     be traced to a version;
+   * add a `modified` row to `metadata/database_changes.csv` describing the
+     format change; and
+   * do not silently widen a schema to make an error go away — a column count
+     that drifts without explanation is exactly the failure this check exists
+     to surface.
+
 ## Version notes and compatibility status
 
 Source-file header versions describe **provenance**, not tested compatibility.

@@ -173,6 +173,26 @@ def _check_name_keyed(P: Problems, name: str, path: Path, fmt: str) -> None:
     cols = schema["columns"] if schema else None
     table = parse_name_keyed_table(path, fmt, cols)
 
+    # Anything the parser could not make sense of structurally (e.g. no
+    # recognizable column-header row) is a hard error: the read scheme is
+    # broken, so every downstream row check would be meaningless.
+    for problem in table.problems:
+        P.err(name, problem)
+
+    # The column header is itself validated against the schema.  This is what
+    # catches a file whose format changed out from under us -- an upstream
+    # SWAT+ release adding/removing/renaming a column, or a corrupted header --
+    # which per-row field counts alone cannot see (a trailing free-text column
+    # has no upper bound, so extra columns would otherwise pass silently).
+    if schema and table.columns and table.columns != cols:
+        detail = _describe_header_drift(cols, table.columns)
+        P.err(name,
+              f"column header does not match the expected schema: {detail}. "
+              "If SWAT+ changed this file's format, update FILE_SCHEMAS for "
+              "the new SWAT+ release and record it in the change log.",
+              line=table.column_header_line_no)
+        return  # per-row checks against a stale schema would be noise
+
     # (5) header readable -> parse_name_keyed_table already read line 0
     seen: dict[str, int] = {}
     for rec in table.records:
@@ -187,16 +207,21 @@ def _check_name_keyed(P: Problems, name: str, path: Path, fmt: str) -> None:
             seen[rec.name] = rec.line_no
 
         if schema:
-            # (8) field count. A free-text trailing column (text_tail) may
-            # contain spaces, so require at least len(cols) tokens in that case
-            # rather than an exact match.
+            # (8) field count.  A trailing free-text column (text_tail) may
+            # contain spaces *or* be left empty -- e.g. every row of fire.ops
+            # omits its description, while urban.urb has descriptions that
+            # contain a space.  So the tail column is optional and unbounded:
+            # require at least len(cols) - 1 tokens.  Fixed-width files must
+            # match their column count exactly.
             text_tail = schema.get("text_tail", False)
             n_fields = len(rec.fields)
-            bad_count = (n_fields < len(cols)) if text_tail else (n_fields != len(cols))
+            min_fields = len(cols) - 1 if text_tail else len(cols)
+            bad_count = (n_fields < min_fields) if text_tail \
+                else (n_fields != len(cols))
             if bad_count:
                 rel = "at least " if text_tail else ""
                 P.err(name,
-                      f"expected {rel}{len(cols)} fields, found {n_fields}",
+                      f"expected {rel}{min_fields} fields, found {n_fields}",
                       record=rec.name, line=rec.line_no)
                 continue
             # (9) numeric fields
@@ -214,6 +239,27 @@ def _check_name_keyed(P: Problems, name: str, path: Path, fmt: str) -> None:
             and table.count_declared != len(table.records):
         P.warn(name, f"declared record count {table.count_declared} != "
                      f"{len(table.records)} parsed records")
+
+
+def _describe_header_drift(expected: list[str], found: list[str]) -> str:
+    """Summarize how a file's header row differs from its schema.
+
+    Kept short on purpose -- plants.plt has 57 columns, so dumping both lists
+    would bury the actual difference.
+    """
+    if len(expected) != len(found):
+        added = [c for c in found if c not in expected]
+        removed = [c for c in expected if c not in found]
+        bits = [f"expected {len(expected)} columns, found {len(found)}"]
+        if added:
+            bits.append(f"new: {added[:5]}")
+        if removed:
+            bits.append(f"missing: {removed[:5]}")
+        return "; ".join(bits)
+    for i, (e, f) in enumerate(zip(expected, found)):
+        if e != f:
+            return f"column {i} renamed {e!r} -> {f!r}"
+    return "headers differ"
 
 
 def _check_decision(P: Problems, name: str, path: Path) -> None:

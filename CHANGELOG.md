@@ -9,6 +9,34 @@ are versioned `YEAR.MAJOR.MINOR` and tagged `database-v<version>`.
 
 ## [Unreleased]
 
+### Fixed
+
+* Column-header detection no longer depends on the first line containing a
+  SWAT+ Editor version string. That heuristic misread three files —
+  `plants.plt` and `transplant.plt` (first line is a bare filename) and
+  `harv.ops` (first line is an unpunctuated sentence) — treating the title as
+  the column header and swallowing the real header row as a data record. The
+  header row is now located by its record-key label, which also handles files
+  with no title line at all (`tillage.til`, `puddle.ops`).
+
+### Added
+
+* Column schemas for the 21 name-keyed files that had none, so field counts and
+  data types are now validated for every name-keyed database file rather than
+  only 7 of them. A test enforces that the coverage cannot silently regress.
+* Header-row validation: a file whose column header no longer matches its
+  schema is now reported, with the drift summarized (added/removed/renamed
+  column). This catches an upstream SWAT+ format change or a corrupted header,
+  neither of which per-row field counts could see. See CONTRIBUTING.md for the
+  procedure when SWAT+ changes a file's format.
+
+### Changed
+
+* `text_tail` columns (a trailing free-text `description`) are now treated as
+  optional as well as unbounded: rows must have at least `len(columns) - 1`
+  fields. Several files (`fire.ops`, `sweep.ops`, `irr.ops`, `chem_app.ops`,
+  `bmpuser.str`) legitimately omit that column on every row.
+
 ### Removed
 
 * The one-time `scripts/inventory_reference_files.py`,
