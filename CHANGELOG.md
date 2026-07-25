@@ -24,6 +24,9 @@ are versioned `YEAR.MAJOR.MINOR` and tagged `database-v<version>`.
 
 ## [2026.1.0] — Initial bootstrap
 
+Released 2026-07-24 · tag `database-v2026.1.0` · published with the text-file
+ZIP, `database_manifest.json`, and `checksums.txt` attached.
+
 Initial workflow setup and authoritative import.
 
 ### Added
@@ -44,6 +47,16 @@ Initial workflow setup and authoritative import.
 * Tooling: inventory, bootstrap, external-import, validation, change-log
   validation, and release-packaging scripts, plus a unit/integration test suite.
 * GitHub Actions: `validate-database` and `release-text-database`.
+
+Final manifest status: 31 `available`, 2 `needs_review` (`pathogens.pth`,
+`metals.mtl`), 0 `unavailable` — every expected file now has an authoritative
+source.
+
+### Changed
+
+* Retired the `metadata/bootstrap_exception` marker once the initial import was
+  in place. Per-record change-log coverage against the pull-request merge base
+  is now enforced for every added or modified authoritative record.
 
 ### Notes
 
