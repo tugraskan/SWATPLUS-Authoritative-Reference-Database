@@ -31,12 +31,30 @@ The pinned bootstrap source is `swat-model/swatplus` @
 
 ```
 database_files/     the authoritative SWAT+ reference text files
-metadata/           manifest, provenance, change log, compatibility matrix, exclusions
-scripts/            validation, change-log validation, release packaging
+metadata/           manifest, provenance, change log, compatibility matrix,
+                    exclusions, schema-drift waivers
+schemas/            SWAT+ source-derived input schemas, one per SWAT+ release
+scripts/            validation, schema sync/diff, change-log validation, release
 tests/              unit + integration tests
 docs/               source inventory, bootstrap report, editor-integration findings
 .github/            validation + release workflows, PR template
 ```
+
+## Checked against what SWAT+ actually reads
+
+`schemas/swatplus-<version>.json` records, for every input database file, the
+fields SWAT+ reads — name, Fortran type, units — in order. It is generated from
+the SWAT+ Fortran source by
+[`swatplus-doc-builder`](https://github.com/tugraskan/swatplus-doc-builder), and
+`scripts/schema_sync.py` compares it against this repository's data on every
+pull request. That is what catches a file drifting out of step with the model
+that consumes it, rather than discovering it during a run.
+
+Known differences are recorded in `metadata/schema_drift_waivers.json` and
+reported on every run. **One matters today:** `pesticide.pes` has 15 columns
+but SWAT+ 62 reads 16 — it predates the `pl_uptake` field — so it is not
+correct for SWAT+ 62 as it stands. See that file for the detail and what would
+resolve it.
 
 ## Why `file.cio` alone is not enough for discovery
 

@@ -48,6 +48,10 @@ METADATA_FILES = [
     "compatibility_matrix.csv",
     "external_sources.json",
     "excluded_files.json",
+    # Ships with the package on purpose: it records where the data is known to
+    # differ from what SWAT+ reads (see schema_sync.py), which a consumer of a
+    # release needs in order to judge whether a file is safe to use as-is.
+    "schema_drift_waivers.json",
 ]
 FIXED_DATE = (1980, 1, 1, 0, 0, 0)  # deterministic ZIP timestamps
 

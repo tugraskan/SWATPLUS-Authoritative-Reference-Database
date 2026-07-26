@@ -29,6 +29,13 @@ jobs:
       - name: Validate authoritative files (manifest, duplicates, manure, provenance)
         run: python scripts/validate_database_files.py --repo-root .
 
+      # Compares the committed data against the SWAT+ source-derived schema in
+      # schemas/. Fails on drift that is not recorded in
+      # metadata/schema_drift_waivers.json, so a file falling out of step with
+      # the model SWAT+ actually reads is caught here rather than at run time.
+      - name: Check for drift from the SWAT+ source schema
+        run: python scripts/schema_sync.py --repo-root .
+
       - name: Validate change log
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
