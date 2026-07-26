@@ -78,6 +78,17 @@ def read_first_line(path: str | Path) -> str:
 
 _MERGE_MARKERS = ("<<<<<<<", "=======", ">>>>>>>")
 
+#: Labels that open the column-header row of a SWAT+ name-keyed table.  Every
+#: authoritative name-keyed file uses one of these as its first column, so the
+#: header row can be found by content instead of by position.  Compared
+#: lower-cased (files vary between ``name``, ``NAME``, and ``BACTNM``).
+RECORD_KEY_LABELS = {"name", "bactnm"}
+
+#: How far into a file to look for the column-header row.  Titles/version
+#: banners and a count line occupy at most the first few lines; searching the
+#: whole file risks matching a data record that happens to be called "name".
+HEADER_SEARCH_LINES = 6
+
 
 def find_merge_markers(text: str) -> list[int]:
     """Return 1-based line numbers that look like unresolved git merge markers."""
@@ -119,10 +130,16 @@ def parse_name_keyed_table(
     """Parse a flat / count-prefixed name-keyed SWAT+ table.
 
     The column-header line is located by content when ``schema_columns`` is
-    provided (first token equals ``schema_columns[0]``); otherwise a heuristic
-    is used: for count-prefixed files the line after the integer-count line is
-    the column header, and for flat files the first non-empty line that is NOT
-    a version/title line is treated as the column header.
+    provided (first token equals ``schema_columns[0]``).  Without a schema it
+    is found by recognizing the record-key label that opens every SWAT+
+    name-keyed header row (see :data:`RECORD_KEY_LABELS`); anything above that
+    line is a title / version banner.
+
+    The label search is what keeps files apart that a version-string test
+    cannot distinguish: some files open with a bare filename
+    (``plants.plt``), some with an unpunctuated sentence
+    (``harv_ops Generated from ...``), and some have no title line at all so
+    that line 1 *is* the column header (``tillage.til``, ``puddle.ops``).
 
     Records are every subsequent non-empty line; the first whitespace token is
     the record name.
@@ -147,32 +164,39 @@ def parse_name_keyed_table(
                 break
 
     if header_idx is None:
-        # Heuristic fallback.
-        if fmt == FMT_COUNT:
-            # line0 = title, then an integer count line, then column header.
-            # Find the first line that is a bare integer.
-            for idx, (n, ln) in enumerate(non_empty):
-                if ln.strip().isdigit():
-                    count_declared = int(ln.strip())
-                    header_idx = idx + 1
-                    break
-            if header_idx is None:
-                header_idx = 1  # assume second non-empty line
-        else:
-            # Flat: if the first line parsed a version, the column header is the
-            # next non-empty line; otherwise the first line IS the column header.
-            if header_info.editor_version or header_info.swatplus_revision:
-                header_idx = 1 if len(non_empty) > 1 else 0
+        # No schema (or the schema's first column was not found): locate the
+        # column-header line by its record-key label.
+        for idx, (n, ln) in enumerate(non_empty[:HEADER_SEARCH_LINES]):
+            toks = ln.split()
+            if toks and toks[0].strip().lower() in RECORD_KEY_LABELS:
+                header_idx = idx
+                break
+
+        if header_idx is None:
+            # Last-resort positional fallback.
+            if fmt == FMT_COUNT:
+                # title, then an integer count line, then the column header.
+                for idx, (n, ln) in enumerate(non_empty):
+                    if ln.strip().isdigit():
+                        header_idx = idx + 1
+                        break
+                if header_idx is None:
+                    header_idx = 1
             else:
-                header_idx = 0
-    else:
-        # We located the column header by name; for count files capture the
-        # declared count if present just above it.
-        if fmt == FMT_COUNT and header_idx is not None:
-            for j in range(header_idx - 1, -1, -1):
-                if non_empty[j][1].strip().isdigit():
-                    count_declared = int(non_empty[j][1].strip())
-                    break
+                header_idx = 1 if len(non_empty) > 1 else 0
+            problems.append(
+                "column-header row not recognized; fell back to position "
+                f"{header_idx} (expected a row starting with one of: "
+                f"{sorted(RECORD_KEY_LABELS)})"
+            )
+
+    if fmt == FMT_COUNT and header_idx is not None and count_declared is None:
+        # Count-prefixed files declare their record count on a bare-integer
+        # line above the column header.
+        for j in range(header_idx - 1, -1, -1):
+            if non_empty[j][1].strip().isdigit():
+                count_declared = int(non_empty[j][1].strip())
+                break
 
     columns: list[str] = []
     column_header_line_no: Optional[int] = None
