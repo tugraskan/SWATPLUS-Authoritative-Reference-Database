@@ -23,17 +23,43 @@ are versioned `YEAR.MAJOR.MINOR` and tagged `database-v<version>`.
 * `metadata/schema_drift_waivers.json` — known drift awaiting a decision, plus
   review notes for findings the tooling cannot detect on its own.
 
-### Known issue
+### Documented (no data changed)
 
-* **`pesticide.pes` is not correct for SWAT+ 62.** The committed file has 15
-  columns; SWAT+ 62 reads 16, including `pl_uptake`, which postdates the file
-  (written by Editor 2.2.0 for SWAT+ rev.60.5.4). Because SWAT+ reads each
-  record with list-directed I/O over a whole derived type, the read does not
-  stop at end-of-line and will consume the next record's tokens. Waived in CI
-  while an approved `pl_uptake` value is obtained; the waiver records what
-  would resolve it. Found by the schema comparison above.
+* **`salt.slt` and `metals.mtl` are confirmed unread by SWAT+ 62.** Both
+  filenames are declared in `input_file_module.f90` but referenced nowhere
+  else in the source; no subroutine opens either file, and the model's salt
+  chemistry uses hardcoded constants rather than reading `salt.slt`. Their
+  content currently has zero effect on any simulation. Recorded in
+  `metadata/schema_drift_waivers.json` and noted in the README.
 
 ### Fixed
+
+* **`pesticide.pes` schema drift with SWAT+ 62.** The committed file had 15
+  columns; SWAT+ 62 reads 16, including `pl_uptake`, which postdates the file
+  (written by Editor 2.2.0 for SWAT+ rev.60.5.4). Added `pl_uptake` to all 233
+  records as an explicit `0.0` "unknown, assume no uptake" placeholder,
+  deliberately distinct from the SWAT+ Editor's own migration default of
+  `0.01` for this column. `schema_sync.py` now reports the file as structurally
+  matching the SWAT+ 62 source.
+
+  **The values are placeholders, not measurements.** Manifest status is
+  `needs_review`, and `metadata/schema_drift_waivers.json` tracks it as a
+  review note until the SWAT+ team provides approved per-pesticide values.
+  This is deliberately not auto-detectable: schema comparison checks
+  structure, not whether a value is scientifically meaningful.
+
+* **`pathogens.pth` had an extra column not present in SWAT+ 62.** `SWF` sat
+  at position 17, one before `CONC_MIN` — not a formatting issue but a
+  correctness one: because SWAT+ reads each record with list-directed I/O and
+  `SWF` sat *before* the end of the 18-field read set, every record's `SWF`
+  value was silently read into `conc_min` and the real `CONC_MIN` value was
+  dropped, with no error. Removed `SWF`; confirmed against
+  `pathogen_data_module.f90` and independently against
+  [swatplus-enhanced-docs' `pth` reference page](https://tugraskan.github.io/swatplus-enhanced-docs/reference/input-reference/pth/),
+  which agree on 18 fields. No value was invented — this is a column removal.
+  `pathogens.pth` remains `needs_review` for an unrelated, still-open reason:
+  its property values are still the original Little River Experimental
+  Watershed example/seed set, not curated data.
 
 * Column-header detection no longer depends on the first line containing a
   SWAT+ Editor version string. That heuristic misread three files —
@@ -42,6 +68,41 @@ are versioned `YEAR.MAJOR.MINOR` and tagged `database-v<version>`.
   the column header and swallowing the real header row as a data record. The
   header row is now located by its record-key label, which also handles files
   with no title line at all (`tillage.til`, `puddle.ops`).
+
+* **`flo_con.dtl` had a decision-table action keyword that doesn't exist in
+  SWAT+ 62.** `act_typ` was `flow_control` on all 7 action rows; that string
+  has no match anywhere in the SWAT+ 62 source. The file's own `option` values
+  (`min_cms`, `all_flo`) match exactly and uniquely the sub-options under
+  `case ("divert")` in `actions.f90`, so `act_typ` has been corrected to
+  `divert`. Before this fix, none of this file's actions executed.
+
+* **`scen_lu.dtl` had three decision-table keyword problems.** Two were
+  spelling corrections: `ch_change` → `chan_change` (`actions.f90:1197`) and,
+  on the one row using it as an action (not as the separate, already-valid
+  condition variable of the same name), `tillage` → `till`
+  (`actions.f90:362`). The third, `ceap_svi`, had zero matches anywhere in the
+  mainline source, and the maintainer — who has direct knowledge of the NAM
+  (National Assessment Model) branch this file was generated from — confirmed
+  it doesn't exist there either. Verified neither `conditions.f90` nor
+  `actions.f90` has a `case default`, so an unrecognized condition is silently
+  skipped and an unrecognized action never executes — meaning `ceap_svi`
+  removal changes no model behavior for the real conditions/actions it sat
+  alongside. **Removed**: the 4 `ceap_svi` condition rows from the
+  `ceap_scenarios` table (conds count corrected 7 → 3), and the entire
+  `ceap_surf_vuln_index` table, whose 4 action rows all used
+  `act_typ = 'ceap_svi'` and were a complete no-op. Declared table count
+  corrected 13 → 12. See `docs/editor_integration_findings.md` for the
+  separate, still-valid point that the NAM branch does carry source changes
+  beyond mainline in general — this specific keyword just wasn't an example
+  of it.
+
+* **`plants.plt`'s last column was mislabeled.** Renamed `description` →
+  `pl_class` to match SWAT+ 62 (`plant_data_module.f90`), a small category
+  vocabulary read only when a rarely-set basin flag is enabled (documented
+  "not used" in mainline, default off). No data changed — the committed
+  values remain per-plant descriptive names, not `pl_class` categories; see
+  `metadata/schema_drift_waivers.json` for what that means if that flag is
+  ever set.
 
 ### Added
 

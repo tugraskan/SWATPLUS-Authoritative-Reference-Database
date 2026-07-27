@@ -61,14 +61,14 @@
     {
       "name": "pesticide.pes",
       "category": "hru_parameter_database",
-      "status": "available",
+      "status": "needs_review",
       "required": true,
       "canonical_record_key": "name",
       "source_format": "SWAT+ text database",
       "direct_read": false,
       "bootstrap_provenance_key": "pesticide.pes",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Imported during initial bootstrap; see bootstrap_sources.json. pl_uptake column added to match SWAT+ 62 (predates this file); every value is a 0.0 placeholder pending SWAT+-team-approved per-pesticide values -- see metadata/schema_drift_waivers.json."
     },
     {
       "name": "pathogens.pth",

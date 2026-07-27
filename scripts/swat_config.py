@@ -206,15 +206,27 @@ FILE_SCHEMAS = {
         numeric=[1, 2, 3],
     ),
     "pathogens.pth": dict(
+        # SWF removed: it is not a field of SWAT+ 62's pathogen_db (verified
+        # against pathogen_data_module.f90, path_parm_read.f90, and
+        # swatplus-enhanced-docs' pth reference page -- three independent
+        # sources agree on 18 fields ending at CONC_MIN, none mention SWF).
         columns=["BACTNM", "DO_SOLN", "GR_SOLN", "DO_SORB", "GR_SORB", "KD",
                  "T_ADJ", "WASHOFF", "DO_PLNT", "GR_PLNT", "FR_MANURE", "PERCO",
                  "DET_THRSHD", "DO_STREAM", "GR_STREAM", "DO_RES", "GR_RES",
-                 "SWF", "CONC_MIN"],
-        numeric=list(range(1, 19)),
+                 "CONC_MIN"],
+        numeric=list(range(1, 18)),
     ),
 
     # ---- derived from the committed header rows (see CONTRIBUTING) ----
     "plants.plt": dict(
+        # Last column is 'pl_class' (not a free-text description): a small
+        # category vocabulary in SWAT+ 62 ("row crop, tree, grass, etc." --
+        # plant_data_module.f90), read into a SEPARATE array appended to the
+        # same read statement (plant_parm_read.f90:57), and only when
+        # bsn_cc%nam1 /= 0 (default 0, documented "not used" in
+        # basin_module.f90). Our committed values are per-plant descriptive
+        # names (126 distinct values), not the small category set -- see
+        # metadata/schema_drift_waivers.json.
         columns=['name', 'plnt_typ', 'gro_trig', 'nfix_co',
                  'days_mat', 'bm_e', 'harv_idx', 'lai_pot',
                  'frac_hu1', 'lai_max1', 'frac_hu2', 'lai_max2',
@@ -231,7 +243,7 @@ FILE_SCHEMAS = {
                  'plnt_pop2', 'frac_lai2', 'frac_sw_gro',
                  'aeration', 'rsd_pctcov', 'rsd_covfac',
                  'avg_lig_frac', 'ab_lig_frac', 'bg_lig_frac',
-                 'description'],
+                 'pl_class'],
         numeric=[3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
                  17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
                  30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
@@ -245,11 +257,15 @@ FILE_SCHEMAS = {
         text_tail=True,
     ),
     "pesticide.pes": dict(
+        # pl_uptake added to match SWAT+ 62 (type pesticide_db in
+        # pesticide_data_module.f90); the file predated this column. Every
+        # value is currently a 0.0 placeholder -- see
+        # metadata/schema_drift_waivers.json.
         columns=['name', 'soil_ads', 'frac_wash', 'hl_foliage',
                  'hl_soil', 'solub', 'aq_hlife', 'aq_volat',
                  'mol_wt', 'aq_resus', 'aq_settle', 'ben_act_dep',
-                 'ben_bury', 'ben_hlife', 'description'],
-        numeric=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                 'ben_bury', 'ben_hlife', 'pl_uptake', 'description'],
+        numeric=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
         text_tail=True,
     ),
     "urban.urb": dict(
