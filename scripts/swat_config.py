@@ -206,11 +206,15 @@ FILE_SCHEMAS = {
         numeric=[1, 2, 3],
     ),
     "pathogens.pth": dict(
+        # SWF removed: it is not a field of SWAT+ 62's pathogen_db (verified
+        # against pathogen_data_module.f90, path_parm_read.f90, and
+        # swatplus-enhanced-docs' pth reference page -- three independent
+        # sources agree on 18 fields ending at CONC_MIN, none mention SWF).
         columns=["BACTNM", "DO_SOLN", "GR_SOLN", "DO_SORB", "GR_SORB", "KD",
                  "T_ADJ", "WASHOFF", "DO_PLNT", "GR_PLNT", "FR_MANURE", "PERCO",
                  "DET_THRSHD", "DO_STREAM", "GR_STREAM", "DO_RES", "GR_RES",
-                 "SWF", "CONC_MIN"],
-        numeric=list(range(1, 19)),
+                 "CONC_MIN"],
+        numeric=list(range(1, 18)),
     ),
 
     # ---- derived from the committed header rows (see CONTRIBUTING) ----

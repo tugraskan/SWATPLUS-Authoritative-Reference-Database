@@ -39,6 +39,19 @@ are versioned `YEAR.MAJOR.MINOR` and tagged `database-v<version>`.
   This is deliberately not auto-detectable: schema comparison checks
   structure, not whether a value is scientifically meaningful.
 
+* **`pathogens.pth` had an extra column not present in SWAT+ 62.** `SWF` sat
+  at position 17, one before `CONC_MIN` — not a formatting issue but a
+  correctness one: because SWAT+ reads each record with list-directed I/O and
+  `SWF` sat *before* the end of the 18-field read set, every record's `SWF`
+  value was silently read into `conc_min` and the real `CONC_MIN` value was
+  dropped, with no error. Removed `SWF`; confirmed against
+  `pathogen_data_module.f90` and independently against
+  [swatplus-enhanced-docs' `pth` reference page](https://tugraskan.github.io/swatplus-enhanced-docs/reference/input-reference/pth/),
+  which agree on 18 fields. No value was invented — this is a column removal.
+  `pathogens.pth` remains `needs_review` for an unrelated, still-open reason:
+  its property values are still the original Little River Experimental
+  Watershed example/seed set, not curated data.
+
 * Column-header detection no longer depends on the first line containing a
   SWAT+ Editor version string. That heuristic misread three files —
   `plants.plt` and `transplant.plt` (first line is a bare filename) and

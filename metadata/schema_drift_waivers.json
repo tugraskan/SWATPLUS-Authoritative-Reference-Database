@@ -10,8 +10,9 @@
     },
     {
       "file": "pathogens.pth",
-      "note": "Manual inspection found an extra column 'SWF' at position 17, which SWAT+ 62's pathogen_db does not have. Because it sits before the end of the read set, SWAT+ would read our SWF value into conc_min and never see our CONC_MIN -- silently wrong values rather than an error. The file is example/seed data carrying a legacy 'bacteria.bac' layout and is already marked needs_review in the manifest; it must not be treated as authoritative until re-derived against the SWAT+ pathogen_db layout.",
-      "raised": "2026-07-26"
+      "note": "The extra column 'SWF' found by manual inspection has been removed (it was not a field of SWAT+ 62's pathogen_db -- confirmed against pathogen_data_module.f90 and independently against the swatplus-enhanced-docs pth reference page, which agree on 18 fields ending at CONC_MIN). The structural issue is resolved; schema_sync.py now reports a match. The file remains needs_review for an unrelated reason: its property VALUES are still the original Little River Experimental Watershed example/seed set ('Example', e_coli, fecal_coliform placeholder rows), not curated data, and no real source has been supplied to replace them.",
+      "raised": "2026-07-26",
+      "resolved_structural": "2026-07-27"
     },
     {
       "file": "metals.mtl",
