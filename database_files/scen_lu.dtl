@@ -1,5 +1,5 @@
 scen_dtl Generated from M:\Constructor\HUC8_models\models\12070204.accdb Time: 2/14/2025 3:26:42 AM
-13
+12
 
             DTBL_NAME      CONDS       ALTS       ACTS
         1800s_channel          7          8          4
@@ -68,12 +68,8 @@ scen_dtl Generated from M:\Constructor\HUC8_models\models\12070204.accdb Time: 2
  lu_change   hru       0  corn_noprac       null     0      0    corn_consprac     y     n     n     n     y     n     n     n            
 
             DTBL_NAME      CONDS       ALTS       ACTS
-       ceap_scenarios          7          7          3
+       ceap_scenarios          3          7          3
  COND_VAR   OBJ   OBJ_NUMB     LIM_VAR LIM_OP LIM_CONST  ALT1  ALT2  ALT3  ALT4  ALT5  ALT6  ALT7
- ceap_svi   hru          0    high_svi      -         0     -     -     -     -     -     =     =                  
- ceap_svi   hru          0  mod_hi_svi      -         0     -     -     -     =     =     -     -                  
- ceap_svi   hru          0     mod_svi      -         0     -     =     =     -     -     -     -                  
- ceap_svi   hru          0     low_svi      -         0     =     -     -     -     -     -     -                  
  p_factor   hru          0        null      -      0.95     -     -     =     -     =     -     =                  
   tillage   hru          0 spring_plow      -         0     -     =     -     =     -     =     -                  
   tillage   hru          0   fall_plow      -         0     -     =     -     =     -     =     -                  
@@ -82,23 +78,6 @@ scen_dtl Generated from M:\Constructor\HUC8_models\models\12070204.accdb Time: 2
  terrace   hru       0    terrace       null     0      0   sod_outlet     n     n     n     n     y     n     y                  
  till   hru       0 mulch_till       null     0      0 mulch_till_2     n     y     n     y     n     y     n                  
 
-            DTBL_NAME      CONDS       ALTS       ACTS
- ceap_surf_vuln_index          9         13          4
-       COND_VAR   OBJ   OBJ_NUMB LIM_VAR LIM_OP LIM_CONST  ALT1  ALT2  ALT3  ALT4  ALT5  ALT6  ALT7  ALT8  ALT9 ALT10
- hyd_soil_group   hru          0       d      -         0     -     -     -     -     -     -     -     -     -     =
- hyd_soil_group   hru          0       c      -         0     -     -     -     -     -     =     =     =     =     -
- hyd_soil_group   hru          0       b      -         0     -     =     =     =     =     -     -     -     -     -
- hyd_soil_group   hru          0       a      -         0     =     -     -     -     -     -     -     -     -     -
-       k_factor   hru          0    null      -  0.320001     -     -     <     >     -     -     -     -     -     -
-       k_factor   hru          0    null      -  0.280001     -     -     -     -     -     -     <     >     -     <
-          slope   hru          0    null      -  0.060001     -     -     <     <     >     -     <     <     >     -
-          slope   hru          0    null      -  0.040001     -     <     >     >     -     -     -     -     -     -
-          slope   hru          0    null      -  0.020001     -     -     -     -     -     -     >     >     -     <
-  ACT_TYP   OBJ OBJ_NUM   ACT_NAME ACT_OPTION CONST CONST2 FILE_POINTER  OUT1  OUT2  OUT3  OUT4  OUT5  OUT6  OUT7  OUT8  OUT9 OUT10
- ceap_svi   hru       0   high_svi       high     0      0         null     n     n     n     n     y     n     n     n     y     n
- ceap_svi   hru       0 mod_hi_svi     mod_hi     0      0         null     n     n     n     y     n     n     n     y     n     n
- ceap_svi   hru       0    mod_svi        mod     0      0         null     n     n     y     n     n     n     y     n     n     n
- ceap_svi   hru       0    low_svi        low     0      0         null     y     y     n     n     n     y     n     n     n     y
 
             DTBL_NAME      CONDS       ALTS       ACTS
            contouring          5          1          1

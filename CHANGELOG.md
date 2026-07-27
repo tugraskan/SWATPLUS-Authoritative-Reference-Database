@@ -76,19 +76,25 @@ are versioned `YEAR.MAJOR.MINOR` and tagged `database-v<version>`.
   `case ("divert")` in `actions.f90`, so `act_typ` has been corrected to
   `divert`. Before this fix, none of this file's actions executed.
 
-* **`scen_lu.dtl` had two decision-table action keywords that don't exist in
-  SWAT+ 62.** `ch_change` → `chan_change` (`actions.f90:1197`) and, on the one
-  row using it as an action (not as the separate, already-valid condition
-  variable of the same name), `tillage` → `till` (`actions.f90:362`). A third
-  keyword, `ceap_svi`, has zero matches anywhere in the mainline source and
-  was **not** changed — no plausible replacement could be identified. The
-  maintainer, who has direct knowledge of the NAM (National Assessment Model)
-  branch this file was generated from, does not believe `ceap_svi` exists
-  there either, so this is most likely dead weight in the file itself rather
-  than NAM-specific functionality this repository can't see. See
-  `docs/editor_integration_findings.md` for the decision this leaves open, and
-  for the separate, still-valid point that the NAM branch does carry source
-  changes beyond mainline in general.
+* **`scen_lu.dtl` had three decision-table keyword problems.** Two were
+  spelling corrections: `ch_change` → `chan_change` (`actions.f90:1197`) and,
+  on the one row using it as an action (not as the separate, already-valid
+  condition variable of the same name), `tillage` → `till`
+  (`actions.f90:362`). The third, `ceap_svi`, had zero matches anywhere in the
+  mainline source, and the maintainer — who has direct knowledge of the NAM
+  (National Assessment Model) branch this file was generated from — confirmed
+  it doesn't exist there either. Verified neither `conditions.f90` nor
+  `actions.f90` has a `case default`, so an unrecognized condition is silently
+  skipped and an unrecognized action never executes — meaning `ceap_svi`
+  removal changes no model behavior for the real conditions/actions it sat
+  alongside. **Removed**: the 4 `ceap_svi` condition rows from the
+  `ceap_scenarios` table (conds count corrected 7 → 3), and the entire
+  `ceap_surf_vuln_index` table, whose 4 action rows all used
+  `act_typ = 'ceap_svi'` and were a complete no-op. Declared table count
+  corrected 13 → 12. See `docs/editor_integration_findings.md` for the
+  separate, still-valid point that the NAM branch does carry source changes
+  beyond mainline in general — this specific keyword just wasn't an example
+  of it.
 
 * **`plants.plt`'s last column was mislabeled.** Renamed `description` →
   `pl_class` to match SWAT+ 62 (`plant_data_module.f90`), a small category
