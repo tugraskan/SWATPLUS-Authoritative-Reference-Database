@@ -245,11 +245,15 @@ FILE_SCHEMAS = {
         text_tail=True,
     ),
     "pesticide.pes": dict(
+        # pl_uptake added to match SWAT+ 62 (type pesticide_db in
+        # pesticide_data_module.f90); the file predated this column. Every
+        # value is currently a 0.0 placeholder -- see
+        # metadata/schema_drift_waivers.json.
         columns=['name', 'soil_ads', 'frac_wash', 'hl_foliage',
                  'hl_soil', 'solub', 'aq_hlife', 'aq_volat',
                  'mol_wt', 'aq_resus', 'aq_settle', 'ben_act_dep',
-                 'ben_bury', 'ben_hlife', 'description'],
-        numeric=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                 'ben_bury', 'ben_hlife', 'pl_uptake', 'description'],
+        numeric=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
         text_tail=True,
     ),
     "urban.urb": dict(

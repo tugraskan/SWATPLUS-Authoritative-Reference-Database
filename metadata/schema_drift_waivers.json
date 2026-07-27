@@ -1,16 +1,13 @@
 {
   "description": "Accepted or pending differences between the authoritative data and the SWAT+ source-derived schema in schemas/. 'waivers' suppress a CI failure for drift that is known and awaiting a decision -- they do not hide it, every run still reports them. 'review_notes' record findings that scripts/schema_sync.py cannot detect automatically (see its module docstring), so they are surfaced on every run instead of being remembered by one person.",
-  "waivers": [
+  "waivers": [],
+  "review_notes": [
     {
       "file": "pesticide.pes",
-      "kind": "underfilled",
-      "schema_version": "62.0.0",
-      "reason": "The committed file has 15 columns; SWAT+ 62 reads 16, including pl_uptake (fraction taken up by plant), added after this file was written (header: SWAT+ Editor 2.2.0, SWAT+ rev.60.5.4). Adding the column to all 233 records is a scientific data change that needs an approved value per pesticide -- the SWAT+ Editor migration backfills 0.01, but that is a migration default, not a per-pesticide determination. Waived so CI stays green while that decision is pending; the file is NOT correct for SWAT+ 62 as it stands.",
+      "note": "pl_uptake was added to match SWAT+ 62 (type pesticide_db in pesticide_data_module.f90); the file predated this column (header: SWAT+ Editor 2.2.0, SWAT+ rev.60.5.4). The schema drift itself is resolved -- arity and types now match the source -- but every one of the 233 pl_uptake values is a 0.0 placeholder, not a scientifically determined value. 0.0 was chosen deliberately as an explicit 'unknown, assume no uptake' marker, distinct from the SWAT+ Editor's own migration default of 0.01 for this column, so it is not mistaken for a real value. schema_sync.py checks structure, not whether a value is a real measurement, so this cannot be caught automatically -- it is recorded here so it stays visible until real per-pesticide values are sourced. The manifest marks pesticide.pes needs_review for the same reason.",
       "raised": "2026-07-26",
-      "action_required": "Obtain approved pl_uptake values (or an agreed default) from the SWAT+ team, add the column, and remove this waiver."
-    }
-  ],
-  "review_notes": [
+      "action_required": "Obtain approved pl_uptake values from the SWAT+ team (or confirm 0.0 is an acceptable long-term default) for each of the 233 pesticides, update the column, and change the manifest status back to available."
+    },
     {
       "file": "pathogens.pth",
       "note": "Manual inspection found an extra column 'SWF' at position 17, which SWAT+ 62's pathogen_db does not have. Because it sits before the end of the read set, SWAT+ would read our SWF value into conc_min and never see our CONC_MIN -- silently wrong values rather than an error. The file is example/seed data carrying a legacy 'bacteria.bac' layout and is already marked needs_review in the manifest; it must not be treated as authoritative until re-derived against the SWAT+ pathogen_db layout.",

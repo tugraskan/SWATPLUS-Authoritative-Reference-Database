@@ -124,13 +124,23 @@ def test_real_repo_has_no_unwaived_drift(repo_root):
         "unwaived schema drift: " + "; ".join(f.detail for f in rep.blocking)
 
 
-def test_pesticide_drift_is_tracked(repo_root):
-    """The known pl_uptake gap must stay visible until it is fixed."""
+def test_pesticide_schema_matches_source(repo_root):
+    """pl_uptake was added; pesticide.pes must no longer show arity drift.
+
+    The remaining concern -- every pl_uptake value is a 0.0 placeholder, not a
+    real measurement -- is a data-quality question schema_sync.py cannot
+    detect (it checks structure, not whether a value is meaningful), so it is
+    tracked as a review note instead of a structural waiver. This test only
+    confirms the structural gap that WAS auto-detectable is actually closed.
+    """
     rep = schema_sync.analyze(repo_root)
-    waived = {f.file for f in rep.waived}
-    assert "pesticide.pes" in waived, (
-        "pesticide.pes drift is no longer waived -- if the file was fixed, "
-        "remove the waiver from metadata/schema_drift_waivers.json"
+    blocking_files = {f.file for f in rep.blocking}
+    assert "pesticide.pes" not in blocking_files, \
+        "pesticide.pes has schema drift again"
+    noted_files = {n["file"] for n in rep.review_notes}
+    assert "pesticide.pes" in noted_files, (
+        "the pl_uptake placeholder-value caveat is missing from "
+        "metadata/schema_drift_waivers.json review_notes"
     )
 
 

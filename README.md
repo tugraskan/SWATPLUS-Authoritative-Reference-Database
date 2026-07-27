@@ -51,10 +51,11 @@ pull request. That is what catches a file drifting out of step with the model
 that consumes it, rather than discovering it during a run.
 
 Known differences are recorded in `metadata/schema_drift_waivers.json` and
-reported on every run. **One matters today:** `pesticide.pes` has 15 columns
-but SWAT+ 62 reads 16 — it predates the `pl_uptake` field — so it is not
-correct for SWAT+ 62 as it stands. See that file for the detail and what would
-resolve it.
+reported on every run. **One matters today:** `pesticide.pes` gained a
+`pl_uptake` column to match SWAT+ 62, but every one of its 233 values is a
+`0.0` placeholder, not a real measurement — the file is `needs_review` until
+the SWAT+ team provides approved per-pesticide values. See that file for the
+detail and what would resolve it.
 
 ## Why `file.cio` alone is not enough for discovery
 

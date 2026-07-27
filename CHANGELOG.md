@@ -23,17 +23,21 @@ are versioned `YEAR.MAJOR.MINOR` and tagged `database-v<version>`.
 * `metadata/schema_drift_waivers.json` — known drift awaiting a decision, plus
   review notes for findings the tooling cannot detect on its own.
 
-### Known issue
-
-* **`pesticide.pes` is not correct for SWAT+ 62.** The committed file has 15
-  columns; SWAT+ 62 reads 16, including `pl_uptake`, which postdates the file
-  (written by Editor 2.2.0 for SWAT+ rev.60.5.4). Because SWAT+ reads each
-  record with list-directed I/O over a whole derived type, the read does not
-  stop at end-of-line and will consume the next record's tokens. Waived in CI
-  while an approved `pl_uptake` value is obtained; the waiver records what
-  would resolve it. Found by the schema comparison above.
-
 ### Fixed
+
+* **`pesticide.pes` schema drift with SWAT+ 62.** The committed file had 15
+  columns; SWAT+ 62 reads 16, including `pl_uptake`, which postdates the file
+  (written by Editor 2.2.0 for SWAT+ rev.60.5.4). Added `pl_uptake` to all 233
+  records as an explicit `0.0` "unknown, assume no uptake" placeholder,
+  deliberately distinct from the SWAT+ Editor's own migration default of
+  `0.01` for this column. `schema_sync.py` now reports the file as structurally
+  matching the SWAT+ 62 source.
+
+  **The values are placeholders, not measurements.** Manifest status is
+  `needs_review`, and `metadata/schema_drift_waivers.json` tracks it as a
+  review note until the SWAT+ team provides approved per-pesticide values.
+  This is deliberately not auto-detectable: schema comparison checks
+  structure, not whether a value is scientifically meaningful.
 
 * Column-header detection no longer depends on the first line containing a
   SWAT+ Editor version string. That heuristic misread three files —
