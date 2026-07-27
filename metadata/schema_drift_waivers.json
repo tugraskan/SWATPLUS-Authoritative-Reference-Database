@@ -1,25 +1,49 @@
 {
   "description": "Accepted or pending differences between the authoritative data and the SWAT+ source-derived schema in schemas/. 'waivers' suppress a CI failure for drift that is known and awaiting a decision -- they do not hide it, every run still reports them. 'review_notes' record findings that scripts/schema_sync.py cannot detect automatically (see its module docstring), so they are surfaced on every run instead of being remembered by one person.",
-  "waivers": [
-    {
-      "file": "pesticide.pes",
-      "kind": "underfilled",
-      "schema_version": "62.0.0",
-      "reason": "The committed file has 15 columns; SWAT+ 62 reads 16, including pl_uptake (fraction taken up by plant), added after this file was written (header: SWAT+ Editor 2.2.0, SWAT+ rev.60.5.4). Adding the column to all 233 records is a scientific data change that needs an approved value per pesticide -- the SWAT+ Editor migration backfills 0.01, but that is a migration default, not a per-pesticide determination. Waived so CI stays green while that decision is pending; the file is NOT correct for SWAT+ 62 as it stands.",
-      "raised": "2026-07-26",
-      "action_required": "Obtain approved pl_uptake values (or an agreed default) from the SWAT+ team, add the column, and remove this waiver."
-    }
-  ],
+  "waivers": [],
   "review_notes": [
     {
+      "file": "pesticide.pes",
+      "note": "pl_uptake was added to match SWAT+ 62 (type pesticide_db in pesticide_data_module.f90); the file predated this column (header: SWAT+ Editor 2.2.0, SWAT+ rev.60.5.4). The schema drift itself is resolved -- arity and types now match the source -- but every one of the 233 pl_uptake values is a 0.0 placeholder, not a scientifically determined value. 0.0 was chosen deliberately as an explicit 'unknown, assume no uptake' marker, distinct from the SWAT+ Editor's own migration default of 0.01 for this column, so it is not mistaken for a real value. schema_sync.py checks structure, not whether a value is a real measurement, so this cannot be caught automatically -- it is recorded here so it stays visible until real per-pesticide values are sourced. The manifest marks pesticide.pes needs_review for the same reason.",
+      "raised": "2026-07-26",
+      "action_required": "Obtain approved pl_uptake values from the SWAT+ team (or confirm 0.0 is an acceptable long-term default) for each of the 233 pesticides, update the column, and change the manifest status back to available."
+    },
+    {
       "file": "pathogens.pth",
-      "note": "Manual inspection found an extra column 'SWF' at position 17, which SWAT+ 62's pathogen_db does not have. Because it sits before the end of the read set, SWAT+ would read our SWF value into conc_min and never see our CONC_MIN -- silently wrong values rather than an error. The file is example/seed data carrying a legacy 'bacteria.bac' layout and is already marked needs_review in the manifest; it must not be treated as authoritative until re-derived against the SWAT+ pathogen_db layout.",
-      "raised": "2026-07-26"
+      "note": "The extra column 'SWF' found by manual inspection has been removed (it was not a field of SWAT+ 62's pathogen_db -- confirmed against pathogen_data_module.f90 and independently against the swatplus-enhanced-docs pth reference page, which agree on 18 fields ending at CONC_MIN). The structural issue is resolved; schema_sync.py now reports a match. The file remains needs_review for an unrelated reason: its property VALUES are still the original Little River Experimental Watershed example/seed set ('Example', e_coli, fecal_coliform placeholder rows), not curated data, and no real source has been supplied to replace them.",
+      "raised": "2026-07-26",
+      "resolved_structural": "2026-07-27"
     },
     {
       "file": "metals.mtl",
-      "note": "The schema generator found no reader for this filename in SWAT+ 62, so there is no source-derived schema to validate against. Combined with its example/seed status (a single 'lead' row), treat any metals work as unsupported until it is confirmed whether SWAT+ 62 reads a heavy-metals database at all.",
-      "raised": "2026-07-26"
+      "note": "Confirmed unread by SWAT+ 62, not merely unresolved by the schema generator. input_file_module.f90 declares hmetcom_db = \"metals.mtl\", but that variable is referenced nowhere else in the source tree, and no derived type anywhere defines a kd/half_life/bio_avail-shaped record (the only heavy-metals-related code found -- constit_db_read.f90, dr_read_hmet.f90 -- tracks constituent NAMES and delivery ratios, not a properties database like this file). Combined with its example/seed status (a single 'lead' row), this file currently has zero effect on any SWAT+ 62 simulation.",
+      "raised": "2026-07-26",
+      "confirmed_unread": "2026-07-27"
+    },
+    {
+      "file": "salt.slt",
+      "note": "Confirmed unread by SWAT+ 62. input_file_module.f90 declares saltcom_db = \"salt.slt\" (immediately next to metals.mtl's declaration), but it too is referenced nowhere else in the source. The salt chemistry routines (salt_chem_hru.f90, salt_chem_soil_single.f90) use hardcoded Ksp constants declared directly in salt_data_module.f90, not values read from any file -- the file's Ksp table has zero effect. Separately, and independent of the above: 4 of our file's 5 Ksp values (CaCO3, MgCO3, MgSO4, NaCl) match those hardcoded source constants exactly, but our CaSO4 value (0.0000493) does not match the source's hardcoded default (0.00007888). This has no functional consequence today since the file is not read, but is recorded here for whenever this file is ever wired up.",
+      "raised": "2026-07-27",
+      "confirmed_unread": "2026-07-27"
+    },
+    {
+      "file": "flo_con.dtl",
+      "note": "act_typ was 'flow_control' on all 7 action rows across all 3 decision tables; that string does not exist anywhere in the SWAT+ 62 source (searched case-insensitively, whole tree). The file's own option values (min_cms, all_flo) match exactly and uniquely the sub-options under case (\"divert\") in actions.f90:759, so act_typ has been corrected to 'divert'. Before this fix, none of this file's actions executed under SWAT+ 62.",
+      "raised": "2026-07-27",
+      "resolved_structural": "2026-07-27"
+    },
+    {
+      "file": "scen_lu.dtl",
+      "note": "Three act_typ/cond_var problems were found and resolved. Two were spelling corrections: 'ch_change' -> 'chan_change' (actions.f90:1197, sets sd_ch%cov/%order from const/const2 -- matches this file's const values of 0.2-0.95), and the ACT_TYP-block 'tillage' on the single row using it as an action (ceap_scenarios table, mulch_till) -> 'till' (actions.f90:362). The COND_VAR-block 'tillage' usages (ceap_scenarios table, condition rows checking spring_plow/fall_plow) were left unchanged -- a different, already-correct vocabulary (conditions.f90:672).\n\n'ceap_svi' had no correct spelling to fall back on: zero matches anywhere in the SWAT+ 62 mainline source tree (including as a substring, e.g. 'svi', 'vuln'), and the maintainer, who has direct knowledge of the NAM (National Assessment Model) branch this file was generated from, confirmed it does not exist there either. Verified against conditions.f90 and actions.f90 that neither dispatcher has a 'case default': an unrecognized COND_VAR is silently skipped (act_hit already defaults to 'matched' for every alternative and is only narrowed by conditions the code recognizes, so a skipped condition affects nothing), and an unrecognized ACT_TYP simply never executes. This confirmed removing 'ceap_svi' changes no model behavior for the real conditions/actions it sat alongside -- it was already contributing nothing.\n\nRemoved: the 4 ceap_svi COND_VAR rows from the 'ceap_scenarios' table (conds count corrected 7 -> 3; its real conditions p_factor/tillage and real actions contour/terrace/till are unaffected), and the entire 'ceap_surf_vuln_index' table (all 4 of its action rows used act_typ='ceap_svi', so the whole table was a no-op). Declared table count corrected 13 -> 12.",
+      "raised": "2026-07-27",
+      "resolved_structural": "2026-07-27 (all three: ch_change, tillage, and ceap_svi removed entirely)"
+    },
+    {
+      "file": "plants.plt",
+      "note": "The last column was mislabeled 'description' in the header; the SWAT+ 62 source calls this position 'pl_class', a small category vocabulary (\"row crop, tree, grass, etc.\" -- plant_data_module.f90). Renamed the header (and FILE_SCHEMAS) to 'pl_class' to reflect what it actually is. This column is only read when bsn_cc%nam1 /= 0 (plant_parm_read.f90:54-57); nam1 defaults to 0 and is documented \"not used\" in basin_module.f90, so under the default/mainline path this column is unread trailing text and harmless either way. No data was changed: the committed values remain per-plant descriptive names (126 distinct values), not the small pl_class category set. If any project ever runs with nam1 /= 0 -- plausible, given this repository's other NAM-provenance files -- those values would not function as pl_class categories.",
+      "raised": "2026-07-27",
+      "resolved_structural": "2026-07-27 (header relabeled; content unchanged)",
+      "action_required": "Only if a project actually runs with bsn_cc%nam1 /= 0: source real pl_class category values per plant before relying on this column."
     }
   ]
 }
