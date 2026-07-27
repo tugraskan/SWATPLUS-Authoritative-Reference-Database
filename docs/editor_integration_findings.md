@@ -80,29 +80,40 @@ Model)** SWAT+ project run (`scen_lu.dtl`'s header records
 
 Auditing `scen_lu.dtl` against the mainline source found two of its action
 keywords, `tillage` and `ch_change`, used the wrong mainline spelling and were
-corrected to `till` / `chan_change`. A third, `ceap_svi`, has **zero matches
+corrected to `till` / `chan_change` -- straightforward authoring errors, not
+evidence of source divergence. A third, `ceap_svi`, has **zero matches
 anywhere** in the mainline source tree -- not as an action, not as a
-condition, not even as a substring (checked for `svi`, `vuln` too). Unlike the
-other two, no plausible mainline replacement exists.
+condition, not even as a substring (checked for `svi`, `vuln` too), and unlike
+the other two, no plausible mainline replacement exists.
 
-The most likely explanation is that `ceap_svi` (CEAP surface vulnerability
-index) is a real action/condition type in whatever SWAT+ build the NAM project
-actually runs, and that build carries source changes beyond the
-`swat-model/swatplus` mainline this repository tracks. That is speculation,
-not confirmed -- this repository has no access to a NAM-specific SWAT+ source
-tree to check against.
+The initial hypothesis was that `ceap_svi` (CEAP surface vulnerability index)
+is a real action/condition type in a NAM-specific SWAT+ build with source
+changes beyond the `swat-model/swatplus` mainline this repository tracks. **The
+maintainer, who has direct knowledge of the NAM branch, does not believe
+`ceap_svi` exists there either.** So this specific keyword is most likely dead
+weight in `scen_lu.dtl` itself -- present in no known SWAT+ build, mainline or
+NAM -- rather than an example of NAM-specific functionality this repository
+can't see. Under mainline SWAT+ 62, the `ceap_surf_vuln_index` table's actions
+are a no-op and the `ceap_svi` condition rows in `ceap_scenarios` never match.
+See `metadata/schema_drift_waivers.json` for the decision this leaves open:
+whether to leave these rows as documented dead weight, deprecate/remove them,
+or supply a correct keyword if one is ever identified.
 
-**This has a real consequence for future releases.** If the NAM SWAT+ variant
-has action/condition types, file formats, or database structures that differ
-from mainline, then a single authoritative release pinned only to mainline
-cannot correctly serve both audiences. A NAM-consuming project would need
-either:
+**The general point about NAM source divergence stands independently of this
+one keyword.** The maintainer has confirmed the NAM branch carries source
+changes beyond mainline (that's the premise `scen_lu.dtl`'s own provenance
+already implied). `ceap_svi` turning out not to be an example of that doesn't
+mean no example exists -- only that this repository has not yet found one it
+can point to. If the NAM SWAT+ variant has action/condition types, file
+formats, or database structures that differ from mainline in ways that do
+matter, then a single authoritative release pinned only to mainline cannot
+correctly serve both audiences. A NAM-consuming project would need either:
 
 * its own authoritative release tagged against the NAM source revision, with
   its own schema artifacts and validation, tracked separately from the
   mainline-pinned release this repository currently produces; or
 * confirmation that the NAM variant's action vocabulary is a strict superset
-  of mainline's (i.e. NAM adds keywords like `ceap_svi` but never removes or
+  of mainline's (i.e. NAM adds keywords mainline lacks but never removes or
   renames a mainline one), in which case a single release could serve both,
   with NAM-only keywords simply undetectable by mainline-derived schema
   checks rather than incorrect.

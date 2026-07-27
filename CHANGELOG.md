@@ -81,11 +81,14 @@ are versioned `YEAR.MAJOR.MINOR` and tagged `database-v<version>`.
   row using it as an action (not as the separate, already-valid condition
   variable of the same name), `tillage` → `till` (`actions.f90:362`). A third
   keyword, `ceap_svi`, has zero matches anywhere in the mainline source and
-  was **not** changed — no plausible replacement could be identified, and this
-  file's own provenance is an internal NAM (National Assessment Model) run
-  that may use SWAT+ source not present in the mainline this repository
-  tracks. See `docs/editor_integration_findings.md` for what this implies
-  about future NAM-specific releases.
+  was **not** changed — no plausible replacement could be identified. The
+  maintainer, who has direct knowledge of the NAM (National Assessment Model)
+  branch this file was generated from, does not believe `ceap_svi` exists
+  there either, so this is most likely dead weight in the file itself rather
+  than NAM-specific functionality this repository can't see. See
+  `docs/editor_integration_findings.md` for the decision this leaves open, and
+  for the separate, still-valid point that the NAM branch does carry source
+  changes beyond mainline in general.
 
 * **`plants.plt`'s last column was mislabeled.** Renamed `description` →
   `pl_class` to match SWAT+ 62 (`plant_data_module.f90`), a small category
