@@ -29,6 +29,9 @@ jobs:
       - name: Validate authoritative files
         run: python scripts/validate_database_files.py --repo-root .
 
+      - name: Check for drift from the SWAT+ source schema
+        run: python scripts/schema_sync.py --repo-root .
+
       - name: Validate change log
         run: python scripts/validate_change_log.py --repo-root .
 

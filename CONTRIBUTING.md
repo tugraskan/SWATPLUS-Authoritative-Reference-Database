@@ -104,6 +104,62 @@ almost always one of two things:
      that drifts without explanation is exactly the failure this check exists
      to surface.
 
+## Adopting a new SWAT+ release (the schema cadence)
+
+`schemas/swatplus-<version>.json` describes, for every input database file,
+the fields SWAT+ actually **reads** — name, Fortran type, and units — in order.
+It is generated from the SWAT+ Fortran source by
+[`swatplus-doc-builder`](https://github.com/tugraskan/swatplus-doc-builder);
+it is not hand-written here. `scripts/schema_sync.py` compares it against our
+schemas and our data on every pull request.
+
+When a new SWAT+ version is approved:
+
+1. Regenerate the artifact in `swatplus-doc-builder` for that release and copy
+   it into `schemas/`.
+2. Run the diff to see exactly what changed:
+
+   ```bash
+   python scripts/schema_diff.py --from 62.0.0 --to <new> --repo-root .
+   ```
+
+3. Paste that output into the pull request. Pay particular attention to
+   **moved** fields: a reordered read assigns existing values to different
+   variables, so data that still parses can silently become wrong.
+4. Update `FILE_SCHEMAS` for each changed file, update the affected data files,
+   and add a `modified` row to `metadata/database_changes.csv` describing the
+   format change and the SWAT+ release that caused it.
+5. Run `python scripts/schema_sync.py --repo-root .` until it is clean.
+
+### Why our column counts differ from the artifact
+
+Our schemas count the columns in a file's **header row**. The artifact counts
+the fields SWAT+ **consumes**. These differ legitimately: SWAT+ reads each
+record with list-directed I/O over a whole derived type, so any column beyond
+the last component — usually a free-text `description` — is never read. 14
+files are in this state and are correct as they are.
+
+The reverse is not benign. If a file supplies **fewer** columns than SWAT+
+reads, list-directed input does not stop at the end of the line: it keeps
+consuming to satisfy the remaining variables, so SWAT+ reads the next record's
+tokens into the current one. `schema_sync.py` reports this as `underfilled`
+and fails.
+
+### Waivers and review notes
+
+`metadata/schema_drift_waivers.json` holds two kinds of entry:
+
+* **`waivers`** — drift that is known and awaiting a decision. A waiver stops
+  CI failing but does **not** hide the finding; every run still prints it with
+  its reason. Add one only with an `action_required` describing what would
+  resolve it, and remove it as soon as the data is fixed.
+* **`review_notes`** — findings that the tooling cannot detect on its own. An
+  extra column inserted *mid-row* is the important case: it shifts every later
+  value into the wrong variable, silently and with plausible numbers. Text
+  column names do not map to Fortran component names by any reliable rule
+  (`falltmp`/`fall_tmp`, but also `timp`/`tmp_lag`), so this is found by human
+  inspection and recorded here to keep it visible.
+
 ## Version notes and compatibility status
 
 Source-file header versions describe **provenance**, not tested compatibility.
@@ -116,6 +172,7 @@ actually ran.
 ```bash
 python scripts/validate_database_files.py --repo-root .
 python scripts/validate_change_log.py --repo-root .
+python scripts/schema_sync.py --repo-root .
 python -m pytest -q
 ```
 

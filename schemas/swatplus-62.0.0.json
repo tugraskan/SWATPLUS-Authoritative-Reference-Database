@@ -1,0 +1,2458 @@
+{
+  "files": {
+    "bmpuser.str": {
+      "derived_type": "bmpuser_operation",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": null,
+          "fortran_name": "bmp_flag",
+          "fortran_type": "integer",
+          "numeric": true,
+          "position": 1,
+          "units": null
+        },
+        {
+          "doc": "Sediment removal by BMP",
+          "fortran_name": "bmp_sed",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "%"
+        },
+        {
+          "doc": "Particulate P removal by BMP",
+          "fortran_name": "bmp_pp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "%"
+        },
+        {
+          "doc": "Soluble P removal by BMP",
+          "fortran_name": "bmp_sp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "%"
+        },
+        {
+          "doc": "Particulate N removal by BMP",
+          "fortran_name": "bmp_pn",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "%"
+        },
+        {
+          "doc": "Soluble N removal by BMP",
+          "fortran_name": "bmp_sn",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": "%"
+        },
+        {
+          "doc": "Bacteria removal by BMP",
+          "fortran_name": "bmp_bac",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": "%"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "scen_read_bmpuser.f90",
+      "reader_line": 43,
+      "type_source": "mgt_operations_module.f90:59-68"
+    },
+    "cal_parms.cal": {
+      "derived_type": "calibration_parameters",
+      "fields": [
+        {
+          "doc": "cn2, esco, awc, etc.",
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "object type the parameter is associated with (hru, chan, res, basin, etc)",
+          "fortran_name": "ob_typ",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 1,
+          "units": null
+        },
+        {
+          "doc": "minimum range for variable",
+          "fortran_name": "absmin",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": null
+        },
+        {
+          "doc": "maximum change for variable",
+          "fortran_name": "absmax",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": null
+        },
+        {
+          "doc": "units used for each parameter",
+          "fortran_name": "units",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 4,
+          "units": null
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "cal_parm_read.f90",
+      "reader_line": 42,
+      "type_source": "calibration_data_module.f90:5-11"
+    },
+    "chem_app.ops": {
+      "derived_type": "chemical_application_operation",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "solid; liquid",
+          "fortran_name": "form",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 1,
+          "units": null
+        },
+        {
+          "doc": "operation type-spread; spray; inject; direct",
+          "fortran_name": "op_typ",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 2,
+          "units": null
+        },
+        {
+          "doc": "application efficiency",
+          "fortran_name": "app_eff",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": null
+        },
+        {
+          "doc": "foliar efficiency",
+          "fortran_name": "foliar_eff",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": null
+        },
+        {
+          "doc": "injection depth",
+          "fortran_name": "inject_dep",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "mm"
+        },
+        {
+          "doc": "surface fraction-amount in upper 10 mm",
+          "fortran_name": "surf_frac",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": null
+        },
+        {
+          "doc": "drift potential",
+          "fortran_name": "drift_pot",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": null
+        },
+        {
+          "doc": "aerial uniformity",
+          "fortran_name": "aerial_unif",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 8,
+          "units": null
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "mgt_read_chemapp.f90",
+      "reader_line": 45,
+      "type_source": "mgt_operations_module.f90:97-107"
+    },
+    "cntable.lum": {
+      "derived_type": "curvenumber_table",
+      "fields": [
+        {
+          "doc": "name includes abbrev for lu/treatment/condition",
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "curve number",
+          "fortran_name": "cn(1)",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": null
+        },
+        {
+          "doc": "curve number",
+          "fortran_name": "cn(2)",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": null
+        },
+        {
+          "doc": "curve number",
+          "fortran_name": "cn(3)",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": null
+        },
+        {
+          "doc": "curve number",
+          "fortran_name": "cn(4)",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": null
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "cntbl_read.f90",
+      "reader_line": 45,
+      "type_source": "landuse_data_module.f90:38-41"
+    },
+    "cons_practice.lum": {
+      "derived_type": "conservation_practice_table",
+      "fields": [
+        {
+          "doc": "name of conservation practice",
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "usle p factor",
+          "fortran_name": "pfac",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": null
+        },
+        {
+          "doc": "m !maximum slope length",
+          "fortran_name": "sl_len_mx",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": null
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "cons_prac_read.f90",
+      "reader_line": 45,
+      "type_source": "landuse_data_module.f90:50-54"
+    },
+    "fertilizer.frt": {
+      "derived_type": "fertilizer_db",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "fertnm",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "fract of fert which is mineral nit (NO3+NH3)",
+          "fortran_name": "fminn",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": "kg minN/kg frt"
+        },
+        {
+          "doc": "frac of fert which is mineral phos",
+          "fortran_name": "fminp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "kg minN/kg frt"
+        },
+        {
+          "doc": "frac of fert which is org n",
+          "fortran_name": "forgn",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "kg orgN/kg frt"
+        },
+        {
+          "doc": "frac of fert which is org p",
+          "fortran_name": "forgp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "kg orgP/kg frt"
+        },
+        {
+          "doc": "frac of mineral N content of fert which is NH3",
+          "fortran_name": "fnh3n",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "kg NH3-N/kg N"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "fert_parm_read.f90",
+      "reader_line": 47,
+      "type_source": "fertilizer_data_module.f90:5-12"
+    },
+    "filterstrip.str": {
+      "derived_type": "filtstrip_operation",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "on/off flag for vegetative filter strip",
+          "fortran_name": "vfsi",
+          "fortran_type": "integer",
+          "numeric": true,
+          "position": 1,
+          "units": null
+        },
+        {
+          "doc": "contouring USLE P factor",
+          "fortran_name": "vfsratio",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": null
+        },
+        {
+          "doc": "fraction of the total runoff from the entire field",
+          "fortran_name": "vfscon",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": null
+        },
+        {
+          "doc": "fraction of flow entering the most concentrated 10% of the VFS.",
+          "fortran_name": "vfsch",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": null
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "scen_read_filtstrip.f90",
+      "reader_line": 45,
+      "type_source": "mgt_operations_module.f90:30-37"
+    },
+    "fire.ops": {
+      "derived_type": "fire_operation",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "change in SCS curve number II value",
+          "fortran_name": "cn2_upd",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": null
+        },
+        {
+          "doc": "fraction burned",
+          "fortran_name": "fr_burn",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": null
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "mgt_read_fireops.f90",
+      "reader_line": 45,
+      "type_source": "mgt_operations_module.f90:40-44"
+    },
+    "grassedww.str": {
+      "derived_type": "grwaterway_operation",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "On/off Flag for waterway simulation",
+          "fortran_name": "grwat_i",
+          "fortran_type": "integer",
+          "numeric": true,
+          "position": 1,
+          "units": "none"
+        },
+        {
+          "doc": "Mannings\"s n for grassed waterway",
+          "fortran_name": "grwat_n",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "none"
+        },
+        {
+          "doc": "sediment transport coefficant defined by user",
+          "fortran_name": "grwat_spcon",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "none"
+        },
+        {
+          "doc": "depth of Grassed waterway",
+          "fortran_name": "grwat_d",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "m"
+        },
+        {
+          "doc": "width of grass waterway",
+          "fortran_name": "grwat_w",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "none"
+        },
+        {
+          "doc": "length of Grass Waterway",
+          "fortran_name": "grwat_l",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": "km"
+        },
+        {
+          "doc": "slope of grass waterway",
+          "fortran_name": "grwat_s",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": "m/m"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "scen_read_grwway.f90",
+      "reader_line": 45,
+      "type_source": "mgt_operations_module.f90:47-56"
+    },
+    "graze.ops": {
+      "derived_type": "grazing_operation",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": null,
+          "fortran_name": "fertnm",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 1,
+          "units": null
+        },
+        {
+          "doc": "dry weight of biomass removed by grazing daily",
+          "fortran_name": "eat",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "(kg/ha)/day"
+        },
+        {
+          "doc": "dry weight of biomass removed by trampling daily",
+          "fortran_name": "tramp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "(kg/ha)/day"
+        },
+        {
+          "doc": "dry weight of manure deposited",
+          "fortran_name": "manure",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "(kg/ha)/day"
+        },
+        {
+          "doc": "minimum plant biomass for grazing",
+          "fortran_name": "biomin",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "kg/ha"
+        }
+      ],
+      "read_pattern": "field_list",
+      "reader": "mgt_read_grazeops.f90",
+      "reader_line": 49,
+      "type_source": "mgt_operations_module.f90:122-130"
+    },
+    "harv.ops": {
+      "derived_type": "harvest_operation",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "grain;biomass;residue;tree;tuber",
+          "fortran_name": "typ",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 1,
+          "units": "none"
+        },
+        {
+          "doc": "harvest index target specified at harvest",
+          "fortran_name": "hi_ovr",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "(kg/ha)/(kg/ha)"
+        },
+        {
+          "doc": "harvest efficiency: fraction of harvested yield that is removed",
+          "fortran_name": "eff",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "none"
+        },
+        {
+          "doc": "minimum biomass to allow harvest",
+          "fortran_name": "bm_min",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "kg/ha"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "mgt_read_harvops.f90",
+      "reader_line": 44,
+      "type_source": "mgt_operations_module.f90:110-117"
+    },
+    "irr.ops": {
+      "derived_type": "irrigation_operation",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "irrigation application amount",
+          "fortran_name": "amt_mm",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": "mm"
+        },
+        {
+          "doc": "irrigation in-field efficiency",
+          "fortran_name": "eff",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": null
+        },
+        {
+          "doc": "surface runoff ratio",
+          "fortran_name": "surq",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "frac"
+        },
+        {
+          "doc": "depth of application for subsurface irrigation",
+          "fortran_name": "dep_mm",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "mm"
+        },
+        {
+          "doc": "concentration of total salt in irrigation",
+          "fortran_name": "salt",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "mg/kg"
+        },
+        {
+          "doc": "concentration of nitrate in irrigation",
+          "fortran_name": "no3",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": "mg/kg"
+        },
+        {
+          "doc": "concentration of phosphate in irrigation",
+          "fortran_name": "po4",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": "mg/kg"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "mgt_read_irrops.f90",
+      "reader_line": 48,
+      "type_source": "mgt_operations_module.f90:5-14"
+    },
+    "manure_db.frt": {
+      "derived_type": "manure_database",
+      "fields": [
+        {
+          "doc": "name of manure type",
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "sediment, carbon, and nutrients",
+          "fortran_name": "org_min",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 1,
+          "units": null
+        },
+        {
+          "doc": "pesticides - ppm",
+          "fortran_name": "pests",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 2,
+          "units": null
+        },
+        {
+          "doc": "pathogens - cfu",
+          "fortran_name": "paths",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 3,
+          "units": null
+        },
+        {
+          "doc": "heavy metals - ppm",
+          "fortran_name": "hmets",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 4,
+          "units": null
+        },
+        {
+          "doc": "salt ions - ppm",
+          "fortran_name": "salts",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 5,
+          "units": null
+        },
+        {
+          "doc": "other constituents - ppm",
+          "fortran_name": "constit",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 6,
+          "units": null
+        },
+        {
+          "doc": "description",
+          "fortran_name": "descrip",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 7,
+          "units": null
+        }
+      ],
+      "read_pattern": "field_list",
+      "reader": "manure_db_read.f90",
+      "reader_line": 47,
+      "type_source": "fertilizer_data_module.f90:16-31"
+    },
+    "manure_om.frt": {
+      "derived_type": "manure_attributes",
+      "fields": [
+        {
+          "doc": "Identifier used to crosswalk fertilizer entries, constructed from",
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "frac of manure which is water",
+          "fortran_name": "frac_water",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": "kg water/(kg manure + kg_water)"
+        },
+        {
+          "doc": "frac of fert which is carbon",
+          "fortran_name": "fcbn",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "kg C/kg frt"
+        },
+        {
+          "doc": "frac of fert which is mineral nitrogen (NO3+NH3)",
+          "fortran_name": "fminn",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "kg minN/kg frt"
+        },
+        {
+          "doc": "frac of fert which is mineral phoshorus",
+          "fortran_name": "fminp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "kg minN/kg frt"
+        },
+        {
+          "doc": "frac of fert which is org N",
+          "fortran_name": "forgn",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "kg orgN/kg frt"
+        },
+        {
+          "doc": "frac of fert which is org P",
+          "fortran_name": "forgp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": "kg orgP/kg frt"
+        },
+        {
+          "doc": "frac of mineral N content of fert which is NH3",
+          "fortran_name": "fnh3n",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": "kg NH3-N/kg N"
+        },
+        {
+          "doc": "description of manure type",
+          "fortran_name": "description",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 8,
+          "units": "na"
+        }
+      ],
+      "read_pattern": "field_list",
+      "reader": "manure_orgmin_read.f90",
+      "reader_line": 47,
+      "type_source": "fertilizer_data_module.f90:35-46"
+    },
+    "ovn_table.lum": {
+      "derived_type": "overlandflow_n_table",
+      "fields": [
+        {
+          "doc": "name of conservation practice",
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "overland flow mannings n - mean",
+          "fortran_name": "ovn",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": null
+        },
+        {
+          "doc": "overland flow mannings n - min",
+          "fortran_name": "ovn_min",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": null
+        },
+        {
+          "doc": "overland flow mannings n - max",
+          "fortran_name": "ovn_max",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": null
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "overland_n_read.f90",
+      "reader_line": 44,
+      "type_source": "landuse_data_module.f90:57-62"
+    },
+    "pathogens.pth": {
+      "derived_type": "pathogen_db",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "pathnm",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "Die-off factor for pers bac in soil solution",
+          "fortran_name": "do_soln",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": "1/day"
+        },
+        {
+          "doc": "Growth factor for pers bac in soil solution",
+          "fortran_name": "gr_soln",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "1/day"
+        },
+        {
+          "doc": "Die-off factor for pers bac adsorbed to soil part",
+          "fortran_name": "do_sorb",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "1/day"
+        },
+        {
+          "doc": "Growth factor for pers bac adsorbed to soil part",
+          "fortran_name": "gr_sorb",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "1/day"
+        },
+        {
+          "doc": "Pathogen part coeff bet sol and sorbed phase in surf runoff",
+          "fortran_name": "kd",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "none"
+        },
+        {
+          "doc": "temp adj factor for bac die-off/growth",
+          "fortran_name": "t_adj",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": "none"
+        },
+        {
+          "doc": "frac of pers bac on foliage washed off by a rainfall event",
+          "fortran_name": "washoff",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": "none"
+        },
+        {
+          "doc": "Die-off factor for pers bac on foliage",
+          "fortran_name": "do_plnt",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 8,
+          "units": "1/day"
+        },
+        {
+          "doc": "Growth factor for persistent pathogen on foliage",
+          "fortran_name": "gr_plnt",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 9,
+          "units": "1/day"
+        },
+        {
+          "doc": "frac of manure containing active colony forming units (cfu)",
+          "fortran_name": "fr_manure",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 10,
+          "units": "none"
+        },
+        {
+          "doc": "Pathogen perc coeff ratio of solution bacteria in surf layer",
+          "fortran_name": "perco",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 11,
+          "units": "none"
+        },
+        {
+          "doc": "Threshold detection level for less pers bac when pathogen levels",
+          "fortran_name": "det_thrshd",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 12,
+          "units": "# cfu/m^2"
+        },
+        {
+          "doc": "Die-off factor for persistent pathogen in streams",
+          "fortran_name": "do_stream",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 13,
+          "units": "1/day"
+        },
+        {
+          "doc": "growth factor for persistent pathogen in streams",
+          "fortran_name": "gr_stream",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 14,
+          "units": "1/day"
+        },
+        {
+          "doc": "Die-off factor for less persistent pathogen in reservoirs",
+          "fortran_name": "do_res",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 15,
+          "units": "1/day"
+        },
+        {
+          "doc": "growth factor for less persistent pathogen in reservoirs",
+          "fortran_name": "gr_res",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 16,
+          "units": "1/day"
+        },
+        {
+          "doc": "minimum pathogen concentration",
+          "fortran_name": "conc_min",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 17,
+          "units": null
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "path_parm_read.f90",
+      "reader_line": 49,
+      "type_source": "pathogen_data_module.f90:5-26"
+    },
+    "pesticide.pes": {
+      "derived_type": "pesticide_db",
+      "fields": [
+        {
+          "doc": "pesticide name",
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "soil adsorption coeff normalized for soil org carbon content",
+          "fortran_name": "koc",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": "(mL/g)"
+        },
+        {
+          "doc": "frac of pesticide on foliage which is washed off by rainfall event",
+          "fortran_name": "washoff",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "none"
+        },
+        {
+          "doc": "half-life of pest on foliage",
+          "fortran_name": "foliar_hlife",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "days"
+        },
+        {
+          "doc": "half-life of pest in soil",
+          "fortran_name": "soil_hlife",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "days"
+        },
+        {
+          "doc": "solubility of chemical in water",
+          "fortran_name": "solub",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "mg/L (ppm)"
+        },
+        {
+          "doc": "aquatic half-life",
+          "fortran_name": "aq_hlife",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": "days"
+        },
+        {
+          "doc": "aquatic volatilization coeff",
+          "fortran_name": "aq_volat",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": "m/day"
+        },
+        {
+          "doc": "molecular weight - to calculate mixing velocity",
+          "fortran_name": "mol_wt",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 8,
+          "units": "g/mol"
+        },
+        {
+          "doc": "aquatic resuspension velocity for pesticide sorbed to sediment",
+          "fortran_name": "aq_resus",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 9,
+          "units": "m/day"
+        },
+        {
+          "doc": "aquatic settling velocity for pesticide sorbed to sediment",
+          "fortran_name": "aq_settle",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 10,
+          "units": "m/day"
+        },
+        {
+          "doc": "depth of active benthic layer",
+          "fortran_name": "ben_act_dep",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 11,
+          "units": "m"
+        },
+        {
+          "doc": "burial velocity in benthic sediment",
+          "fortran_name": "ben_bury",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 12,
+          "units": "m/day"
+        },
+        {
+          "doc": "half-life of pest in benthic sediment",
+          "fortran_name": "ben_hlife",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 13,
+          "units": "days"
+        },
+        {
+          "doc": "fraction taken up by plant",
+          "fortran_name": "pl_uptake",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 14,
+          "units": "none"
+        },
+        {
+          "doc": "pesticide description",
+          "fortran_name": "descrip",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 15,
+          "units": null
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "pest_parm_read.f90",
+      "reader_line": 48,
+      "type_source": "pesticide_data_module.f90:5-22"
+    },
+    "plants.plt": {
+      "derived_type": "plant_db",
+      "fields": [
+        {
+          "doc": "crop name",
+          "fortran_name": "plantnm",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": "none"
+        },
+        {
+          "doc": "plant category warm_annual cold_annual warm_annual_tuber cold_annual_tuber perennial",
+          "fortran_name": "typ",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 1,
+          "units": "none"
+        },
+        {
+          "doc": "phenology trigger moisture_gro temp_gro",
+          "fortran_name": "trig",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 2,
+          "units": "none"
+        },
+        {
+          "doc": "n fixation coefficient (0.5 legume; 0 non-legume)",
+          "fortran_name": "nfix_co",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "none"
+        },
+        {
+          "doc": "days to maturity - if zero use hu for entire growing season",
+          "fortran_name": "days_mat",
+          "fortran_type": "integer",
+          "numeric": true,
+          "position": 4,
+          "units": "days"
+        },
+        {
+          "doc": "biomass-energy ratio",
+          "fortran_name": "bio_e",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "(kg/ha/(MJ/m**2)"
+        },
+        {
+          "doc": "harvest index: crop yield/aboveground biomass",
+          "fortran_name": "hvsti",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": "(kg/ha)/(kg/ha)"
+        },
+        {
+          "doc": "max (potential) leaf area index",
+          "fortran_name": "blai",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": "none"
+        },
+        {
+          "doc": "fraction of the growing season corresponding to the 1st point on optimal leaf area development curve",
+          "fortran_name": "frgrw1",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 8,
+          "units": "none"
+        },
+        {
+          "doc": "frac of max leaf area index corresponding to the 1st point on optimal leaf area development curve",
+          "fortran_name": "laimx1",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 9,
+          "units": "none"
+        },
+        {
+          "doc": "fraction of the growing season corresponding to the 2nd point on optimal leaf area development curve",
+          "fortran_name": "frgrw2",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 10,
+          "units": "none"
+        },
+        {
+          "doc": "fraction of max leaf area index corresponding to the 2nd point on optimal leaf area development curve",
+          "fortran_name": "laimx2",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 11,
+          "units": "none"
+        },
+        {
+          "doc": "frac of growing season when leaf are declines",
+          "fortran_name": "dlai",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 12,
+          "units": "none"
+        },
+        {
+          "doc": "exponent that governs lai decline rate",
+          "fortran_name": "dlai_rate",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 13,
+          "units": "none"
+        },
+        {
+          "doc": "maximum canopy height",
+          "fortran_name": "chtmx",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 14,
+          "units": "m"
+        },
+        {
+          "doc": "maximum root depth",
+          "fortran_name": "rdmx",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 15,
+          "units": "m"
+        },
+        {
+          "doc": "optimal temp for plant growth",
+          "fortran_name": "t_opt",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 16,
+          "units": "deg C"
+        },
+        {
+          "doc": "minimum temp for plant growth",
+          "fortran_name": "t_base",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 17,
+          "units": "deg C"
+        },
+        {
+          "doc": "frac of nitrogen in yield",
+          "fortran_name": "cnyld",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 18,
+          "units": "kg N/kg yld"
+        },
+        {
+          "doc": "frac of phosphorus in yield",
+          "fortran_name": "cpyld",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 19,
+          "units": "kg P/kg yld"
+        },
+        {
+          "doc": "nitrogen uptake parm #1",
+          "fortran_name": "pltnfr1",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 20,
+          "units": "kg N/kg biomass"
+        },
+        {
+          "doc": "nitrogen uptake parm #2",
+          "fortran_name": "pltnfr2",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 21,
+          "units": "kg N/kg biomass"
+        },
+        {
+          "doc": "nitrogen uptake parm #3",
+          "fortran_name": "pltnfr3",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 22,
+          "units": "kg N/kg/biomass"
+        },
+        {
+          "doc": "phoshorus uptake parm #1",
+          "fortran_name": "pltpfr1",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 23,
+          "units": "kg P/kg/biomass"
+        },
+        {
+          "doc": "phoshorus uptake parm #2",
+          "fortran_name": "pltpfr2",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 24,
+          "units": "kg P/kg/biomass"
+        },
+        {
+          "doc": "phoshorus uptake parm #3",
+          "fortran_name": "pltpfr3",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 25,
+          "units": "kg P/kg/biomass"
+        },
+        {
+          "doc": "value of harvest index bet 0 and HVSTI",
+          "fortran_name": "wsyf",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 26,
+          "units": "(kg/ha)/(kg/ha)"
+        },
+        {
+          "doc": "minimum value of the USLE C factor for water erosion",
+          "fortran_name": "usle_c",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 27,
+          "units": "none"
+        },
+        {
+          "doc": "maximum stomatal conductance",
+          "fortran_name": "gsi",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 28,
+          "units": "m/s"
+        },
+        {
+          "doc": "vapor pressure deficit at which GMAXFR is valid",
+          "fortran_name": "vpdfr",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 29,
+          "units": "kPa"
+        },
+        {
+          "doc": "fraction of max stomatal conductance that is",
+          "fortran_name": "gmaxfr",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 30,
+          "units": "none"
+        },
+        {
+          "doc": "rate of decline in radiation use efficiency",
+          "fortran_name": "wavp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 31,
+          "units": "none"
+        },
+        {
+          "doc": "CO2 concentration higher than the ambient corresponding",
+          "fortran_name": "co2hi",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 32,
+          "units": "uL CO2/L air"
+        },
+        {
+          "doc": "biomass-energy ratio when plant is in an environment with",
+          "fortran_name": "bioehi",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 33,
+          "units": "(kg/ha)/(MJ/m**2)"
+        },
+        {
+          "doc": "plant residue decomposition coeff",
+          "fortran_name": "rsdco_pl",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 34,
+          "units": "none"
+        },
+        {
+          "doc": "min LAI during winter dormant period",
+          "fortran_name": "alai_min",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 35,
+          "units": "m**2/m**2"
+        },
+        {
+          "doc": "coefficient to estimate max lai during tree growth",
+          "fortran_name": "laixco_tree",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 36,
+          "units": "none"
+        },
+        {
+          "doc": "years to maturity",
+          "fortran_name": "mat_yrs",
+          "fortran_type": "integer",
+          "numeric": true,
+          "position": 37,
+          "units": "years"
+        },
+        {
+          "doc": "max biomass for forest",
+          "fortran_name": "bmx_peren",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 38,
+          "units": "metric tons/ha"
+        },
+        {
+          "doc": "light extinction coefficient",
+          "fortran_name": "ext_coef",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 39,
+          "units": null
+        },
+        {
+          "doc": "perennial leaf turnover rate with minimum stress (complete turnover in 12 mon)",
+          "fortran_name": "leaf_tov_min",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 40,
+          "units": "months"
+        },
+        {
+          "doc": "perennial leaf turnover rate with maximum stress (complete turnover in 3 mon)",
+          "fortran_name": "leaf_tov_max",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 41,
+          "units": "months"
+        },
+        {
+          "doc": "above ground biomass that dies off at dormancy",
+          "fortran_name": "bm_dieoff",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 42,
+          "units": "frac"
+        },
+        {
+          "doc": "max fraction of above ground biomass that is leaf (assume constant over life of perennial) frac              |initial root to shoot ratio at the beg of growing season",
+          "fortran_name": "rsr1",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 43,
+          "units": "real :: leaf_frac_mx             !frac"
+        },
+        {
+          "doc": "root to shoot ratio at the end of the growing season",
+          "fortran_name": "rsr2",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 44,
+          "units": "frac"
+        },
+        {
+          "doc": "plant population corresponding to the 1st point on the",
+          "fortran_name": "pop1",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 45,
+          "units": "plants/m^2"
+        },
+        {
+          "doc": "frac of max leaf area index corresponding to the 1st",
+          "fortran_name": "frlai1",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 46,
+          "units": "frac"
+        },
+        {
+          "doc": "plant population corresponding to the 2nd point on the",
+          "fortran_name": "pop2",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 47,
+          "units": "plants/m^2"
+        },
+        {
+          "doc": "frac of max leaf area index corresponding to the 2nd",
+          "fortran_name": "frlai2",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 48,
+          "units": "frac"
+        },
+        {
+          "doc": "30 day sum of P-PET to initiate growth of tropical",
+          "fortran_name": "frsw_gro",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 49,
+          "units": "frac"
+        },
+        {
+          "doc": "aeration stress factor",
+          "fortran_name": "aeration",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 50,
+          "units": null
+        },
+        {
+          "doc": "residue factor for percent cover equation",
+          "fortran_name": "rsd_pctcov",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 51,
+          "units": null
+        },
+        {
+          "doc": "residue factor for surface cover (C factor) equation",
+          "fortran_name": "rsd_covfac",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 52,
+          "units": null
+        },
+        {
+          "doc": "reads plants.plt avg_lig_frac",
+          "fortran_name": "meta_frac",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 53,
+          "units": "none"
+        },
+        {
+          "doc": "reads plants.plt ab_lig_frac (used as above-ground lignin)",
+          "fortran_name": "str_frac",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 54,
+          "units": "none"
+        },
+        {
+          "doc": "reads plants.plt bg_lig_frac (used as below-ground lignin)",
+          "fortran_name": "lig_frac",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 55,
+          "units": "none"
+        },
+        {
+          "doc": null,
+          "fortran_name": "pl_class",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 56,
+          "units": null
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "plant_parm_read.f90",
+      "reader_line": 57,
+      "type_source": "plant_data_module.f90:30-106"
+    },
+    "puddle.ops": {
+      "derived_type": "puddle_operation",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "hydraulic conductivity of upper layer of soil after puddling",
+          "fortran_name": "wet_hc",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": "mm/h"
+        },
+        {
+          "doc": "sediment concentration after puddling",
+          "fortran_name": "sed",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "ppm"
+        },
+        {
+          "doc": "organic N concentration after puddling",
+          "fortran_name": "orgn",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "ppm"
+        },
+        {
+          "doc": "organic P concentration after puddling",
+          "fortran_name": "sedp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "ppm"
+        },
+        {
+          "doc": "NO3-N concentration after puddling",
+          "fortran_name": "no3",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "ppm"
+        },
+        {
+          "doc": "mineral (soluble P) concentration after puddling",
+          "fortran_name": "solp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": "ppm"
+        },
+        {
+          "doc": "NH3 concentration after puddling",
+          "fortran_name": "nh3",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": "ppm"
+        },
+        {
+          "doc": "NO2 concentration after puddling",
+          "fortran_name": "no2",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 8,
+          "units": "ppm"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "mgt_read_puddle.f90",
+      "reader_line": 42,
+      "type_source": "mgt_operations_module.f90:17-27"
+    },
+    "septic.sep": {
+      "derived_type": "septic_db",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "sepnm",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "flow rate of the septic tank effluent per capita (sptq)",
+          "fortran_name": "qs",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": "m3/d"
+        },
+        {
+          "doc": "biological oxygen demand of the septic tank effluent",
+          "fortran_name": "bodconcs",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "mg/l"
+        },
+        {
+          "doc": "concentration of total suspended solid in the septic tank effluent",
+          "fortran_name": "tssconcs",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "mg/l"
+        },
+        {
+          "doc": "concentration of total phosphorus in the septic tank effluent",
+          "fortran_name": "nh4concs",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "mg/l"
+        },
+        {
+          "doc": "concentration of nitrate in the septic tank effluent",
+          "fortran_name": "no3concs",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "mg/l"
+        },
+        {
+          "doc": "concentration of nitrite in the septic tank effluent",
+          "fortran_name": "no2concs",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": "mg/l"
+        },
+        {
+          "doc": "concentration of organic nitrogen in the septic tank effluent",
+          "fortran_name": "orgnconcs",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": "mg/l"
+        },
+        {
+          "doc": "concentration of mineral phosphorus in the septic tank effluent",
+          "fortran_name": "minps",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 8,
+          "units": "mg/l"
+        },
+        {
+          "doc": "concentration of organic phosphorus in the septic tank effluent",
+          "fortran_name": "orgps",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 9,
+          "units": "mg/l"
+        },
+        {
+          "doc": "concentration of fecal coliform in the septic tank effluent",
+          "fortran_name": "fcolis",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 10,
+          "units": "mg/l"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "septic_parm_read.f90",
+      "reader_line": 48,
+      "type_source": "septic_data_module.f90:5-17"
+    },
+    "septic.str": {
+      "derived_type": "septic_system",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "septic system type",
+          "fortran_name": "typ",
+          "fortran_type": "integer",
+          "numeric": true,
+          "position": 1,
+          "units": "none"
+        },
+        {
+          "doc": "year the septic system became operational",
+          "fortran_name": "yr",
+          "fortran_type": "integer",
+          "numeric": true,
+          "position": 2,
+          "units": null
+        },
+        {
+          "doc": "Septic system operation flag (1=active,2=failing,0=not operated)",
+          "fortran_name": "opt",
+          "fortran_type": "integer",
+          "numeric": true,
+          "position": 3,
+          "units": "none"
+        },
+        {
+          "doc": "Number of permanent residents in the house",
+          "fortran_name": "cap",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "none"
+        },
+        {
+          "doc": "average area of drainfield of individual septic systems",
+          "fortran_name": "area",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "m^2"
+        },
+        {
+          "doc": "time until falling systems gets fixed",
+          "fortran_name": "tfail",
+          "fortran_type": "integer",
+          "numeric": true,
+          "position": 6,
+          "units": "days"
+        },
+        {
+          "doc": "depth to the top of the biozone layer from the ground surface",
+          "fortran_name": "z",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": "mm"
+        },
+        {
+          "doc": "thickness of biozone layer",
+          "fortran_name": "thk",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 8,
+          "units": "mm"
+        },
+        {
+          "doc": "distance to the stream from the septic",
+          "fortran_name": "strm_dist",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 9,
+          "units": "km"
+        },
+        {
+          "doc": "number of septic systems per square kilometer",
+          "fortran_name": "density",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 10,
+          "units": null
+        },
+        {
+          "doc": "density of biomass",
+          "fortran_name": "bd",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 11,
+          "units": "kg/m^3"
+        },
+        {
+          "doc": "BOD decay rate coefficient",
+          "fortran_name": "bod_dc",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 12,
+          "units": "m^3/day"
+        },
+        {
+          "doc": "a conversion factor representing the proportion of mass",
+          "fortran_name": "bod_conv",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 13,
+          "units": null
+        },
+        {
+          "doc": "Linear coefficient for calculation of field capacity in the biozone",
+          "fortran_name": "fc1",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 14,
+          "units": "none"
+        },
+        {
+          "doc": "Exponential coefficient for calculation of field capacity in the biozone",
+          "fortran_name": "fc2",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 15,
+          "units": "none"
+        },
+        {
+          "doc": "fecal coliform bacteria decay rate coefficient",
+          "fortran_name": "fecal",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 16,
+          "units": "m^3/day"
+        },
+        {
+          "doc": "conversion factor for plaque from TDS",
+          "fortran_name": "plq",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 17,
+          "units": "none"
+        },
+        {
+          "doc": "mortality rate coefficient",
+          "fortran_name": "mrt",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 18,
+          "units": "none"
+        },
+        {
+          "doc": "respiration rate coefficient",
+          "fortran_name": "rsp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 19,
+          "units": "none"
+        },
+        {
+          "doc": "slough-off calibration parameter",
+          "fortran_name": "slg1",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 20,
+          "units": "none"
+        },
+        {
+          "doc": "slough-off calibration parameter",
+          "fortran_name": "slg2",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 21,
+          "units": "none"
+        },
+        {
+          "doc": "nitrification rate coefficient",
+          "fortran_name": "nitr",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 22,
+          "units": "none"
+        },
+        {
+          "doc": "denitrification rate coefficient",
+          "fortran_name": "denitr",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 23,
+          "units": "none"
+        },
+        {
+          "doc": "Linear P sorption distribution coefficient",
+          "fortran_name": "pdistrb",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 24,
+          "units": "(L/kg)"
+        },
+        {
+          "doc": "Maximum P sorption capacity",
+          "fortran_name": "psorpmax",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 25,
+          "units": "(mg P/kg Soil)"
+        },
+        {
+          "doc": "Slope of the linear effluent soluble P equation",
+          "fortran_name": "solpslp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 26,
+          "units": null
+        },
+        {
+          "doc": "Intercept of the linear effluent soluble P equation",
+          "fortran_name": "solpintc",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 27,
+          "units": null
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "sep_read.f90",
+      "reader_line": 43,
+      "type_source": "septic_data_module.f90:20-50"
+    },
+    "snow.sno": {
+      "derived_type": "snow_parameters",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "snowfall temp",
+          "fortran_name": "falltmp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": "deg C"
+        },
+        {
+          "doc": "snow melt base temp",
+          "fortran_name": "melttmp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "deg C"
+        },
+        {
+          "doc": "Max melt rate for snow during year (June 21)",
+          "fortran_name": "meltmx",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "mm/deg C/day"
+        },
+        {
+          "doc": "Min melt rate for snow during year (Dec 21)",
+          "fortran_name": "meltmn",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "mm/deg C/day"
+        },
+        {
+          "doc": "snow pack temp lag factor (0-1)",
+          "fortran_name": "timp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "none"
+        },
+        {
+          "doc": "snow water content at full ground cover",
+          "fortran_name": "covmx",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": "mm H20"
+        },
+        {
+          "doc": "frac of covmx at 50% snow cover",
+          "fortran_name": "cov50",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": "none"
+        },
+        {
+          "doc": "initial snow water content at start of simulation",
+          "fortran_name": "init_mm",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 8,
+          "units": "mm H20"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "snowdb_read.f90",
+      "reader_line": 48,
+      "type_source": "hru_module.f90:72-82"
+    },
+    "sweep.ops": {
+      "derived_type": "streetsweep_operation",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "removal efficiency of sweeping operation",
+          "fortran_name": "eff",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": "none"
+        },
+        {
+          "doc": "availability factor, the fraction of the",
+          "fortran_name": "fr_curb",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "none"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "mgt_read_sweepops.f90",
+      "reader_line": 47,
+      "type_source": "mgt_operations_module.f90:134-139"
+    },
+    "tiledrain.str": {
+      "derived_type": "subsurface_drainage_parameters",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "mm            |depth of drain tube from the soil surface",
+          "fortran_name": "depth",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": null
+        },
+        {
+          "doc": "hrs           |time to drain soil to field capacity",
+          "fortran_name": "time",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": null
+        },
+        {
+          "doc": "hours         |drain tile lag time",
+          "fortran_name": "lag",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": null
+        },
+        {
+          "doc": "mm            |effective radius of drains",
+          "fortran_name": "radius",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": null
+        },
+        {
+          "doc": "mm            |distance between two drain tubes or tiles",
+          "fortran_name": "dist",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": null
+        },
+        {
+          "doc": "mm/day        |drainage coefficient",
+          "fortran_name": "drain_co",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": null
+        },
+        {
+          "doc": "mm/hr         |pump capacity",
+          "fortran_name": "pumpcap",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": null
+        },
+        {
+          "doc": "multiplication factor to determine lat sat hyd conductivity for profile",
+          "fortran_name": "latksat",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 8,
+          "units": "!na"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "sdr_read.f90",
+      "reader_line": 45,
+      "type_source": "hru_module.f90:85-95"
+    },
+    "tillage.til": {
+      "derived_type": "tillage_db",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "tillnm",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "mixing efficiency of tillage operation",
+          "fortran_name": "effmix",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": "none"
+        },
+        {
+          "doc": "depth of mixing caused by tillage",
+          "fortran_name": "deptil",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "mm"
+        },
+        {
+          "doc": "random roughness",
+          "fortran_name": "ranrns",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "mm"
+        },
+        {
+          "doc": "ridge height",
+          "fortran_name": "ridge_ht",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "mm"
+        },
+        {
+          "doc": "ridge interval (or row spacing)",
+          "fortran_name": "ridge_sp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "mm"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "till_parm_read.f90",
+      "reader_line": 47,
+      "type_source": "tillage_data_module.f90:19-26"
+    },
+    "transplant.plt": {
+      "derived_type": "plant_transplant_db",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "name",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "leaf area index",
+          "fortran_name": "lai",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": "m**2/m**2"
+        },
+        {
+          "doc": "land cover/crop biomass",
+          "fortran_name": "bioms",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "kg/ha"
+        },
+        {
+          "doc": "frac of plant heat unit acc.",
+          "fortran_name": "phuacc",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "frac"
+        },
+        {
+          "doc": "fraction of current year of growth to years to maturity",
+          "fortran_name": "fr_yrmat",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "years"
+        },
+        {
+          "doc": "plant population",
+          "fortran_name": "pop",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "plants/m^2"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "plant_transplant_read.f90",
+      "reader_line": 43,
+      "type_source": "plant_data_module.f90:154-161"
+    },
+    "urban.urb": {
+      "derived_type": "urban_db",
+      "fields": [
+        {
+          "doc": null,
+          "fortran_name": "urbnm",
+          "fortran_type": "character",
+          "numeric": false,
+          "position": 0,
+          "units": null
+        },
+        {
+          "doc": "fraction of HRU area that is imp",
+          "fortran_name": "fimp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 1,
+          "units": "fraction"
+        },
+        {
+          "doc": "fraction of HRU that is classified as directly connected imp",
+          "fortran_name": "fcimp",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 2,
+          "units": "fraction"
+        },
+        {
+          "doc": "curb length density",
+          "fortran_name": "curbden",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 3,
+          "units": "km/ha"
+        },
+        {
+          "doc": "wash-off coefficient for removal of constituents from an imp surface",
+          "fortran_name": "urbcoef",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 4,
+          "units": "1/mm"
+        },
+        {
+          "doc": "max amt of solids allowed to build up on imp surfaces",
+          "fortran_name": "dirtmx",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 5,
+          "units": "kg/curb km"
+        },
+        {
+          "doc": "time for the amt of solids on imp areas to build up to 1/2 max level",
+          "fortran_name": "thalf",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 6,
+          "units": "days"
+        },
+        {
+          "doc": "conc of total nitrogen in suspended solid load from imp areas",
+          "fortran_name": "tnconc",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 7,
+          "units": "mg N/kg sed"
+        },
+        {
+          "doc": "conc of total phosphorus in suspened solid load from imp areas",
+          "fortran_name": "tpconc",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 8,
+          "units": "mg P/kg sed"
+        },
+        {
+          "doc": "conc of NO3-N in suspended solid load from imp areas",
+          "fortran_name": "tno3conc",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 9,
+          "units": "mg NO3-N/kg sed"
+        },
+        {
+          "doc": "moisture condition II curve number for imp areas",
+          "fortran_name": "urbcn2",
+          "fortran_type": "real",
+          "numeric": true,
+          "position": 10,
+          "units": "none"
+        }
+      ],
+      "read_pattern": "derived_type",
+      "reader": "urban_parm_read.f90",
+      "reader_line": 42,
+      "type_source": "urban_data_module.f90:5-17"
+    }
+  },
+  "generated_utc": "2026-07-25T23:45:53+00:00",
+  "generator": "swatplus-doc-builder 0.1.0",
+  "source_ref": "62.0.0",
+  "source_repository": "swat-model/swatplus",
+  "swatplus_version": "62.0.0",
+  "unresolved": [
+    {
+      "file": "metals.mtl",
+      "reason": "reader not found for filename"
+    }
+  ]
+}

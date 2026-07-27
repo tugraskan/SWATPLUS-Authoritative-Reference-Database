@@ -1,0 +1,25 @@
+{
+  "description": "Accepted or pending differences between the authoritative data and the SWAT+ source-derived schema in schemas/. 'waivers' suppress a CI failure for drift that is known and awaiting a decision -- they do not hide it, every run still reports them. 'review_notes' record findings that scripts/schema_sync.py cannot detect automatically (see its module docstring), so they are surfaced on every run instead of being remembered by one person.",
+  "waivers": [
+    {
+      "file": "pesticide.pes",
+      "kind": "underfilled",
+      "schema_version": "62.0.0",
+      "reason": "The committed file has 15 columns; SWAT+ 62 reads 16, including pl_uptake (fraction taken up by plant), added after this file was written (header: SWAT+ Editor 2.2.0, SWAT+ rev.60.5.4). Adding the column to all 233 records is a scientific data change that needs an approved value per pesticide -- the SWAT+ Editor migration backfills 0.01, but that is a migration default, not a per-pesticide determination. Waived so CI stays green while that decision is pending; the file is NOT correct for SWAT+ 62 as it stands.",
+      "raised": "2026-07-26",
+      "action_required": "Obtain approved pl_uptake values (or an agreed default) from the SWAT+ team, add the column, and remove this waiver."
+    }
+  ],
+  "review_notes": [
+    {
+      "file": "pathogens.pth",
+      "note": "Manual inspection found an extra column 'SWF' at position 17, which SWAT+ 62's pathogen_db does not have. Because it sits before the end of the read set, SWAT+ would read our SWF value into conc_min and never see our CONC_MIN -- silently wrong values rather than an error. The file is example/seed data carrying a legacy 'bacteria.bac' layout and is already marked needs_review in the manifest; it must not be treated as authoritative until re-derived against the SWAT+ pathogen_db layout.",
+      "raised": "2026-07-26"
+    },
+    {
+      "file": "metals.mtl",
+      "note": "The schema generator found no reader for this filename in SWAT+ 62, so there is no source-derived schema to validate against. Combined with its example/seed status (a single 'lead' row), treat any metals work as unsupported until it is confirmed whether SWAT+ 62 reads a heavy-metals database at all.",
+      "raised": "2026-07-26"
+    }
+  ]
+}
