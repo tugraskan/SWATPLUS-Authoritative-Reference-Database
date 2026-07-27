@@ -90,14 +90,26 @@ The initial hypothesis was that `ceap_svi` (CEAP surface vulnerability index)
 is a real action/condition type in a NAM-specific SWAT+ build with source
 changes beyond the `swat-model/swatplus` mainline this repository tracks. **The
 maintainer, who has direct knowledge of the NAM branch, does not believe
-`ceap_svi` exists there either.** So this specific keyword is most likely dead
-weight in `scen_lu.dtl` itself -- present in no known SWAT+ build, mainline or
-NAM -- rather than an example of NAM-specific functionality this repository
-can't see. Under mainline SWAT+ 62, the `ceap_surf_vuln_index` table's actions
-are a no-op and the `ceap_svi` condition rows in `ceap_scenarios` never match.
-See `metadata/schema_drift_waivers.json` for the decision this leaves open:
-whether to leave these rows as documented dead weight, deprecate/remove them,
-or supply a correct keyword if one is ever identified.
+`ceap_svi` exists there either.** So this specific keyword was dead weight in
+`scen_lu.dtl` itself -- present in no known SWAT+ build, mainline or NAM --
+rather than an example of NAM-specific functionality this repository can't
+see.
+
+Before removing it, both dispatchers (`conditions.f90`, `actions.f90`) were
+checked for a `case default` that might do something with an unrecognized
+value -- neither has one. An unrecognized `COND_VAR` is silently skipped (the
+alternative-match array defaults to "matched" and is only narrowed by
+conditions the code recognizes, so a skipped condition affects nothing), and
+an unrecognized `ACT_TYP` simply never executes. This confirmed removing
+`ceap_svi` would not change any model behavior for the real, still-used
+conditions/actions it sat alongside.
+
+**Removed**, rather than left as documented dead weight: the 4 `ceap_svi`
+condition rows from the `ceap_scenarios` table (its real conditions --
+`p_factor`, `tillage` -- and real actions -- `contour`, `terrace`, `till` --
+are unaffected), and the entire `ceap_surf_vuln_index` table, whose 4 action
+rows all used `act_typ = 'ceap_svi'` and so were a complete no-op. See
+`metadata/schema_drift_waivers.json` for the full detail.
 
 **The general point about NAM source divergence stands independently of this
 one keyword.** The maintainer has confirmed the NAM branch carries source
