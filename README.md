@@ -98,6 +98,13 @@ provenance in `metadata/external_sources.json`:
 
 Every expected file now has an authoritative source; none remain unavailable.
 
+**`salt.slt` and `metals.mtl` are confirmed unread by SWAT+ 62.** Both filenames
+are declared in `input_file_module.f90` but referenced nowhere else in the
+source — no subroutine opens either file, and the model's salt chemistry uses
+hardcoded constants rather than reading `salt.slt`'s table. Their content
+currently has zero effect on any simulation. See
+`metadata/schema_drift_waivers.json` for the full evidence.
+
 The scripts that performed the one-time inventory, bootstrap, and external
 import (`inventory_reference_files.py`, `bootstrap_database_files.py`,
 `import_external_files.py`) have been removed now that the initial import is

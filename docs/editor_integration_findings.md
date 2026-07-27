@@ -69,6 +69,49 @@ filename `pesticide.pes` and validation rejects a `pesticide.pst` text file.
 * The process and cadence for regenerating the datasets SQLite from an
   authoritative release.
 
+## SWAT+ source divergence: the NAM variant
+
+This repository's bootstrap and every schema check are pinned to
+`swat-model/swatplus` @ `cb442f7c05fc3bfc34349c446010f452d2737ca0` (SWAT+
+revision 62) -- the public mainline. Several files supplied for this
+repository, however, trace back to an internal **NAM (National Assessment
+Model)** SWAT+ project run (`scen_lu.dtl`'s header records
+`M:\Constructor\HUC8_models\models\12070204.accdb`).
+
+Auditing `scen_lu.dtl` against the mainline source found two of its action
+keywords, `tillage` and `ch_change`, used the wrong mainline spelling and were
+corrected to `till` / `chan_change`. A third, `ceap_svi`, has **zero matches
+anywhere** in the mainline source tree -- not as an action, not as a
+condition, not even as a substring (checked for `svi`, `vuln` too). Unlike the
+other two, no plausible mainline replacement exists.
+
+The most likely explanation is that `ceap_svi` (CEAP surface vulnerability
+index) is a real action/condition type in whatever SWAT+ build the NAM project
+actually runs, and that build carries source changes beyond the
+`swat-model/swatplus` mainline this repository tracks. That is speculation,
+not confirmed -- this repository has no access to a NAM-specific SWAT+ source
+tree to check against.
+
+**This has a real consequence for future releases.** If the NAM SWAT+ variant
+has action/condition types, file formats, or database structures that differ
+from mainline, then a single authoritative release pinned only to mainline
+cannot correctly serve both audiences. A NAM-consuming project would need
+either:
+
+* its own authoritative release tagged against the NAM source revision, with
+  its own schema artifacts and validation, tracked separately from the
+  mainline-pinned release this repository currently produces; or
+* confirmation that the NAM variant's action vocabulary is a strict superset
+  of mainline's (i.e. NAM adds keywords like `ceap_svi` but never removes or
+  renames a mainline one), in which case a single release could serve both,
+  with NAM-only keywords simply undetectable by mainline-derived schema
+  checks rather than incorrect.
+
+Determining which of these is true requires visibility into the NAM SWAT+
+source that this repository does not currently have. See
+`metadata/schema_drift_waivers.json` (`scen_lu.dtl` entry) for the specific
+unresolved keyword this surfaced.
+
 ## Explicitly out of scope now
 
 Generating `swatplus_datasets.sqlite`, adding Editor table models, adding manure

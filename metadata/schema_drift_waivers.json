@@ -16,8 +16,35 @@
     },
     {
       "file": "metals.mtl",
-      "note": "The schema generator found no reader for this filename in SWAT+ 62, so there is no source-derived schema to validate against. Combined with its example/seed status (a single 'lead' row), treat any metals work as unsupported until it is confirmed whether SWAT+ 62 reads a heavy-metals database at all.",
-      "raised": "2026-07-26"
+      "note": "Confirmed unread by SWAT+ 62, not merely unresolved by the schema generator. input_file_module.f90 declares hmetcom_db = \"metals.mtl\", but that variable is referenced nowhere else in the source tree, and no derived type anywhere defines a kd/half_life/bio_avail-shaped record (the only heavy-metals-related code found -- constit_db_read.f90, dr_read_hmet.f90 -- tracks constituent NAMES and delivery ratios, not a properties database like this file). Combined with its example/seed status (a single 'lead' row), this file currently has zero effect on any SWAT+ 62 simulation.",
+      "raised": "2026-07-26",
+      "confirmed_unread": "2026-07-27"
+    },
+    {
+      "file": "salt.slt",
+      "note": "Confirmed unread by SWAT+ 62. input_file_module.f90 declares saltcom_db = \"salt.slt\" (immediately next to metals.mtl's declaration), but it too is referenced nowhere else in the source. The salt chemistry routines (salt_chem_hru.f90, salt_chem_soil_single.f90) use hardcoded Ksp constants declared directly in salt_data_module.f90, not values read from any file -- the file's Ksp table has zero effect. Separately, and independent of the above: 4 of our file's 5 Ksp values (CaCO3, MgCO3, MgSO4, NaCl) match those hardcoded source constants exactly, but our CaSO4 value (0.0000493) does not match the source's hardcoded default (0.00007888). This has no functional consequence today since the file is not read, but is recorded here for whenever this file is ever wired up.",
+      "raised": "2026-07-27",
+      "confirmed_unread": "2026-07-27"
+    },
+    {
+      "file": "flo_con.dtl",
+      "note": "act_typ was 'flow_control' on all 7 action rows across all 3 decision tables; that string does not exist anywhere in the SWAT+ 62 source (searched case-insensitively, whole tree). The file's own option values (min_cms, all_flo) match exactly and uniquely the sub-options under case (\"divert\") in actions.f90:759, so act_typ has been corrected to 'divert'. Before this fix, none of this file's actions executed under SWAT+ 62.",
+      "raised": "2026-07-27",
+      "resolved_structural": "2026-07-27"
+    },
+    {
+      "file": "scen_lu.dtl",
+      "note": "Two act_typ values did not exist in SWAT+ 62 and have been corrected: 'ch_change' -> 'chan_change' (actions.f90:1197, sets sd_ch%cov/%order from const/const2 -- matches this file's const values of 0.2-0.95), and the ACT_TYP-block 'tillage' on the single row using it as an action (ceap_scenarios table, mulch_till) -> 'till' (actions.f90:362). The COND_VAR-block 'tillage' usages (ceap_scenarios table, condition rows checking spring_plow/fall_plow) were left unchanged -- that is a different vocabulary (conditions.f90:672 recognizes 'tillage' as a valid condition variable) and was already correct.\n\n'ceap_svi', used both as a COND_VAR and as an ACT_TYP in this file, was NOT changed: it has zero matches anywhere in the SWAT+ 62 source tree (including as a substring, e.g. 'svi', 'vuln'), and unlike the other two, no candidate replacement could be identified from context. This file's own header records it as generated from an internal NAM (National Assessment Model) model run, which may run a SWAT+ variant with additional action/condition types not present in the swat-model/swatplus mainline pinned by this repository (see docs/editor_integration_findings.md). Guessing a replacement risks inventing a keyword that exists nowhere, which is worse than leaving it flagged.",
+      "raised": "2026-07-27",
+      "resolved_structural": "2026-07-27 (ch_change, tillage only)",
+      "action_required": "Confirm whether 'ceap_svi' is a valid action/condition type in the NAM SWAT+ variant this file targets. If so, no data change is needed and this note should record that confirmation. If not, it needs a real replacement, not a guess."
+    },
+    {
+      "file": "plants.plt",
+      "note": "The last column was mislabeled 'description' in the header; the SWAT+ 62 source calls this position 'pl_class', a small category vocabulary (\"row crop, tree, grass, etc.\" -- plant_data_module.f90). Renamed the header (and FILE_SCHEMAS) to 'pl_class' to reflect what it actually is. This column is only read when bsn_cc%nam1 /= 0 (plant_parm_read.f90:54-57); nam1 defaults to 0 and is documented \"not used\" in basin_module.f90, so under the default/mainline path this column is unread trailing text and harmless either way. No data was changed: the committed values remain per-plant descriptive names (126 distinct values), not the small pl_class category set. If any project ever runs with nam1 /= 0 -- plausible, given this repository's other NAM-provenance files -- those values would not function as pl_class categories.",
+      "raised": "2026-07-27",
+      "resolved_structural": "2026-07-27 (header relabeled; content unchanged)",
+      "action_required": "Only if a project actually runs with bsn_cc%nam1 /= 0: source real pl_class category values per plant before relying on this column."
     }
   ]
 }

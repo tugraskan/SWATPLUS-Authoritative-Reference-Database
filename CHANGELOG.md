@@ -23,6 +23,15 @@ are versioned `YEAR.MAJOR.MINOR` and tagged `database-v<version>`.
 * `metadata/schema_drift_waivers.json` — known drift awaiting a decision, plus
   review notes for findings the tooling cannot detect on its own.
 
+### Documented (no data changed)
+
+* **`salt.slt` and `metals.mtl` are confirmed unread by SWAT+ 62.** Both
+  filenames are declared in `input_file_module.f90` but referenced nowhere
+  else in the source; no subroutine opens either file, and the model's salt
+  chemistry uses hardcoded constants rather than reading `salt.slt`. Their
+  content currently has zero effect on any simulation. Recorded in
+  `metadata/schema_drift_waivers.json` and noted in the README.
+
 ### Fixed
 
 * **`pesticide.pes` schema drift with SWAT+ 62.** The committed file had 15
@@ -59,6 +68,32 @@ are versioned `YEAR.MAJOR.MINOR` and tagged `database-v<version>`.
   the column header and swallowing the real header row as a data record. The
   header row is now located by its record-key label, which also handles files
   with no title line at all (`tillage.til`, `puddle.ops`).
+
+* **`flo_con.dtl` had a decision-table action keyword that doesn't exist in
+  SWAT+ 62.** `act_typ` was `flow_control` on all 7 action rows; that string
+  has no match anywhere in the SWAT+ 62 source. The file's own `option` values
+  (`min_cms`, `all_flo`) match exactly and uniquely the sub-options under
+  `case ("divert")` in `actions.f90`, so `act_typ` has been corrected to
+  `divert`. Before this fix, none of this file's actions executed.
+
+* **`scen_lu.dtl` had two decision-table action keywords that don't exist in
+  SWAT+ 62.** `ch_change` → `chan_change` (`actions.f90:1197`) and, on the one
+  row using it as an action (not as the separate, already-valid condition
+  variable of the same name), `tillage` → `till` (`actions.f90:362`). A third
+  keyword, `ceap_svi`, has zero matches anywhere in the mainline source and
+  was **not** changed — no plausible replacement could be identified, and this
+  file's own provenance is an internal NAM (National Assessment Model) run
+  that may use SWAT+ source not present in the mainline this repository
+  tracks. See `docs/editor_integration_findings.md` for what this implies
+  about future NAM-specific releases.
+
+* **`plants.plt`'s last column was mislabeled.** Renamed `description` →
+  `pl_class` to match SWAT+ 62 (`plant_data_module.f90`), a small category
+  vocabulary read only when a rarely-set basin flag is enabled (documented
+  "not used" in mainline, default off). No data changed — the committed
+  values remain per-plant descriptive names, not `pl_class` categories; see
+  `metadata/schema_drift_waivers.json` for what that means if that flag is
+  ever set.
 
 ### Added
 

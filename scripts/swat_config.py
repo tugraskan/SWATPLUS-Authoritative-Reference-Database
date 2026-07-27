@@ -219,6 +219,14 @@ FILE_SCHEMAS = {
 
     # ---- derived from the committed header rows (see CONTRIBUTING) ----
     "plants.plt": dict(
+        # Last column is 'pl_class' (not a free-text description): a small
+        # category vocabulary in SWAT+ 62 ("row crop, tree, grass, etc." --
+        # plant_data_module.f90), read into a SEPARATE array appended to the
+        # same read statement (plant_parm_read.f90:57), and only when
+        # bsn_cc%nam1 /= 0 (default 0, documented "not used" in
+        # basin_module.f90). Our committed values are per-plant descriptive
+        # names (126 distinct values), not the small category set -- see
+        # metadata/schema_drift_waivers.json.
         columns=['name', 'plnt_typ', 'gro_trig', 'nfix_co',
                  'days_mat', 'bm_e', 'harv_idx', 'lai_pot',
                  'frac_hu1', 'lai_max1', 'frac_hu2', 'lai_max2',
@@ -235,7 +243,7 @@ FILE_SCHEMAS = {
                  'plnt_pop2', 'frac_lai2', 'frac_sw_gro',
                  'aeration', 'rsd_pctcov', 'rsd_covfac',
                  'avg_lig_frac', 'ab_lig_frac', 'bg_lig_frac',
-                 'description'],
+                 'pl_class'],
         numeric=[3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
                  17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
                  30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
