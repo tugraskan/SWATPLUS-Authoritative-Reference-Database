@@ -8,6 +8,11 @@ name: sync-change-log
 #   - otherwise commits the matching change-log row back onto the PR branch,
 #     so the CSV is always in sync with the description by the time of review.
 #
+# Either way, it also posts (or updates in place) a plain-English PR comment
+# with the same result -- a failing Actions log is not something most
+# contributors will ever go looking for, so the comment is the feedback that
+# actually reaches them.
+#
 # The PR body is untrusted user input: it is passed to the parser only via an
 # `env:` variable, never interpolated into a shell `run:` string, so it can
 # never be executed as a command.
@@ -18,6 +23,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   sync:
@@ -35,19 +41,60 @@ jobs:
 
       # Fails here (before any commit) if a required field is missing, blank,
       # or the Change type box isn't checked exactly once -- see the script's
-      # docstring for the full field list.
+      # docstring for the full field list. Output is captured so the comment
+      # step below can relay it verbatim; it is nothing but static field-name
+      # strings, never the PR's own text, so it's safe to post as-is.
       - name: Sync change log from PR description
+        id: sync
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           PR_BODY: ${{ github.event.pull_request.body }}
-        run: python scripts/sync_change_log_from_pr.py --repo-root .
+        run: python scripts/sync_change_log_from_pr.py --repo-root . 2>&1 | tee sync_output.txt
+
+      - name: Post result as a PR comment
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- sync-change-log-bot -->';
+            let output = '';
+            try { output = fs.readFileSync('sync_output.txt', 'utf8').trim(); } catch (e) { /* no output file */ }
+
+            const outcome = '${{ steps.sync.outcome }}';
+            const body = outcome === 'success'
+              ? `${marker}\n✅ **Change log updated.** Everything required was filled in, so \`metadata/database_changes.csv\` has been updated automatically -- nothing else to do here.`
+              : `${marker}\n⚠️ **This pull request's description is missing some required information**, so I couldn't create its change-log entry yet:\n\n${output}\n\n**What to do:** click **Edit** on the description at the top of this pull request and fill in the missing section(s). This comment (and the failing check below) update automatically as soon as you save.`;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
 
       # Only same-repo branches can be pushed back to with this workflow's
-      # token; a fork PR still gets the required-field check above, it just
-      # needs a maintainer to run the script (or add the row) before merge.
+      # token; a fork PR still gets the required-field check and comment
+      # above, it just needs a maintainer to run the script (or add the row)
+      # before merge.
       - name: Commit updated change log
-        if: github.event.pull_request.head.repo.full_name == github.repository
+        if: steps.sync.outcome == 'success' && github.event.pull_request.head.repo.full_name == github.repository
         run: |
           if ! git diff --quiet -- metadata/database_changes.csv; then
             git config user.name "github-actions[bot]"
