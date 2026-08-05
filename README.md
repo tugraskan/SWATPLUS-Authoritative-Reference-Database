@@ -46,9 +46,9 @@ or source for the change, the template has optional spots for them, but a PR
 with neither still goes through cleanly. Opening the PR also runs file
 validation, schema-drift checking, and the full test suite (that's what the
 scripts and workflows under [`internal/`](internal/) are for). A reviewer
-must approve before merge. The changelog is a release-level summary a
-maintainer writes when cutting a release — it isn't part of the per-PR
-checklist. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full rules,
+must approve before merge. `internal/CHANGELOG.md` is an ongoing history a
+maintainer updates when it's worth summarizing, not something every PR
+touches. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full rules,
 including how the diff maps to the change log.
 
 ## What's in here
@@ -60,13 +60,13 @@ internal/            everything else: metadata, schemas, scripts, tests, docs
   metadata/           manifest, provenance, change log, compatibility matrix,
                       schema-drift waivers
   schemas/            SWAT+ source-derived input schemas, one per SWAT+ release
-  scripts/            validation, schema sync/diff, change-log sync, release
+  scripts/            validation, schema sync/diff, change-log sync, the
+                      patch-editor-dataset sync tool
   tests/              unit + integration tests
   docs/               provenance report, editor-integration findings
-  CHANGELOG.md         release history
-  DATABASE_VERSION     current release version
+  CHANGELOG.md         ongoing change history
   CONTRIBUTOR_GUIDE.md detailed contributor/maintainer rules
-.github/              validation + release workflows, PR template
+.github/              validation workflows, PR template
 ```
 
 `.github/`, `LICENSE`, and `pyproject.toml` stay at the repository root because
@@ -165,22 +165,40 @@ only.** It is *not* a claim that a database release has been tested against that
 SWAT+ or Editor version. `internal/metadata/compatibility_matrix.csv` records
 real test status, which is `not_tested` in this phase.
 
-## Releases
+## Syncing changes back to SWAT+ Editor
 
-Releases are versioned `YEAR.MAJOR.MINOR` (see `internal/DATABASE_VERSION`,
-currently `2026.2.0`) and tagged `database-v<version>`. Pushing such a tag runs
-validation and tests, verifies the tag matches `internal/DATABASE_VERSION`, and
-publishes a text-file ZIP with metadata and checksums. To build a package
-locally:
+This repository doesn't publish its own versioned releases. There's no
+independent audience downloading a ZIP of this data — the actual destination
+for an accepted change is SWAT+ Editor's own `swatplus_datasets.sqlite`, and
+that's a periodic, maintainer-driven step rather than a per-PR or scheduled
+one:
 
-```bash
-python internal/scripts/build_release_package.py --repo-root .
-```
+1. Community PRs accumulate here — reviewed, validated, logged — same as
+   always. Nothing further happens automatically after merge.
+2. When a maintainer decides enough has accumulated to be worth syncing, they
+   run `internal/scripts/patch_editor_dataset.py` against a local
+   `swatplus-editor` checkout. It takes the editor's **current**
+   `swatplus_datasets.sqlite`, replaces only the ~24 tables this repository
+   maintains text for, and leaves every other table (soils, weather
+   generator, project config, and two tables with known editor-side reader
+   bugs — see `internal/docs/editor_integration_findings.md`) completely
+   untouched. Verified to round-trip byte-for-byte on the tables it touches,
+   and to leave everything else byte-for-byte identical.
+3. The maintainer opens a pull request on `swat-model/swatplus-editor` with
+   the resulting file. The editor team reviews and merges it like any other
+   PR to their repo. It ships in their next release.
+
+That patched `.sqlite` — not a ZIP of this repository — is the actual
+deliverable. See `internal/CONTRIBUTOR_GUIDE.md` for how to run the sync.
 
 ## Not built here
 
-* **No SQLite database** is built or committed in this repository — the source
-  of record for the official data is SWAT+ Editor's `swatplus_datasets.sqlite`;
+* **No SQLite database is committed in this repository** — the source of
+  record for the official data is SWAT+ Editor's `swatplus_datasets.sqlite`;
   this repository holds the human-readable, version-controlled text files
-  regenerated from it.
-* **No changes are made to SWAT+ or SWAT+ Editor** as part of this workflow.
+  regenerated from it (and, periodically, patched back into a copy of it —
+  see above).
+* **No changes are made to SWAT+ or SWAT+ Editor source code** as part of
+  this repository's own automation. Submitting a patched dataset upstream is
+  a deliberate, manual, maintainer-driven pull request, not something any
+  automation here triggers on its own.

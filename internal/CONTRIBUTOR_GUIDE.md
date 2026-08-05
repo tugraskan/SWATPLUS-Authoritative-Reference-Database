@@ -186,3 +186,55 @@ Reviewers confirm: a source was provided, the auto-generated change-log row
 matches the actual data change, no duplicate record names were introduced,
 filenames follow the rules in `CONTRIBUTING.md`, and no unrelated SWAT+ or
 SWAT+ Editor changes are bundled in.
+
+## Syncing accepted changes to SWAT+ Editor
+
+This repository does not publish its own versioned releases -- there's no
+audience downloading a ZIP of this data. The real destination for an
+accepted change is SWAT+ Editor's own `swatplus_datasets.sqlite`, and getting
+it there is a periodic, maintainer-run step, not something any automation
+here triggers.
+
+When it's time to sync (no fixed cadence -- whenever enough has accumulated
+to be worth a PR to the editor team):
+
+1. Get a local checkout of `swat-model/swatplus-editor` and its current
+   `release/build/swatplus_datasets.sqlite`.
+2. Run:
+
+   ```bash
+   python internal/scripts/patch_editor_dataset.py \
+       --editor-repo /path/to/swatplus-editor \
+       --editor-sqlite /path/to/swatplus-editor/release/build/swatplus_datasets.sqlite \
+       --output /path/to/patched_swatplus_datasets.sqlite \
+       --repo-root .
+   ```
+
+   This copies the editor's current dataset and replaces only the tables
+   this repository maintains text for (`plants.plt`, `fertilizer.frt`,
+   decision tables, and so on -- see `EXCLUDED_TABLES` and `build_jobs()` in
+   the script for the exact list). Every other table -- soils, weather
+   generator, project config, and the two tables the script deliberately
+   skips (see below) -- is left byte-for-byte untouched. The script prints a
+   before/after row count for every table it touches; review that output
+   before doing anything with the result.
+3. Open a pull request on `swat-model/swatplus-editor` replacing
+   `release/build/swatplus_datasets.sqlite` with the patched file. Since a
+   binary can't be reviewed line-by-line, describe in the PR body which of
+   *this* repository's merged PRs/records are included (the entries in
+   `internal/metadata/database_changes.csv` since the last sync are the
+   list).
+4. The editor team reviews and merges it like any other change to their
+   repo. It ships in their next release.
+
+**Two tables are deliberately never patched:** `septic_sep` and
+`cal_parms_cal`. Both have real bugs in `swatplus-editor`'s own reader code
+(`Septic_sep.read()` expects a column that doesn't exist in the real schema;
+`Cal_parms_cal.read()` force-lowercases names, which would rename three real
+mixed-case parameters) -- see `internal/docs/editor_integration_findings.md`
+for the evidence. These are bugs in the editor, not something to route around
+here; once fixed upstream, remove them from `EXCLUDED_TABLES` in the script.
+
+This tool requires a local `swatplus-editor` checkout to import its peewee
+models and file readers, so it is not wired into this repository's CI --
+CI has no editor checkout to run it against.
