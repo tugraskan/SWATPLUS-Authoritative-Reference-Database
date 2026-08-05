@@ -1,17 +1,14 @@
 name: sync-change-log
 
-# Contributors fill in the PR template (.github/pull_request_template.md);
-# they never hand-edit metadata/database_changes.csv. This workflow parses the
-# PR description on every open/edit/push and:
-#   - fails the check if a required template field is missing or incomplete
-#     (this is what makes the template "required"), and
-#   - otherwise commits the matching change-log row back onto the PR branch,
-#     so the CSV is always in sync with the description by the time of review.
+# Contributors don't say which file or record they changed, and don't fill
+# in metadata/database_changes.csv by hand -- this workflow figures both out
+# by diffing database_files/ against the PR's base commit (same approach
+# scripts/validate_change_log.py's coverage check already uses) and writes
+# the row(s) itself. The PR template's Reason/Source are the only human
+# input, and both are optional: a PR with neither still gets a row.
 #
-# Either way, it also posts (or updates in place) a plain-English PR comment
-# with the same result -- a failing Actions log is not something most
-# contributors will ever go looking for, so the comment is the feedback that
-# actually reaches them.
+# It also posts (or updates in place) a PR comment summarizing what was
+# detected, so that's visible without digging into the Actions log.
 #
 # The PR body is untrusted user input: it is passed to the parser only via an
 # `env:` variable, never interpolated into a shell `run:` string, so it can
@@ -33,24 +30,27 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0  # need base history to diff database_files/ against
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      # Fails here (before any commit) if a required field is missing, blank,
-      # or the Change type box isn't checked exactly once -- see the script's
-      # docstring for the full field list. Output is captured so the comment
-      # step below can relay it verbatim; it is nothing but static field-name
-      # strings, never the PR's own text, so it's safe to post as-is.
-      - name: Sync change log from PR description
+      # Diffs database_files/ against the PR's base commit to work out which
+      # file(s)/record(s) changed and whether each was added/modified/removed,
+      # then writes metadata/database_changes.csv itself. Output is captured
+      # so the comment step below can relay it; it never contains the PR's
+      # own free text, only file/record names and status words.
+      - name: Sync change log from PR diff
         id: sync
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           PR_BODY: ${{ github.event.pull_request.body }}
-        run: python scripts/sync_change_log_from_pr.py --repo-root . 2>&1 | tee sync_output.txt
+        run: |
+          python scripts/sync_change_log_from_pr.py --repo-root . \
+            --base-ref "${{ github.event.pull_request.base.sha }}" 2>&1 | tee sync_output.txt
 
       - name: Post result as a PR comment
         if: always()
@@ -64,8 +64,8 @@ jobs:
 
             const outcome = '${{ steps.sync.outcome }}';
             const body = outcome === 'success'
-              ? `${marker}\n✅ **Change log updated.** Everything required was filled in, so \`metadata/database_changes.csv\` has been updated automatically -- nothing else to do here.`
-              : `${marker}\n⚠️ **This pull request's description is missing some required information**, so I couldn't create its change-log entry yet:\n\n${output}\n\n**What to do:** click **Edit** on the description at the top of this pull request and fill in the missing section(s). This comment (and the failing check below) update automatically as soon as you save.`;
+              ? `${marker}\n🤖 **Change log:**\n\n${output}\n\nNothing else needed here -- \`metadata/database_changes.csv\` reflects this automatically. Reason/Source in the description above are optional extra context for reviewers.`
+              : `${marker}\n⚠️ Something went wrong generating the change-log entry for this PR:\n\n${output}\n\nThis is likely a bug in the automation, not something to fix in your PR -- a maintainer should take a look.`;
 
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
@@ -90,9 +90,8 @@ jobs:
             }
 
       # Only same-repo branches can be pushed back to with this workflow's
-      # token; a fork PR still gets the required-field check and comment
-      # above, it just needs a maintainer to run the script (or add the row)
-      # before merge.
+      # token; a fork PR still gets the diff-based detection and comment
+      # above, it just needs a maintainer to push the resulting row.
       - name: Commit updated change log
         if: steps.sync.outcome == 'success' && github.event.pull_request.head.repo.full_name == github.repository
         run: |

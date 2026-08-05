@@ -47,16 +47,16 @@ def test_invalid_change_type_detected(tmp_path):
     assert any("invalid change_type" in e for e in errs)
 
 
-def test_missing_reason_detected(tmp_path):
+def test_blank_reason_is_not_an_error(tmp_path):
+    """reason/source are optional: sync_change_log_from_pr.py generates rows
+    straight from a PR's file diff and often has neither."""
     _write(tmp_path, [_row(reason="")])
-    errs = vcl.validate(tmp_path)
-    assert any("reason is required" in e for e in errs)
+    assert vcl.validate(tmp_path) == []
 
 
-def test_missing_source_detected(tmp_path):
+def test_blank_source_is_not_an_error(tmp_path):
     _write(tmp_path, [_row(source="")])
-    errs = vcl.validate(tmp_path)
-    assert any("source is required" in e for e in errs)
+    assert vcl.validate(tmp_path) == []
 
 
 def test_real_repo_change_log_structural_ok(repo_root):

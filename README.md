@@ -141,19 +141,19 @@ status, which is `not_tested` in this phase.
 
 1. Create a branch.
 2. Edit the file under `database_files/`.
-3. Open a pull request and fill in every section of the template (file,
-   record, change type, reason, source).
+3. Open a pull request.
 
-That's it — the rest is automatic. A bot reads your filled-out PR description
-and commits the matching `metadata/database_changes.csv` row for you; if a
-required field is missing, the `sync-change-log` check fails and tells you
-which one. Opening the PR also runs file validation, schema-drift checking,
-per-record change-log coverage, and the full test suite (that's what the
-scripts under `scripts/` and the workflows in `.github/workflows/` are for). A
-reviewer must approve and every check must pass before merge.
+That's genuinely it. Nothing in the PR template is required — a bot figures
+out which file and record(s) you changed by diffing your branch against
+`main`, and writes the matching `metadata/database_changes.csv` row for you.
+If you know a reason or source for the change, the template has optional
+spots for them, but a PR with neither still goes through cleanly. Opening the
+PR also runs file validation, schema-drift checking, and the full test suite
+(that's what the scripts under `scripts/` and the workflows in
+`.github/workflows/` are for). A reviewer must approve before merge.
 `CHANGELOG.md` is a release-level summary a maintainer writes when cutting a
 release — it isn't part of the per-PR checklist. See `CONTRIBUTING.md` for the
-full rules, including how the PR template maps to the change log.
+full rules, including how the diff maps to the change log.
 
 ## Releases
 

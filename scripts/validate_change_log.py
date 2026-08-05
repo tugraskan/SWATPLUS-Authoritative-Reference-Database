@@ -4,8 +4,9 @@
 Two layers:
 
 * Structural (always): required columns present; no duplicate change_id;
-  change_type is one of added/modified/deprecated/removed; reason and source
-  are non-empty for added/modified rows.
+  change_type is one of added/modified/deprecated/removed. `reason` and
+  `source` are optional -- scripts/sync_change_log_from_pr.py generates rows
+  straight from a PR's file diff and doesn't require either.
 
 * Coverage (with --base-ref REF, as in CI): diff each changed name-keyed
   database file against REF and require a matching change-log entry for every
@@ -126,14 +127,6 @@ def validate(repo_root, base_ref=None, bootstrap_exception=False):
         if ct not in VALID_CHANGE_TYPES:
             errors.append(f"ERROR: database_changes.csv line {i}: invalid "
                           f"change_type '{r['change_type']}'")
-
-        if ct in ("added", "modified"):
-            if r["reason"].strip() == "":
-                errors.append(f"ERROR: database_changes.csv line {i} "
-                              f"({cid}): reason is required")
-            if r["source"].strip() == "":
-                errors.append(f"ERROR: database_changes.csv line {i} "
-                              f"({cid}): source is required")
 
         fn, rn = r["file_name"].strip(), r["record_name"].strip()
         if rn == "*":

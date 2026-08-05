@@ -8,61 +8,57 @@ every record stays traceable and validated.
 
 1. Create a branch off `main`.
 2. Modify the appropriate file under `database_files/`.
-3. Open a pull request using the template and fill in every section.
-4. A reviewer must approve; automated validation must pass before merge.
-
-You do **not** need to hand-edit `metadata/database_changes.csv`. The
-`sync-change-log` check reads your filled-out PR description and commits the
-matching row onto your branch for you — see "The PR template is the
-change-log" below. `CHANGELOG.md` is a release-level summary a maintainer
-writes when cutting a release, not something every PR updates.
+3. Open a pull request. Filling in the template is welcome but **entirely
+   optional** — nothing you type is required.
+4. A reviewer must approve before merge.
 
 Branch protection on `main` is recommended (require PR review + passing
-`validate-database` and `sync-change-log` checks). Do **not** commit directly
-to `main`.
+`validate-database` checks). Do **not** commit directly to `main`.
 
 Ordinary database-row changes do **not** require a SWAT+ Editor code change or an
 Editor pull request.
 
-## Technical or scientific source is required
+## A source is welcome, but not required
 
-Every added or modified record must cite a real source: a publication, dataset,
-official documentation, a GitHub issue, or a named subject-matter expert. "It
-looked right" is not a source. Do not invent scientific values.
+If you have one, cite it in the PR template's `Source` section: a publication,
+dataset, official documentation, a GitHub issue, or a named subject-matter
+expert. It's optional, but it helps whoever reviews your change, and future
+readers of `metadata/database_changes.csv` trying to understand why a value
+is what it is.
 
-## The PR template is the change-log
+## The change log is generated from your diff, not typed by anyone
 
-Fill in every section of the PR template — `Database file`, `Record`,
-`Change type`, `Reason`, `Source`, and (if known) the version notes. The
-`sync-change-log` workflow parses your description and writes the matching row
-into `metadata/database_changes.csv` for you, then commits it onto your PR
-branch. If a required field is missing, blank, or `Change type` doesn't have
-exactly one box checked, that check fails and tells you which field to fix;
-editing the PR description re-runs it.
+You never touch `metadata/database_changes.csv`, and nothing in the PR
+template is required. The `sync-change-log` workflow figures out **which
+file and which record(s)** you changed — and whether each was added,
+modified, or removed — by diffing `database_files/` against the pull
+request's base commit, the same way `scripts/validate_change_log.py`'s
+coverage check already does. It then writes the matching row(s) itself and
+commits them onto your PR branch. `Reason` and `Source` in the template are
+the only things a human could add, and both are optional; a PR with neither
+still gets a properly filled-in row, just with those two columns blank.
 
 A few things worth knowing about how the row is built:
 
-* **`Record`** accepts a single stable name, a comma-separated list (one row
-  is created per name), or `*` for a file-wide change.
-* **`change_id`** is derived from the PR number (`pr-<number>`, or
-  `pr-<number>-<n>` when multiple records are listed) — you never choose one.
-* Editing the PR description **updates that PR's row in place** rather than
-  adding a duplicate; a row's `date` and `review_status` are preserved across
-  edits.
-* **`review_status`** starts `pending` and reflects that the row was
-  auto-generated, not yet human-reviewed; the merged, approved PR is itself
-  the approval record.
+* One row is created per changed record. A PR that adds one plant gets one
+  row; a PR that edits three records in the same file gets three.
+* Decision-table and other non-name-keyed files get a single file-wide row
+  (`record_name: *`) rather than a per-record diff, since those files don't
+  have a cheap way to isolate one changed entry.
+* **`change_id`** is derived from the PR number and the file/record
+  (`pr-<number>-<file>-<record>`) — you never choose one.
+* Editing the PR (pushing more commits, changing the description) **updates
+  that PR's row(s) in place** rather than duplicating them; a row's `date`
+  and `review_status` are preserved across re-runs.
+* **`review_status`** starts `pending`, reflecting that the row was
+  auto-generated and not yet human-reviewed; the merged, approved PR is
+  itself the approval record.
 * **`swatplus_version` / `editor_version`** default to `not_tested` if left
-  blank. Do not claim tested compatibility that hasn't happened.
+  blank in the template. Do not claim tested compatibility that hasn't
+  happened.
 * **Fork pull requests**: the workflow can't push a commit onto a branch it
-  doesn't own, so the required-field check still runs, but a maintainer will
-  need to add the row (or push it on your behalf) before merge.
-
-Every new or modified authoritative record still needs a corresponding entry —
-that coverage is checked by `scripts/validate_change_log.py` against the pull
-request's merge base, independently of how the row was created. (A
-`metadata/bootstrap_exception` marker file, if present, skips that per-record
-coverage — used only for a wholesale dataset import, not ordinary edits.)
+  doesn't own, so a maintainer will need to push the generated row (or add it
+  by hand) before merge.
 
 `metadata/database_changes.csv` columns, for reference:
 
@@ -72,9 +68,8 @@ swatplus_version,editor_version,review_status,notes
 ```
 
 `change_type` is one of `added`, `modified`, `deprecated`, `removed`;
-`change_id` must be unique; `reason` and `source` are required for `added` /
-`modified` — all enforced whether the row came from the template or was
-edited by hand.
+`change_id` must be unique. `reason` and `source` may be blank — there is no
+required field anywhere in this pipeline.
 
 ## Stable row keys
 
@@ -122,12 +117,18 @@ almost always one of two things:
 2. **An upstream SWAT+ release changed the format** (added, removed, or renamed
    a column, or changed a column's type). In that case:
    * update the file's `FILE_SCHEMAS` entry to the new layout;
-   * fill in the PR template as a file-wide `modified` change (`Record: *`),
-     with `Source`/`Reason` naming which SWAT+ release changed it, so the
+   * name, in the PR description, which SWAT+ release changed it, so the
      schema change can be traced to a version;
    * do not silently widen a schema to make an error go away — a column count
      that drifts without explanation is exactly the failure this check exists
      to surface.
+
+   Note: if the header line changes but no record's actual *values* change,
+   `sync-change-log` won't generate a row — its diff only compares data, not
+   header text, since a header rename by itself is a schema/config change, not
+   a data change. Add a row to `metadata/database_changes.csv` by hand if you
+   want the schema change itself recorded (see the note on hand-added rows
+   below).
 
 ## Adopting a new SWAT+ release (the schema cadence)
 
@@ -152,15 +153,15 @@ When a new SWAT+ version is approved:
    **moved** fields: a reordered read assigns existing values to different
    variables, so data that still parses can silently become wrong.
 4. Update `FILE_SCHEMAS` for each changed file and update the affected data
-   files. The PR template covers one file per pull request (`Record: *` for a
-   file-wide format change) — a release that changes several files' formats at
-   once means either one pull request per file, or a maintainer adding the
-   extra rows to `metadata/database_changes.csv` by hand. If you add rows by
-   hand for a PR the sync workflow is also managing, give them a `change_id`
-   that does **not** start with `pr-<that PR's number>` (e.g. `sft-migration-
-   62-soils`, not `pr-50-soils`) — the workflow deletes and regenerates every
-   row whose `change_id` starts with `pr-<number>` on each sync, and cannot
-   tell your hand-added row from its own.
+   files. If the migration only renames/reorders headers without changing any
+   record's actual values, `sync-change-log` has nothing to detect (see the
+   note above) — add a row to `metadata/database_changes.csv` by hand to
+   record the schema change itself. If you add rows by hand for a PR the sync
+   workflow is also managing, give them a `change_id` that does **not** start
+   with `pr-<that PR's number>` (e.g. `sft-migration-62-soils`, not
+   `pr-50-soils`) — the workflow deletes and regenerates every row whose
+   `change_id` starts with `pr-<number>` on each sync, and cannot tell your
+   hand-added row from its own.
 5. Run `python scripts/schema_sync.py --repo-root .` until it is clean.
 
 ### Why our column counts differ from the artifact
