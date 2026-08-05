@@ -29,13 +29,20 @@ def test_missing_version_is_null_not_guessed():
 
 def test_real_bootstrap_provenance_present(repo_root):
     prov = json.loads((repo_root / "metadata" / "bootstrap_sources.json").read_text())
-    assert prov["bootstrap_swatplus_commit"].startswith("cb442f7")
-    # tillage.til came from Ames and legitimately has no version header -> null
+    # The core files are regenerated from the official SWAT+ Editor reference
+    # dataset (swatplus_datasets.sqlite), not the earlier Ames/OSU inputs.
+    assert prov["source_type"] == "swatplus_editor_official_reference_dataset"
+    assert prov["source_dataset_version"] == "4.0.0"
+    assert prov["source_swatplus_revision"] == "62"
     by = {f["file_name"]: f for f in prov["files"]}
-    assert by["tillage.til"]["source_editor_version"] is None
-    # snow.sno (Ames) carries a version header
-    assert by["snow.sno"]["source_editor_version"] == "2.3.3"
-    assert by["snow.sno"]["source_swatplus_revision"] == "60.5.7"
+    # every regenerated file records the sqlite table it was serialized from
+    assert by["plants.plt"]["source_table"] == "plants_plt"
+    assert by["pesticide.pes"]["source_table"] == "pesticide_pst"
+    # decision-table files all come from the shared d_table_dtl table
+    assert by["lum.dtl"]["source_table"] == "d_table_dtl"
+    # each file carries a content checksum and a record count
+    assert all(len(f["content_sha256"]) == 64 for f in prov["files"])
+    assert by["plants.plt"]["record_count"] == 266
 
 
 def test_compatibility_matrix_defaults_not_tested(repo_root):
@@ -52,7 +59,8 @@ def test_external_provenance_separate_from_bootstrap(repo_root):
     ext = json.loads((repo_root / "metadata" / "external_sources.json").read_text())
     boot_names = {f["file_name"] for f in boot["files"]}
     ext_names = {f["file_name"] for f in ext["files"]}
-    # the five external files must NOT appear in bootstrap provenance
-    assert ext_names == {"pathogens.pth", "metals.mtl", "salt.slt",
-                         "flo_con.dtl", "scen_lu.dtl"}
+    # the supplemental files (not carried by the official SWAT+ Editor dataset)
+    # must NOT appear in the official-dataset provenance
+    assert ext_names == {"manure_db.frt", "manure_om.frt", "transplant.plt",
+                         "puddle.ops", "pathogens.pth", "metals.mtl", "salt.slt"}
     assert boot_names.isdisjoint(ext_names)

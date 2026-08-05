@@ -1,5 +1,14 @@
 # SWAT+ Source Inventory
 
+> **Historical (superseded).** This inventory documents the *initial*
+> `Ames_sub1` / `Osu_1hru` bootstrap. As of release `2026.2.0` the core files
+> are regenerated from the official SWAT+ Editor reference dataset
+> (`swatplus_datasets.sqlite`); see `docs/bootstrap_report.md`. The direct-read
+> discovery below still stands — those four files remain supplemental because
+> the editor dataset does not manage them. The "missing from both sources"
+> list is also superseded: `flo_con.dtl` and `scen_lu.dtl` are present in the
+> official dataset and are now sourced from it.
+
 Source: `swat-model/swatplus` @ `cb442f7c05fc3bfc34349c446010f452d2737ca0`  
 Priority: Ames_sub1 -> Osu_1hru
 

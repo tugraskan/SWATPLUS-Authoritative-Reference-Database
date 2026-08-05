@@ -1,12 +1,16 @@
 # SWAT+ Editor Integration Findings (read-only)
 
-> This repository setup phase does not modify SWAT+ Editor. Editor integration,
-> SQLite generation, project database copying, and TxtInOut export are deferred
-> to a future implementation.
+> **Update (2026.2.0):** the authoritative core files are now regenerated
+> **from** the official SWAT+ Editor reference dataset
+> (`swatplus_datasets.sqlite`, v4.0.0, SWAT+ rev. 62), serialized with the
+> editor's own `fileio` writers. This is still a **read-only** use of SWAT+
+> Editor: no Editor code was changed and no Editor pull request was opened. The
+> earlier notes below (gathered while setting up this repository) remain
+> accurate observations of `swat-model/swatplus-editor`.
 
 The notes below summarize **read-only** observations of
-`swat-model/swatplus-editor` gathered while setting up this repository. Nothing
-in the Editor was changed, and no Editor pull request was opened.
+`swat-model/swatplus-editor`. Nothing in the Editor was changed, and no Editor
+pull request was opened.
 
 ## Canonical pesticide filename: `pesticide.pes` (resolved)
 

@@ -7,7 +7,52 @@ summarizes releases and significant events.
 The format follows a lightweight version of Keep a Changelog. Database releases
 are versioned `YEAR.MAJOR.MINOR` and tagged `database-v<version>`.
 
-## [Unreleased]
+## [2026.2.0] — Re-bootstrap from the official SWAT+ Editor dataset
+
+The authoritative core files are now regenerated from the **official SWAT+
+Editor reference dataset** (`swatplus_datasets.sqlite`, **v4.0.0**, **SWAT+
+rev. 62**) instead of the initial `Ames_sub1` / `Osu_1hru` import.
+
+### Changed — the re-bootstrap
+
+* **Source of record changed from Ames/OSU model inputs to the official SWAT+
+  Editor dataset.** The initial import drew from `refdata/Ames_sub1` /
+  `refdata/Osu_1hru`, which are *model-specific watershed inputs* — customized,
+  trimmed, or augmented copies — not the official shared reference dataset. They
+  diverged materially from what SWAT+ Editor distributes (e.g. official
+  `plants.plt` has 266 records vs the Ames file's 126; `urban.urb` 18 vs 9). All
+  26 core files were regenerated verbatim from tables in
+  `release/build/swatplus_datasets.sqlite` using SWAT+ Editor's own `fileio`
+  writers, so each file now matches, byte for byte, what the editor copies into
+  a project. Per-file source table, record count, and checksum are recorded in
+  `metadata/bootstrap_sources.json`; a `*` row per file is in
+  `metadata/database_changes.csv`.
+* **`flo_con.dtl` and `scen_lu.dtl` graduated from external to official.** Both
+  exist as decision tables in the official dataset and are now sourced from it.
+* **Seven files reclassified as supplemental** (`metadata/external_sources.json`):
+  `manure_db.frt`, `manure_om.frt`, `transplant.plt`, `puddle.ops` (direct-read
+  databases the editor dataset does not manage), plus `metals.mtl`, `salt.slt`,
+  and `pathogens.pth` (the editor's `pathogens` table ships empty). These are
+  real SWAT+ files with no source in the official dataset; they are retained
+  unchanged so no data is lost.
+* **New schema-drift waiver: `plants.plt` carbon-module tail.** The official
+  dataset writes `plants.plt` ending at `rsd_covfac` + `description`; SWAT+ 62
+  reads four further conditional carbon-module fields
+  (`meta_frac`/`str_frac`/`lig_frac`/`pl_class`). Waived (tracked) because this
+  is the editor's own on-disk format; it resolves when the editor dataset emits
+  those columns. See `metadata/schema_drift_waivers.json`.
+* **`pesticide.pes` `pl_uptake`** is now the editor's uniform `0.01` migration
+  default (the official dataset's value), tracked as a review note pending
+  curated per-pesticide values.
+
+> **Superseded:** the interim per-file corrections listed under "Fixed" below
+> were made against the earlier Ames/OSU files. Those files have been replaced
+> by regeneration from the official dataset, so the corrections no longer apply
+> as edits — the official dataset supplies these files directly. Where the
+> official decision tables (`flo_con.dtl`, `scen_lu.dtl`) still use the keywords
+> those corrections targeted (`flow_control`, `ch_change`, `ceap_svi`), they are
+> retained as-shipped and recorded as review notes for upstream confirmation
+> rather than re-edited locally. The tooling changes below remain in force.
 
 ### Added
 

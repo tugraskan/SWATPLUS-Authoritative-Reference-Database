@@ -23,14 +23,15 @@ release changes a file's format.
 Nothing in this module contacts the network or the SWAT+ checkout; it is pure
 data so that both the scripts and the tests can import it cheaply.
 
-Note: the one-time bootstrap/inventory/external-import scripts (and the
-constants that only they consumed -- the pinned-commit/source-priority
-constants, the direct-read filename list, and the external-file provenance
-table) have been retired now that the initial import is complete and merged.
-That history -- the pinned commit, which direct-read databases were
-discovered, and every external file's origin -- is preserved permanently in
-``metadata/bootstrap_sources.json``, ``metadata/external_sources.json``, and
-git history; it doesn't need to be duplicated here as unused code.
+Note: the authoritative reference files are regenerated from the official
+SWAT+ Editor reference dataset (``swatplus_datasets.sqlite``) using the
+editor's own file writers, so they match, byte for byte, what SWAT+ Editor
+ships into every project. Seven files that the official dataset does not
+carry -- the manure databases, metals, salt, transplant, puddle, and the
+pathogens example set -- are retained as supplemental and tracked in
+``metadata/external_sources.json``. The per-file source table, dataset
+version, and checksums live in ``metadata/bootstrap_sources.json`` and
+``metadata/external_sources.json``; they are not duplicated here.
 """
 
 from __future__ import annotations
@@ -59,95 +60,97 @@ NAME_KEYED_FORMATS = {FMT_FLAT, FMT_COUNT}
 #   record_key       stable identity column ("name", "table_name", or None)
 #   fmt              format class (see above)
 #   direct_read      True -> hard-coded filename in SWAT+ source
-#   origin           "bootstrap" (imported from Ames/OSU) or "external"
-#                    (supplied outside the approved sources) -- informational
-#                    only; the authoritative record of each file's provenance
-#                    is metadata/bootstrap_sources.json or
+#   origin           "official" (regenerated from the SWAT+ Editor official
+#                    reference dataset, swatplus_datasets.sqlite) or
+#                    "supplemental" (a real SWAT+ file the official dataset
+#                    does not carry, retained from the earlier import) --
+#                    informational only; the authoritative record of each
+#                    file's provenance is metadata/bootstrap_sources.json or
 #                    metadata/external_sources.json, not this field.
 
 EXPECTED_FILES = [
     # -- calibration --
     dict(name="cal_parms.cal", category="calibration", required=True,
-         record_key="name", fmt=FMT_COUNT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_COUNT, direct_read=False, origin="official"),
 
     # -- HRU parameter databases --
     dict(name="plants.plt", category="hru_parameter_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="fertilizer.frt", category="hru_parameter_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="tillage.til", category="hru_parameter_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="pesticide.pes", category="hru_parameter_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="pathogens.pth", category="hru_parameter_database", required=False,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="external"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="supplemental"),
     dict(name="metals.mtl", category="hru_parameter_database", required=False,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="external"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="supplemental"),
     dict(name="salt.slt", category="hru_parameter_database", required=False,
-         record_key=None, fmt=FMT_CONSTANTS, direct_read=False, origin="external"),
+         record_key=None, fmt=FMT_CONSTANTS, direct_read=False, origin="supplemental"),
     dict(name="urban.urb", category="hru_parameter_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="septic.sep", category="hru_parameter_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="snow.sno", category="hru_parameter_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     # transplant.plt is a plant database read directly by SWAT+ (hard-coded).
     dict(name="transplant.plt", category="hru_parameter_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=True, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=True, origin="supplemental"),
 
     # -- manure databases (direct-read) --
     dict(name="manure_db.frt", category="manure_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=True, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=True, origin="supplemental"),
     dict(name="manure_om.frt", category="manure_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=True, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=True, origin="supplemental"),
 
     # -- operation databases --
     dict(name="harv.ops", category="operation_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="graze.ops", category="operation_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="irr.ops", category="operation_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="chem_app.ops", category="operation_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="fire.ops", category="operation_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="sweep.ops", category="operation_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     # puddle.ops is read directly by SWAT+ (hard-coded); OSU only.
     dict(name="puddle.ops", category="operation_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=True, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=True, origin="supplemental"),
 
     # -- decision tables --
     dict(name="lum.dtl", category="decision_table", required=True,
-         record_key="table_name", fmt=FMT_DECISION, direct_read=False, origin="bootstrap"),
+         record_key="table_name", fmt=FMT_DECISION, direct_read=False, origin="official"),
     dict(name="res_rel.dtl", category="decision_table", required=True,
-         record_key="table_name", fmt=FMT_DECISION, direct_read=False, origin="bootstrap"),
-    dict(name="scen_lu.dtl", category="decision_table", required=False,
+         record_key="table_name", fmt=FMT_DECISION, direct_read=False, origin="official"),
+    dict(name="scen_lu.dtl", category="decision_table", required=True,
          record_key="table_name", fmt=FMT_DECISION, direct_read=False,
-         origin="external"),
-    dict(name="flo_con.dtl", category="decision_table", required=False,
-         record_key="table_name", fmt=FMT_DECISION, direct_read=False, origin="external"),
+         origin="official"),
+    dict(name="flo_con.dtl", category="decision_table", required=True,
+         record_key="table_name", fmt=FMT_DECISION, direct_read=False, origin="official"),
 
     # -- structural databases --
     dict(name="tiledrain.str", category="structural_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="septic.str", category="structural_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="filterstrip.str", category="structural_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="grassedww.str", category="structural_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="bmpuser.str", category="structural_database", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
 
     # -- additional shared reference tables --
     dict(name="cntable.lum", category="lum_reference", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="cons_practice.lum", category="lum_reference", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
     dict(name="ovn_table.lum", category="lum_reference", required=True,
-         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="bootstrap"),
+         record_key="name", fmt=FMT_FLAT, direct_read=False, origin="official"),
 ]
 
 #: Convenience lookup by file name.
@@ -219,14 +222,15 @@ FILE_SCHEMAS = {
 
     # ---- derived from the committed header rows (see CONTRIBUTING) ----
     "plants.plt": dict(
-        # Last column is 'pl_class' (not a free-text description): a small
-        # category vocabulary in SWAT+ 62 ("row crop, tree, grass, etc." --
-        # plant_data_module.f90), read into a SEPARATE array appended to the
-        # same read statement (plant_parm_read.f90:57), and only when
-        # bsn_cc%nam1 /= 0 (default 0, documented "not used" in
-        # basin_module.f90). Our committed values are per-plant descriptive
-        # names (126 distinct values), not the small category set -- see
-        # metadata/schema_drift_waivers.json.
+        # The official SWAT+ Editor dataset (swatplus_datasets.sqlite v4.0.0)
+        # writes plants.plt with 52 numeric parameters ending at 'rsd_covfac'
+        # followed by a free-text 'description'. SWAT+ 62's read statement
+        # continues past rsd_covfac to four carbon-module fields --
+        # meta_frac, str_frac, lig_frac (all real) and pl_class -- which the
+        # official dataset does not emit. Those trailing fields are read
+        # conditionally (the carbon module / bsn_cc%nam1 path) and default
+        # otherwise, so the official file runs on the default/mainline path;
+        # the arity gap is recorded in metadata/schema_drift_waivers.json.
         columns=['name', 'plnt_typ', 'gro_trig', 'nfix_co',
                  'days_mat', 'bm_e', 'harv_idx', 'lai_pot',
                  'frac_hu1', 'lai_max1', 'frac_hu2', 'lai_max2',
@@ -242,12 +246,8 @@ FILE_SCHEMAS = {
                  'rt_st_beg', 'rt_st_end', 'plnt_pop1', 'frac_lai1',
                  'plnt_pop2', 'frac_lai2', 'frac_sw_gro',
                  'aeration', 'rsd_pctcov', 'rsd_covfac',
-                 'avg_lig_frac', 'ab_lig_frac', 'bg_lig_frac',
-                 'pl_class'],
-        numeric=[3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-                 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-                 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
-                 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55],
+                 'description'],
+        numeric=list(range(3, 53)),
         text_tail=True,
     ),
     "fertilizer.frt": dict(
@@ -288,9 +288,10 @@ FILE_SCHEMAS = {
         numeric=[1, 2, 3, 4, 5],
     ),
     "harv.ops": dict(
-        columns=['NAME', 'HARV_TYP', 'HARV_IDX', 'HARV_EFF',
-                 'HARV_BM_MIN'],
+        columns=['name', 'harv_typ', 'harv_idx', 'harv_eff',
+                 'harv_bm_min', 'description'],
         numeric=[2, 3, 4],
+        text_tail=True,
     ),
     "graze.ops": dict(
         columns=['name', 'fert', 'bm_eat', 'bm_tramp', 'man_amt',

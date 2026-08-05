@@ -32,11 +32,12 @@ def test_unavailable_entry_has_no_file(repo_root):
             assert not (repo_root / "database_files" / f["name"]).exists()
 
 
-def test_bootstrap_commit_pinned(repo_root):
+def test_official_dataset_source_recorded(repo_root):
     m = _manifest(repo_root)
-    assert m["bootstrap_swatplus_commit"] == \
-        "cb442f7c05fc3bfc34349c446010f452d2737ca0"
-    assert m["bootstrap_source_priority"] == ["Ames_sub1", "Osu_1hru"]
+    assert m["source_type"] == "swatplus_editor_official_reference_dataset"
+    assert m["source_repository"] == "swat-model/swatplus-editor"
+    assert m["source_dataset_version"] == "4.0.0"
+    assert m["source_swatplus_revision"] == "62"
 
 
 def test_no_sqlite_committed(repo_root):

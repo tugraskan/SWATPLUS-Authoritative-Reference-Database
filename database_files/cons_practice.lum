@@ -1,4 +1,4 @@
-cons_practice.lum: written by SWAT+ editor v2.3.3 on 2023-10-25 08:58 for SWAT+ rev.60.5.7
+cons_practice.lum: written by SWAT+ editor v4.0.0 on 2026-06-16 12:00 for SWAT+ rev.62
 name                    usle_p   slp_len_max  description
 up_down_slope          1.00000     121.00000  Up_and_down_slope
 cross_slope            0.75000     121.00000  Cross_slope_tillage

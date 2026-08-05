@@ -1,13 +1,12 @@
 {
-  "database_version": "2026.1.0",
+  "database_version": "2026.2.0",
   "repository": "tugraskan/SWATPLUS-Authoritative-Reference-Database",
   "manifest_schema_version": 1,
-  "bootstrap_swatplus_repository": "swat-model/swatplus",
-  "bootstrap_swatplus_commit": "cb442f7c05fc3bfc34349c446010f452d2737ca0",
-  "bootstrap_source_priority": [
-    "Ames_sub1",
-    "Osu_1hru"
-  ],
+  "source_type": "swatplus_editor_official_reference_dataset",
+  "source_repository": "swat-model/swatplus-editor",
+  "source_dataset_file": "release/build/swatplus_datasets.sqlite",
+  "source_dataset_version": "4.0.0",
+  "source_swatplus_revision": "62",
   "compatibility_matrix": "metadata/compatibility_matrix.csv",
   "files": [
     {
@@ -20,7 +19,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "cal_parms.cal",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "plants.plt",
@@ -32,7 +31,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "plants.plt",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "fertilizer.frt",
@@ -44,7 +43,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "fertilizer.frt",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "tillage.til",
@@ -56,19 +55,19 @@
       "direct_read": false,
       "bootstrap_provenance_key": "tillage.til",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "pesticide.pes",
       "category": "hru_parameter_database",
-      "status": "needs_review",
+      "status": "available",
       "required": true,
       "canonical_record_key": "name",
       "source_format": "SWAT+ text database",
       "direct_read": false,
       "bootstrap_provenance_key": "pesticide.pes",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json. pl_uptake column added to match SWAT+ 62 (predates this file); every value is a 0.0 placeholder pending SWAT+-team-approved per-pesticide values -- see metadata/schema_drift_waivers.json."
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "pathogens.pth",
@@ -80,7 +79,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": null,
       "external_provenance_key": "pathogens.pth",
-      "notes": "Supplied from outside the approved Ames/OSU sources; see external_sources.json [example/seed values pending curation]"
+      "notes": "Supplemental file not carried by the official SWAT+ Editor dataset; retained from the earlier import. See external_sources.json."
     },
     {
       "name": "metals.mtl",
@@ -92,7 +91,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": null,
       "external_provenance_key": "metals.mtl",
-      "notes": "Supplied from outside the approved Ames/OSU sources; see external_sources.json [example/seed values pending curation]"
+      "notes": "Supplemental file not carried by the official SWAT+ Editor dataset; retained from the earlier import. See external_sources.json."
     },
     {
       "name": "salt.slt",
@@ -104,7 +103,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": null,
       "external_provenance_key": "salt.slt",
-      "notes": "Supplied from outside the approved Ames/OSU sources; see external_sources.json"
+      "notes": "Supplemental file not carried by the official SWAT+ Editor dataset; retained from the earlier import. See external_sources.json."
     },
     {
       "name": "urban.urb",
@@ -116,7 +115,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "urban.urb",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "septic.sep",
@@ -128,7 +127,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "septic.sep",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "snow.sno",
@@ -140,7 +139,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "snow.sno",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "transplant.plt",
@@ -150,9 +149,9 @@
       "canonical_record_key": "name",
       "source_format": "SWAT+ text database",
       "direct_read": true,
-      "bootstrap_provenance_key": "transplant.plt",
-      "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json (direct-read database: hard-coded filename in SWAT+ source)"
+      "bootstrap_provenance_key": null,
+      "external_provenance_key": "transplant.plt",
+      "notes": "Supplemental file not carried by the official SWAT+ Editor dataset; retained from the earlier import. See external_sources.json."
     },
     {
       "name": "manure_db.frt",
@@ -162,9 +161,9 @@
       "canonical_record_key": "name",
       "source_format": "SWAT+ text database",
       "direct_read": true,
-      "bootstrap_provenance_key": "manure_db.frt",
-      "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json (direct-read database: hard-coded filename in SWAT+ source)"
+      "bootstrap_provenance_key": null,
+      "external_provenance_key": "manure_db.frt",
+      "notes": "Supplemental file not carried by the official SWAT+ Editor dataset; retained from the earlier import. See external_sources.json."
     },
     {
       "name": "manure_om.frt",
@@ -174,9 +173,9 @@
       "canonical_record_key": "name",
       "source_format": "SWAT+ text database",
       "direct_read": true,
-      "bootstrap_provenance_key": "manure_om.frt",
-      "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json (direct-read database: hard-coded filename in SWAT+ source)"
+      "bootstrap_provenance_key": null,
+      "external_provenance_key": "manure_om.frt",
+      "notes": "Supplemental file not carried by the official SWAT+ Editor dataset; retained from the earlier import. See external_sources.json."
     },
     {
       "name": "harv.ops",
@@ -188,7 +187,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "harv.ops",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "graze.ops",
@@ -200,7 +199,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "graze.ops",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "irr.ops",
@@ -212,7 +211,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "irr.ops",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "chem_app.ops",
@@ -224,7 +223,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "chem_app.ops",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "fire.ops",
@@ -236,7 +235,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "fire.ops",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "sweep.ops",
@@ -248,7 +247,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "sweep.ops",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "puddle.ops",
@@ -258,9 +257,9 @@
       "canonical_record_key": "name",
       "source_format": "SWAT+ text database",
       "direct_read": true,
-      "bootstrap_provenance_key": "puddle.ops",
-      "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json (direct-read database: hard-coded filename in SWAT+ source)"
+      "bootstrap_provenance_key": null,
+      "external_provenance_key": "puddle.ops",
+      "notes": "Supplemental file not carried by the official SWAT+ Editor dataset; retained from the earlier import. See external_sources.json."
     },
     {
       "name": "lum.dtl",
@@ -272,7 +271,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "lum.dtl",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "res_rel.dtl",
@@ -284,31 +283,31 @@
       "direct_read": false,
       "bootstrap_provenance_key": "res_rel.dtl",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "scen_lu.dtl",
       "category": "decision_table",
       "status": "available",
-      "required": false,
+      "required": true,
       "canonical_record_key": "table_name",
       "source_format": "SWAT+ text database",
       "direct_read": false,
-      "bootstrap_provenance_key": null,
-      "external_provenance_key": "scen_lu.dtl",
-      "notes": "Supplied from outside the approved Ames/OSU sources; see external_sources.json"
+      "bootstrap_provenance_key": "scen_lu.dtl",
+      "external_provenance_key": null,
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "flo_con.dtl",
       "category": "decision_table",
       "status": "available",
-      "required": false,
+      "required": true,
       "canonical_record_key": "table_name",
       "source_format": "SWAT+ text database",
       "direct_read": false,
-      "bootstrap_provenance_key": null,
-      "external_provenance_key": "flo_con.dtl",
-      "notes": "Supplied from outside the approved Ames/OSU sources; see external_sources.json"
+      "bootstrap_provenance_key": "flo_con.dtl",
+      "external_provenance_key": null,
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "tiledrain.str",
@@ -320,7 +319,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "tiledrain.str",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "septic.str",
@@ -332,7 +331,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "septic.str",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "filterstrip.str",
@@ -344,7 +343,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "filterstrip.str",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "grassedww.str",
@@ -356,7 +355,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "grassedww.str",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "bmpuser.str",
@@ -368,7 +367,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "bmpuser.str",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "cntable.lum",
@@ -380,7 +379,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "cntable.lum",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "cons_practice.lum",
@@ -392,7 +391,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "cons_practice.lum",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     },
     {
       "name": "ovn_table.lum",
@@ -404,7 +403,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "ovn_table.lum",
       "external_provenance_key": null,
-      "notes": "Imported during initial bootstrap; see bootstrap_sources.json"
+      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
     }
   ]
 }

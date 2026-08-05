@@ -1,11 +1,12 @@
 # SWAT+ Authoritative Reference Database
 
 > The text files in this repository are the authoritative source for shared
-> SWAT+ reference records. The repository was initially populated from the
-> official SWAT+ Ames_sub1 reference dataset, using the official SWAT+ Osu_1hru
-> reference dataset only when an Ames file was unavailable. SWAT+ Editor
-> integration and SQLite generation are planned future work and are not part of
-> the current repository setup.
+> SWAT+ reference records. The core files are regenerated from the **official
+> SWAT+ Editor reference dataset** (`swatplus_datasets.sqlite`), serialized with
+> SWAT+ Editor's own file writers, so each file matches — byte for byte — what
+> SWAT+ Editor ships into every new project. A small set of real SWAT+ files
+> that the official dataset does not carry (the manure databases and a few
+> others) are retained as clearly-marked supplements.
 
 This repository is the permanent, authoritative home for the shared SWAT+
 reference database text files (`plants.plt`, `fertilizer.frt`, the manure
@@ -13,19 +14,29 @@ databases, decision tables, structural databases, and so on). It exists to make
 every reference record traceable: where it came from, who changed it, why, and
 which release contains it.
 
-## Authoritative after bootstrap
+## Source of record: the official SWAT+ Editor dataset
 
-* After the initial bootstrap was reviewed, **this repository is
-  authoritative**. Edits happen here, through pull requests.
-* **Ames was used first, OSU second.** During bootstrap each expected file was
-  taken from `refdata/Ames_sub1`; `refdata/Osu_1hru` was used only when Ames
-  lacked the file.
-* **Upstream datasets are provenance only.** Normal validation and releases use
-  the files committed here. Workflows never pull live files from Ames or OSU,
-  and upstream files never silently overwrite authoritative files.
+* **The core files come from the official dataset.** Each authoritative file
+  under `database_files/` was regenerated from a table in the SWAT+ Editor
+  official reference dataset, `release/build/swatplus_datasets.sqlite`
+  (**version 4.0.0**, **SWAT+ rev. 62**), using the editor's own `fileio`
+  writers. That is the same dataset SWAT+ Editor copies into a project as its
+  reference database, so the authoritative files here are identical to what a
+  user gets from the editor.
+* **This repository is authoritative for edits.** Curation and corrections
+  happen here, through pull requests. Regeneration is only for adopting a new
+  official dataset release.
+* **Per-file provenance** — which sqlite table each file came from, its record
+  count, and a content checksum — is recorded in
+  `metadata/bootstrap_sources.json`.
 
-The pinned bootstrap source is `swat-model/swatplus` @
-`cb442f7c05fc3bfc34349c446010f452d2737ca0`.
+> **History:** the repository was *initially* bootstrapped from the
+> `Ames_sub1` / `Osu_1hru` datasets in `swat-model/swatplus`. Those are
+> **model-specific watershed inputs**, not the official shared reference
+> dataset, so they diverged from what SWAT+ Editor distributes (for example the
+> official `plants.plt` has 266 records; the Ames file had 126). That import was
+> replaced by this re-bootstrap from the official dataset in release `2026.2.0`.
+> The earlier provenance is preserved in git history and `CHANGELOG.md`.
 
 ## What's in here
 
@@ -51,11 +62,15 @@ pull request. That is what catches a file drifting out of step with the model
 that consumes it, rather than discovering it during a run.
 
 Known differences are recorded in `metadata/schema_drift_waivers.json` and
-reported on every run. **One matters today:** `pesticide.pes` gained a
-`pl_uptake` column to match SWAT+ 62, but every one of its 233 values is a
-`0.0` placeholder, not a real measurement — the file is `needs_review` until
-the SWAT+ team provides approved per-pesticide values. See that file for the
-detail and what would resolve it.
+reported on every run. **The one that matters today:** the official dataset
+writes `plants.plt` ending at `rsd_covfac` + a free-text `description`, while
+SWAT+ 62 reads four further carbon-module fields (`meta_frac`, `str_frac`,
+`lig_frac`, `pl_class`). Those are on the conditional carbon-module read path
+and default otherwise, so the file runs on the default/mainline path exactly as
+SWAT+ Editor ships it. The gap is **waived** (tracked, not hidden) until the
+editor dataset itself emits those columns. Separately, a review note records
+that `pesticide.pes` carries the editor's uniform `0.01` `pl_uptake` migration
+default rather than curated per-pesticide values.
 
 ## Why `file.cio` alone is not enough for discovery
 
@@ -72,9 +87,10 @@ databases:
 | `puddle.ops` | `src/mgt_read_puddle.f90` | direct-read |
 | `transplant.plt` | `src/plant_transplant_read.f90` | direct-read |
 
-`puddle.ops` and `transplant.plt` were **discovered during this inspection** and
-are not in the original expected-file list; they are included here as
-authoritative direct-read databases. See `docs/source_inventory.md`.
+None of these four is managed by the SWAT+ Editor dataset (there is no table for
+them in `swatplus_datasets.sqlite`), so they cannot be regenerated from it. They
+are retained as **supplemental** direct-read databases (see below and
+`docs/source_inventory.md`).
 
 ## Why the manure files are included
 
@@ -82,21 +98,23 @@ authoritative direct-read databases. See `docs/source_inventory.md`.
 to manure handling. `manure_db.frt` references entries in `manure_om.frt` via its
 `org_min` column; validation checks that every such reference resolves.
 
-## Externally supplied files
+## Supplemental files (not in the official dataset)
 
-Five expected files had no approved Ames/OSU source and were supplied from
-outside those sources. Their provenance is kept **separate** from bootstrap
-provenance in `metadata/external_sources.json`:
+Seven files are **real SWAT+ inputs that the official SWAT+ Editor dataset does
+not carry**, so they cannot be regenerated from it. They are retained unchanged
+from the earlier import so no data is lost, and their provenance is kept
+**separate** from the official-dataset provenance in
+`metadata/external_sources.json`:
 
-| File | Origin | Reproducible? | Status |
+| File | Why supplemental | Reproducible? | Status |
 |---|---|---|---|
-| `flo_con.dtl` | `biopsichas/soft_cal_crop_paper` @ `f58c684` | yes (public commit) | available |
-| `salt.slt` | maintainer local drive | no | available |
-| `scen_lu.dtl` | maintainer's internal NAM HUC8 model run (`12070204.accdb`) | no | available |
-| `pathogens.pth` | maintainer local drive | no | needs_review (example/seed) |
-| `metals.mtl` | maintainer local drive | no | needs_review (example/seed) |
-
-Every expected file now has an authoritative source; none remain unavailable.
+| `manure_db.frt` | direct-read DB; not managed by the editor dataset | yes (swatplus refdata) | available |
+| `manure_om.frt` | direct-read DB; not managed by the editor dataset | yes (swatplus refdata) | available |
+| `transplant.plt` | direct-read DB; not managed by the editor dataset | yes (swatplus refdata) | available |
+| `puddle.ops` | direct-read DB; not managed by the editor dataset | yes (swatplus refdata) | available |
+| `salt.slt` | no editor table; confirmed unread by SWAT+ 62 | no (maintainer) | available |
+| `pathogens.pth` | editor table ships **empty**; example/seed values | no (maintainer) | needs_review |
+| `metals.mtl` | no editor table; confirmed unread by SWAT+ 62 | no (maintainer) | needs_review (example/seed) |
 
 **`salt.slt` and `metals.mtl` are confirmed unread by SWAT+ 62.** Both filenames
 are declared in `input_file_module.f90` but referenced nowhere else in the
@@ -105,23 +123,19 @@ hardcoded constants rather than reading `salt.slt`'s table. Their content
 currently has zero effect on any simulation. See
 `metadata/schema_drift_waivers.json` for the full evidence.
 
-The scripts that performed the one-time inventory, bootstrap, and external
-import (`inventory_reference_files.py`, `bootstrap_database_files.py`,
-`import_external_files.py`) have been removed now that the initial import is
-complete and merged — they have no further job to do, and their logic is
-preserved in git history if a future re-bootstrap (e.g. against a newer
-pinned SWAT+ commit) is ever needed. Curating the `needs_review` files, or
+Re-bootstrapping from a newer official dataset is a scripted, repeatable
+operation: point SWAT+ Editor's `fileio` writers at the new
+`swatplus_datasets.sqlite` and regenerate. Curating the `needs_review` files, or
 adding any future new database file, is an ordinary edit through the normal
-pull-request workflow below — no special tooling required.
+pull-request workflow below.
 
 ## Source versions are provenance, not tested compatibility
 
-Each bootstrapped file's header may name a SWAT+ Editor version and SWAT+
-revision (e.g. Editor 2.3.3 / rev 60.5.7). **This is source provenance only.**
-It is *not* a claim that a database release has been tested against that SWAT+ or
-Editor version. `metadata/compatibility_matrix.csv` records real test status,
-which is `not_tested` in this phase. Some files (e.g. Ames `tillage.til`) carry
-no version header; those are recorded as `null`, never guessed.
+The regenerated files' headers name the official dataset's version and SWAT+
+revision (SWAT+ Editor v4.0.0 / SWAT+ rev. 62). **This is source provenance
+only.** It is *not* a claim that a database release has been tested against that
+SWAT+ or Editor version. `metadata/compatibility_matrix.csv` records real test
+status, which is `not_tested` in this phase.
 
 ## Proposing and changing records
 
@@ -139,6 +153,7 @@ recommended so every change is reviewed and validated.
 
 ```bash
 python scripts/validate_database_files.py --repo-root .
+python scripts/schema_sync.py --repo-root .
 python scripts/validate_change_log.py --repo-root .
 python -m pytest -q
 ```
@@ -146,7 +161,7 @@ python -m pytest -q
 ## Releases
 
 Releases are versioned `YEAR.MAJOR.MINOR` (see `DATABASE_VERSION`, currently
-`2026.1.0`) and tagged `database-v<version>`. Pushing such a tag runs validation
+`2026.2.0`) and tagged `database-v<version>`. Pushing such a tag runs validation
 and tests, verifies the tag matches `DATABASE_VERSION`, and publishes a
 text-file ZIP with metadata and checksums. To build a package locally:
 
@@ -154,16 +169,10 @@ text-file ZIP with metadata and checksums. To build a package locally:
 python scripts/build_release_package.py --repo-root .
 ```
 
-The first release, **[`database-v2026.1.0`][rel]**, is published with the
-text-file ZIP (`swatplus-authoritative-reference-database-2026.1.0.zip`),
-`database_manifest.json`, and `checksums.txt` attached. Compatibility test
-status is `not_tested` (source-file header versions are provenance only).
+## Not built here
 
-[rel]: https://github.com/tugraskan/SWATPLUS-Authoritative-Reference-Database/releases/tag/database-v2026.1.0
-
-## Not built yet
-
-* **No SQLite database** is built or committed in this phase.
-* **SWAT+ Editor integration is future work** (see
-  `docs/editor_integration_findings.md`).
+* **No SQLite database** is built or committed in this repository — the source
+  of record for the official data is SWAT+ Editor's `swatplus_datasets.sqlite`;
+  this repository holds the human-readable, version-controlled text files
+  regenerated from it.
 * **No changes are made to SWAT+ or SWAT+ Editor** as part of this workflow.
