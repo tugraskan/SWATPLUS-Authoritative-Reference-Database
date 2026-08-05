@@ -8,7 +8,7 @@ from swat_config import EXPECTED_BY_NAME
 
 
 def _manifest(repo_root):
-    return json.loads((repo_root / "metadata" / "database_manifest.json").read_text())
+    return json.loads((repo_root / "internal" / "metadata" / "database_manifest.json").read_text())
 
 
 def test_every_expected_file_in_manifest(repo_root):

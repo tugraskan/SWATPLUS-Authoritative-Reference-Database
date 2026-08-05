@@ -5,21 +5,22 @@ from __future__ import annotations
 import json
 
 import validate_database_files as vdb
+from swat_config import METADATA_DIR
 
 
 def _min_repo(tmp_path, manifest_files, db_files=None):
     (tmp_path / "database_files").mkdir()
-    (tmp_path / "metadata").mkdir()
+    (tmp_path / METADATA_DIR).mkdir(parents=True)
     (tmp_path / "DATABASE_VERSION").write_text("2026.1.0\n")
     manifest = {
         "database_version": "2026.2.0", "repository": "x",
         "manifest_schema_version": 1,
         "source_type": "swatplus_editor_official_reference_dataset",
         "source_repository": "swat-model/swatplus-editor",
-        "compatibility_matrix": "metadata/compatibility_matrix.csv",
+        "compatibility_matrix": f"{METADATA_DIR}/compatibility_matrix.csv",
         "files": manifest_files,
     }
-    (tmp_path / "metadata" / "database_manifest.json").write_text(json.dumps(manifest))
+    (tmp_path / METADATA_DIR / "database_manifest.json").write_text(json.dumps(manifest))
     for name, content in (db_files or {}).items():
         (tmp_path / "database_files" / name).write_text(content)
     return tmp_path

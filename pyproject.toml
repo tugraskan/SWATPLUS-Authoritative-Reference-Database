@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "swatplus-authoritative-reference-database"
-version = "2026.1.0"
+version = "2026.2.0"
 description = "Authoritative source for shared SWAT+ reference database text files, with provenance, validation, and versioned releases."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -20,9 +20,9 @@ dependencies = []
 dev = ["pytest>=7.0"]
 
 [tool.pytest.ini_options]
-# Tests and scripts import the shared modules from scripts/ directly.
-pythonpath = ["scripts"]
-testpaths = ["tests"]
+# Tests and scripts import the shared modules from internal/scripts/ directly.
+pythonpath = ["internal/scripts"]
+testpaths = ["internal/tests"]
 addopts = "-ra"
 
 [tool.setuptools]

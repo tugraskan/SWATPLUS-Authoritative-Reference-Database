@@ -22,7 +22,7 @@ deterministically (fixed timestamps, sorted entries) so rebuilding from the
 same commit yields identical bytes and checksums.
 
 Usage:
-    python scripts/build_release_package.py [--repo-root .] [--output-dir dist] \
+    python internal/scripts/build_release_package.py [--repo-root .] [--output-dir dist] \
         [--version X.Y.Z] [--skip-validation]
 """
 
@@ -38,7 +38,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import validate_database_files as vdb  # noqa: E402
 from swat_common import sha256_file  # noqa: E402
-from swat_config import DATABASE_FILES_DIR  # noqa: E402
+from swat_config import (  # noqa: E402
+    DATABASE_FILES_DIR, DATABASE_VERSION_FILE, METADATA_DIR,
+)
 
 METADATA_FILES = [
     "database_manifest.json",
@@ -65,7 +67,7 @@ def build(repo_root, output_dir="dist", version=None, skip_validation=False):
                 print(e)
             raise SystemExit("Refusing to build release: validation failed")
 
-    version = version or (repo_root / "DATABASE_VERSION").read_text().strip()
+    version = version or (repo_root / DATABASE_VERSION_FILE).read_text().strip()
 
     if dist.exists():
         shutil.rmtree(dist)
@@ -78,10 +80,10 @@ def build(repo_root, output_dir="dist", version=None, skip_validation=False):
 
     # copy metadata + version
     for meta in METADATA_FILES:
-        src = repo_root / "metadata" / meta
+        src = repo_root / METADATA_DIR / meta
         if src.exists():
             shutil.copyfile(src, dist / meta)
-    shutil.copyfile(repo_root / "DATABASE_VERSION", dist / "DATABASE_VERSION")
+    shutil.copyfile(repo_root / DATABASE_VERSION_FILE, dist / "DATABASE_VERSION")
 
     # checksums over every packaged file (except checksums.txt itself)
     checks = []

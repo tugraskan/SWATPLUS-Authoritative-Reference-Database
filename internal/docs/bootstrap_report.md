@@ -39,7 +39,7 @@ Decision-table files (`lum.dtl`, `res_rel.dtl`, `scen_lu.dtl`, `flo_con.dtl`) ar
 
 ## Supplemental files (not in the official dataset)
 
-These real SWAT+ files have no table in `swatplus_datasets.sqlite`, so they cannot be produced from it. They are tracked separately in `metadata/external_sources.json`.
+These real SWAT+ files have no table in `swatplus_datasets.sqlite`, so they cannot be produced from it. They are tracked separately in `internal/metadata/external_sources.json`.
 
 | File | Why supplemental | Status |
 |---|---|---|

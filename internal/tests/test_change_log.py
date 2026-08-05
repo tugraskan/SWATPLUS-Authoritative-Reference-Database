@@ -5,13 +5,14 @@ from __future__ import annotations
 import csv
 
 import validate_change_log as vcl
+from swat_config import METADATA_DIR
 
 HEADER = vcl.REQUIRED_COLUMNS
 
 
 def _write(tmp_path, rows):
-    (tmp_path / "metadata").mkdir()
-    p = tmp_path / "metadata" / "database_changes.csv"
+    (tmp_path / METADATA_DIR).mkdir(parents=True)
+    p = tmp_path / METADATA_DIR / "database_changes.csv"
     with open(p, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=HEADER)
         w.writeheader()

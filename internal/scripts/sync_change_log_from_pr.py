@@ -16,7 +16,7 @@ the PR description doesn't reset them.
 Usage (normally invoked by .github/workflows/sync-change-log.yml, which sets
 the environment variables from the pull_request event):
     PR_NUMBER=42 PR_AUTHOR=someone PR_BODY="$(cat body.md)" \
-        python scripts/sync_change_log_from_pr.py --repo-root . \
+        python internal/scripts/sync_change_log_from_pr.py --repo-root . \
         --base-ref <base-commit-sha>
 """
 
@@ -36,7 +36,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from swat_common import parse_name_keyed_table  # noqa: E402
 from swat_config import (  # noqa: E402
-    DATABASE_FILES_DIR, EXPECTED_BY_NAME, FILE_SCHEMAS, NAME_KEYED_FORMATS,
+    DATABASE_FILES_DIR, EXPECTED_BY_NAME, FILE_SCHEMAS, METADATA_DIR,
+    NAME_KEYED_FORMATS,
 )
 
 REQUIRED_COLUMNS = [
@@ -200,7 +201,7 @@ def sync(repo_root: Path, pr_number: str, pr_author: str, body: str,
     fields = parse_pr_body(body)
     detected = detect_changes(repo_root, base_ref)
 
-    csv_path = repo_root / "metadata" / "database_changes.csv"
+    csv_path = repo_root / METADATA_DIR / "database_changes.csv"
     existing_rows = []
     if csv_path.is_file():
         with open(csv_path, newline="", encoding="utf-8") as fh:

@@ -393,4 +393,5 @@ MANURE_OM_FILE = "manure_om.frt"
 MANURE_DB_ORGMIN_COLUMN = "org_min"
 
 DATABASE_FILES_DIR = "database_files"
-METADATA_DIR = "metadata"
+METADATA_DIR = "internal/metadata"
+DATABASE_VERSION_FILE = "internal/DATABASE_VERSION"

@@ -51,7 +51,7 @@ def test_empty_manure_file_flagged(tmp_path):
 
 def test_real_repo_manure_references_resolve(repo_root):
     manifest = json.loads(
-        (repo_root / "metadata" / "database_manifest.json").read_text())
+        (repo_root / "internal" / "metadata" / "database_manifest.json").read_text())
     mf = {f["name"]: f for f in manifest["files"]}
     P = vdb.Problems()
     vdb._check_manure(P, repo_root / "database_files", mf)

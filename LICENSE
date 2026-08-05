@@ -27,7 +27,7 @@ NOTE ON REFERENCE DATA PROVENANCE
 The text data files under database_files/ are shared SWAT+ reference records.
 They are serialized from the official SWAT+ Editor reference dataset
 (swat-model/swatplus-editor: swatplus_datasets.sqlite), with a few supplemental
-files documented in metadata/external_sources.json. This MIT license covers the
+files documented in internal/metadata/external_sources.json. This MIT license covers the
 repository's tooling, metadata, and workflow. Reuse of the underlying scientific
 data should also credit the original SWAT+ project and the sources recorded in
 the provenance metadata.

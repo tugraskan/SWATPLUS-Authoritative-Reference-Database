@@ -20,7 +20,7 @@ A field is matched between versions by name, not position, so a field that
 moved is reported as moved rather than as an unrelated add plus remove.
 
 Usage:
-    python scripts/schema_diff.py --from 62.0.0 --to 63.0.0 [--repo-root .]
+    python internal/scripts/schema_diff.py --from 62.0.0 --to 63.0.0 [--repo-root .]
 """
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ import json
 import sys
 from pathlib import Path
 
-SCHEMAS_DIR = "schemas"
+SCHEMAS_DIR = "internal/schemas"
 
 
 def load(repo_root: Path, version: str) -> dict:

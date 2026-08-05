@@ -30,12 +30,12 @@ def _fields(*specs):
 
 
 def _write(tmp_path, artifact, waivers=None):
-    (tmp_path / "schemas").mkdir(exist_ok=True)
-    (tmp_path / "schemas" / f"swatplus-{artifact['swatplus_version']}.json"
-     ).write_text(json.dumps(artifact))
-    (tmp_path / "metadata").mkdir(exist_ok=True)
+    (tmp_path / schema_sync.SCHEMAS_DIR).mkdir(parents=True, exist_ok=True)
+    (tmp_path / schema_sync.SCHEMAS_DIR /
+     f"swatplus-{artifact['swatplus_version']}.json").write_text(json.dumps(artifact))
+    (tmp_path / schema_sync.METADATA_DIR).mkdir(parents=True, exist_ok=True)
     if waivers is not None:
-        (tmp_path / "metadata" / "schema_drift_waivers.json").write_text(
+        (tmp_path / schema_sync.METADATA_DIR / "schema_drift_waivers.json").write_text(
             json.dumps(waivers))
     return tmp_path
 
@@ -140,7 +140,7 @@ def test_pesticide_schema_matches_source(repo_root):
     noted_files = {n["file"] for n in rep.review_notes}
     assert "pesticide.pes" in noted_files, (
         "the pl_uptake placeholder-value caveat is missing from "
-        "metadata/schema_drift_waivers.json review_notes"
+        "internal/metadata/schema_drift_waivers.json review_notes"
     )
 
 

@@ -28,7 +28,7 @@ def test_missing_version_is_null_not_guessed():
 
 
 def test_real_bootstrap_provenance_present(repo_root):
-    prov = json.loads((repo_root / "metadata" / "bootstrap_sources.json").read_text())
+    prov = json.loads((repo_root / "internal" / "metadata" / "bootstrap_sources.json").read_text())
     # The core files are regenerated from the official SWAT+ Editor reference
     # dataset (swatplus_datasets.sqlite).
     assert prov["source_type"] == "swatplus_editor_official_reference_dataset"
@@ -46,7 +46,7 @@ def test_real_bootstrap_provenance_present(repo_root):
 
 
 def test_compatibility_matrix_defaults_not_tested(repo_root):
-    path = repo_root / "metadata" / "compatibility_matrix.csv"
+    path = repo_root / "internal" / "metadata" / "compatibility_matrix.csv"
     with open(path, newline="", encoding="utf-8") as fh:
         rows = list(csv.DictReader(fh))
     assert rows, "compatibility matrix should have seed rows"
@@ -55,8 +55,8 @@ def test_compatibility_matrix_defaults_not_tested(repo_root):
 
 
 def test_external_provenance_separate_from_bootstrap(repo_root):
-    boot = json.loads((repo_root / "metadata" / "bootstrap_sources.json").read_text())
-    ext = json.loads((repo_root / "metadata" / "external_sources.json").read_text())
+    boot = json.loads((repo_root / "internal" / "metadata" / "bootstrap_sources.json").read_text())
+    ext = json.loads((repo_root / "internal" / "metadata" / "external_sources.json").read_text())
     boot_names = {f["file_name"] for f in boot["files"]}
     ext_names = {f["file_name"] for f in ext["files"]}
     # the supplemental files (not carried by the official SWAT+ Editor dataset)

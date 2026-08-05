@@ -27,20 +27,20 @@ jobs:
         run: python -m pip install --upgrade pip pytest
 
       - name: Validate authoritative files
-        run: python scripts/validate_database_files.py --repo-root .
+        run: python internal/scripts/validate_database_files.py --repo-root .
 
       - name: Check for drift from the SWAT+ source schema
-        run: python scripts/schema_sync.py --repo-root .
+        run: python internal/scripts/schema_sync.py --repo-root .
 
       - name: Validate change log
-        run: python scripts/validate_change_log.py --repo-root .
+        run: python internal/scripts/validate_change_log.py --repo-root .
 
       - name: Run unit tests
         run: python -m pytest -q
 
       - name: Verify tag matches DATABASE_VERSION
         run: |
-          VERSION=$(cat DATABASE_VERSION)
+          VERSION=$(cat internal/DATABASE_VERSION)
           TAG="${GITHUB_REF_NAME#database-v}"
           echo "DATABASE_VERSION=$VERSION  tag=$TAG"
           if [ "$VERSION" != "$TAG" ]; then
@@ -49,11 +49,11 @@ jobs:
           fi
 
       - name: Build release package
-        run: python scripts/build_release_package.py --repo-root .
+        run: python internal/scripts/build_release_package.py --repo-root .
 
       - name: Compose release notes
         run: |
-          VERSION=$(cat DATABASE_VERSION)
+          VERSION=$(cat internal/DATABASE_VERSION)
           {
             echo "## SWAT+ Authoritative Reference Database $VERSION"
             echo
@@ -65,7 +65,7 @@ jobs:
             echo "SWAT+ rev.62)."
             echo
             echo "**Compatibility test status:** not_tested (see"
-            echo "metadata/compatibility_matrix.csv). Source-file header"
+            echo "internal/metadata/compatibility_matrix.csv). Source-file header"
             echo "versions are provenance only, not a tested-compatibility claim."
             echo
             echo "Per-file provenance is in bootstrap_sources.json /"

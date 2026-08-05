@@ -1,9 +1,9 @@
 name: sync-change-log
 
 # Contributors don't say which file or record they changed, and don't fill
-# in metadata/database_changes.csv by hand -- this workflow figures both out
+# in internal/metadata/database_changes.csv by hand -- this workflow figures both out
 # by diffing database_files/ against the PR's base commit (same approach
-# scripts/validate_change_log.py's coverage check already uses) and writes
+# internal/scripts/validate_change_log.py's coverage check already uses) and writes
 # the row(s) itself. The PR template's Reason/Source are the only human
 # input, and both are optional: a PR with neither still gets a row.
 #
@@ -39,7 +39,7 @@ jobs:
 
       # Diffs database_files/ against the PR's base commit to work out which
       # file(s)/record(s) changed and whether each was added/modified/removed,
-      # then writes metadata/database_changes.csv itself. Output is captured
+      # then writes internal/metadata/database_changes.csv itself. Output is captured
       # so the comment step below can relay it; it never contains the PR's
       # own free text, only file/record names and status words.
       - name: Sync change log from PR diff
@@ -49,7 +49,7 @@ jobs:
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          python scripts/sync_change_log_from_pr.py --repo-root . \
+          python internal/scripts/sync_change_log_from_pr.py --repo-root . \
             --base-ref "${{ github.event.pull_request.base.sha }}" 2>&1 | tee sync_output.txt
 
       - name: Post result as a PR comment
@@ -64,7 +64,7 @@ jobs:
 
             const outcome = '${{ steps.sync.outcome }}';
             const body = outcome === 'success'
-              ? `${marker}\n🤖 **Change log:**\n\n${output}\n\nNothing else needed here -- \`metadata/database_changes.csv\` reflects this automatically. Reason/Source in the description above are optional extra context for reviewers.`
+              ? `${marker}\n🤖 **Change log:**\n\n${output}\n\nNothing else needed here -- \`internal/metadata/database_changes.csv\` reflects this automatically. Reason/Source in the description above are optional extra context for reviewers.`
               : `${marker}\n⚠️ Something went wrong generating the change-log entry for this PR:\n\n${output}\n\nThis is likely a bug in the automation, not something to fix in your PR -- a maintainer should take a look.`;
 
             const { data: comments } = await github.rest.issues.listComments({
@@ -95,10 +95,10 @@ jobs:
       - name: Commit updated change log
         if: steps.sync.outcome == 'success' && github.event.pull_request.head.repo.full_name == github.repository
         run: |
-          if ! git diff --quiet -- metadata/database_changes.csv; then
+          if ! git diff --quiet -- internal/metadata/database_changes.csv; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add metadata/database_changes.csv
+            git add internal/metadata/database_changes.csv
             git commit -m "Sync change log for PR #${{ github.event.pull_request.number }}"
             git push origin HEAD:"${{ github.event.pull_request.head.ref }}"
           else

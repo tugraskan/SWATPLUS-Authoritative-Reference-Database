@@ -18,7 +18,7 @@ The initial bootstrap import is allowed a documented exception via
 ``--bootstrap-exception`` (skips coverage; structural checks still run).
 
 Usage:
-    python scripts/validate_change_log.py [--repo-root .] \
+    python internal/scripts/validate_change_log.py [--repo-root .] \
         [--base-ref origin/main] [--bootstrap-exception]
 """
 

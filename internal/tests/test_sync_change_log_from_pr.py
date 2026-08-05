@@ -25,8 +25,8 @@ def _init_repo(tmp_path):
     _git(tmp_path, "config", "user.email", "test@example.com")
     _git(tmp_path, "config", "user.name", "Test")
     (tmp_path / "database_files").mkdir()
-    (tmp_path / "metadata").mkdir()
-    with open(tmp_path / "metadata" / "database_changes.csv", "w", newline="") as fh:
+    (tmp_path / sync_mod.METADATA_DIR).mkdir(parents=True)
+    with open(tmp_path / sync_mod.METADATA_DIR / "database_changes.csv", "w", newline="") as fh:
         csv.DictWriter(fh, fieldnames=sync_mod.REQUIRED_COLUMNS).writeheader()
     return tmp_path
 
@@ -185,7 +185,7 @@ def test_sync_writes_row_with_optional_fields_blank(tmp_path):
     assert rows[0]["source"] == ""
     assert rows[0]["review_status"] == "pending"
 
-    csv_rows = _read_csv(tmp_path / "metadata" / "database_changes.csv")
+    csv_rows = _read_csv(tmp_path / sync_mod.METADATA_DIR / "database_changes.csv")
     assert len(csv_rows) == 1
     assert csv_rows[0]["change_id"] == "pr-42-snow.sno-snow002"
 
@@ -207,10 +207,10 @@ def test_sync_rerun_preserves_date_and_review_status(tmp_path):
     })
     sync_mod.sync(tmp_path, "42", "alice", "", base)
 
-    rows = _read_csv(tmp_path / "metadata" / "database_changes.csv")
+    rows = _read_csv(tmp_path / sync_mod.METADATA_DIR / "database_changes.csv")
     rows[0]["review_status"] = "approved"
     rows[0]["date"] = "2020-01-01"
-    with open(tmp_path / "metadata" / "database_changes.csv", "w", newline="") as fh:
+    with open(tmp_path / sync_mod.METADATA_DIR / "database_changes.csv", "w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=sync_mod.REQUIRED_COLUMNS)
         w.writeheader()
         for r in rows:
@@ -219,7 +219,7 @@ def test_sync_rerun_preserves_date_and_review_status(tmp_path):
     body = "## Reason\n\nUpdated reason\n"
     sync_mod.sync(tmp_path, "42", "alice", body, base)
 
-    rows = _read_csv(tmp_path / "metadata" / "database_changes.csv")
+    rows = _read_csv(tmp_path / sync_mod.METADATA_DIR / "database_changes.csv")
     assert len(rows) == 1
     assert rows[0]["review_status"] == "approved"
     assert rows[0]["date"] == "2020-01-01"
@@ -233,7 +233,7 @@ def test_sync_does_not_touch_other_prs_rows(tmp_path):
               "submitted_by": "bob", "source": "s", "reason": "r",
               "swatplus_version": "not_tested", "editor_version": "not_tested",
               "review_status": "pending", "notes": ""}
-    with open(tmp_path / "metadata" / "database_changes.csv", "w", newline="") as fh:
+    with open(tmp_path / sync_mod.METADATA_DIR / "database_changes.csv", "w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=sync_mod.REQUIRED_COLUMNS)
         w.writeheader()
         w.writerow(other)
@@ -246,6 +246,6 @@ def test_sync_does_not_touch_other_prs_rows(tmp_path):
     _git(tmp_path, "add", "-A")  # stage the new file so `git diff <base>` sees it
     sync_mod.sync(tmp_path, "42", "alice", "", base)
 
-    rows = _read_csv(tmp_path / "metadata" / "database_changes.csv")
+    rows = _read_csv(tmp_path / sync_mod.METADATA_DIR / "database_changes.csv")
     assert len(rows) == 2
     assert other in rows

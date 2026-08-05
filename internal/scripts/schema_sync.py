@@ -48,7 +48,7 @@ reason, so it stays visible in every report instead of being silently
 tolerated -- and so CI can stay green while a data fix is pending.
 
 Usage:
-    python scripts/schema_sync.py [--repo-root .] [--schema-version 62.0.0]
+    python internal/scripts/schema_sync.py [--repo-root .] [--schema-version 62.0.0]
                                   [--strict]
 
 ``--strict`` fails on waived drift too (use when verifying a waiver is still
@@ -74,7 +74,7 @@ from swat_config import (  # noqa: E402
     NAME_KEYED_FORMATS,
 )
 
-SCHEMAS_DIR = "schemas"
+SCHEMAS_DIR = "internal/schemas"
 WAIVERS_FILE = "schema_drift_waivers.json"
 
 # Trailing columns SWAT+ never reads.  Present in the header for human

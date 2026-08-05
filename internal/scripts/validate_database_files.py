@@ -26,7 +26,7 @@ Checks (spec section 21):
   17 manifest and provenance records agree
 
 Usage:
-    python scripts/validate_database_files.py [--repo-root .] \
+    python internal/scripts/validate_database_files.py [--repo-root .] \
         [--verify-bootstrap-checksums]
 """
 
