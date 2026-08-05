@@ -1,0 +1,96 @@
+{
+  "description": "Supplemental files: real SWAT+ input databases that the official SWAT+ Editor reference dataset (swatplus_datasets.sqlite) does not carry, so they cannot be regenerated from it. Kept separate from the official-dataset provenance in bootstrap_sources.json. The manure/transplant/puddle files are direct-read SWAT+ databases; pathogens/metals/salt are maintainer-supplied example or unread-by-model data. See CONTRIBUTING.md / README.md.",
+  "files": [
+    {
+      "file_name": "manure_db.frt",
+      "origin_type": "swatplus_reference_distribution",
+      "source_repository": "swat-model/swatplus",
+      "source_location": "SWAT+ reference distribution (direct-read database)",
+      "source_ref": null,
+      "reproducible": true,
+      "status": "available",
+      "direct_read": true,
+      "notes": "Manure nutrient database, read directly by SWAT+ (hard-coded filename). Not managed by the official SWAT+ Editor dataset (no manure table in swatplus_datasets.sqlite), so it is supplied here rather than regenerated.",
+      "content_sha256": "ba741042e0e0f7eaf7540540b46758ad6921d5ed938bcbeb8ca5a60ee32e1760",
+      "date": "2026-08-05"
+    },
+    {
+      "file_name": "manure_om.frt",
+      "origin_type": "swatplus_reference_distribution",
+      "source_repository": "swat-model/swatplus",
+      "source_location": "SWAT+ reference distribution (direct-read database)",
+      "source_ref": null,
+      "reproducible": true,
+      "status": "available",
+      "direct_read": true,
+      "notes": "Manure organic-matter database, read directly by SWAT+ (hard-coded filename). Not managed by the official SWAT+ Editor dataset. manure_db.frt org_min values reference names in this file (validated by scripts/validate_database_files.py).",
+      "content_sha256": "20918504f020bee734c12ad9c2a5a79cb11b9744f051362ca29686c7a9a5e357",
+      "date": "2026-08-05"
+    },
+    {
+      "file_name": "transplant.plt",
+      "origin_type": "swatplus_reference_distribution",
+      "source_repository": "swat-model/swatplus",
+      "source_location": "SWAT+ reference distribution (direct-read database)",
+      "source_ref": null,
+      "reproducible": true,
+      "status": "available",
+      "direct_read": true,
+      "notes": "Transplant plant database, read directly by SWAT+ (hard-coded filename). Not present in the official SWAT+ Editor dataset.",
+      "content_sha256": "e6c92d7d790a12a22ccf5a6493959c2c2a58ebc6b4d485a165f78a18e6a340e7",
+      "date": "2026-08-05"
+    },
+    {
+      "file_name": "puddle.ops",
+      "origin_type": "swatplus_reference_distribution",
+      "source_repository": "swat-model/swatplus",
+      "source_location": "SWAT+ reference distribution (direct-read database)",
+      "source_ref": null,
+      "reproducible": true,
+      "status": "available",
+      "direct_read": true,
+      "notes": "Puddling operations database, read directly by SWAT+ (hard-coded filename). Not present in the official SWAT+ Editor dataset.",
+      "content_sha256": "d30bd8a1a412200da108acc8b28ad3081afe47e99767277d6c4de826691312ae",
+      "date": "2026-08-05"
+    },
+    {
+      "file_name": "pathogens.pth",
+      "origin_type": "local_drive",
+      "source_repository": null,
+      "source_location": "maintainer-supplied (local drive)",
+      "source_ref": null,
+      "reproducible": false,
+      "status": "needs_review",
+      "direct_read": false,
+      "notes": "Example/seed bacteria properties supplied by the maintainer. The official SWAT+ Editor dataset ships an empty pathogens table, so no official records exist to regenerate. Values need curation before being treated as authoritative.",
+      "content_sha256": "5dd2d8666ae94b45ed9c36b24b04e3dde83370feb114d3606ea5811fb2df9e79",
+      "date": "2026-08-05"
+    },
+    {
+      "file_name": "metals.mtl",
+      "origin_type": "local_drive",
+      "source_repository": null,
+      "source_location": "maintainer-supplied (local drive)",
+      "source_ref": null,
+      "reproducible": false,
+      "status": "needs_review",
+      "direct_read": false,
+      "notes": "Example heavy-metal database (single 'lead' row) supplied by the maintainer. Not managed by the official SWAT+ Editor dataset and confirmed unread by SWAT+ 62 (see schema_drift_waivers.json). Needs curation before authoritative use.",
+      "content_sha256": "943193f154c743027fb88c78ebd797a6925d24c065324bfebeacc36000267f6a",
+      "date": "2026-08-05"
+    },
+    {
+      "file_name": "salt.slt",
+      "origin_type": "local_drive",
+      "source_repository": null,
+      "source_location": "maintainer-supplied (local drive)",
+      "source_ref": null,
+      "reproducible": false,
+      "status": "available",
+      "direct_read": false,
+      "notes": "Salt input parameters (TDS/EC factor and solubility products) supplied by the maintainer. Not managed by the official SWAT+ Editor dataset and confirmed unread by SWAT+ 62 (see schema_drift_waivers.json).",
+      "content_sha256": "f3727b5d79adffc9571013c701a6019bd757867db3bc9ef918add822066f2f7d",
+      "date": "2026-08-05"
+    }
+  ]
+}

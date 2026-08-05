@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "swatplus-authoritative-reference-database"
+version = "2026.1.0"
+description = "Authoritative source for shared SWAT+ reference database text files, with provenance, validation, and versioned releases."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "SWAT+ Authoritative Reference Database maintainers" }]
+keywords = ["swat+", "swatplus", "reference-database", "hydrology"]
+
+# The tooling is intentionally dependency-free (standard library only) so that
+# validation and releases run anywhere without installing SWAT+ or the Editor.
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[tool.pytest.ini_options]
+# Tests and scripts import the shared modules from scripts/ directly.
+pythonpath = ["scripts"]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.setuptools]
+# This project ships text data + standalone scripts rather than an importable
+# package; nothing to install as a library.
+py-modules = []

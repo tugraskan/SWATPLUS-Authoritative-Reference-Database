@@ -1,0 +1,2 @@
+database_version,authoritative_commit,swatplus_repository,swatplus_ref,swatplus_commit,swatplus_revision,editor_repository,editor_ref,editor_commit,editor_version,test_status,test_date,test_suite,notes
+2026.2.0,,swat-model/swatplus,,,62,swat-model/swatplus-editor,,,4.0.0,not_tested,,,"Source provenance only (official SWAT+ Editor reference dataset v4.0.0, SWAT+ rev.62); NOT a tested-compatibility claim."
