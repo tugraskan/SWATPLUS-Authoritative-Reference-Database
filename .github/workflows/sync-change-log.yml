@@ -1,0 +1,60 @@
+name: sync-change-log
+
+# Contributors fill in the PR template (.github/pull_request_template.md);
+# they never hand-edit metadata/database_changes.csv. This workflow parses the
+# PR description on every open/edit/push and:
+#   - fails the check if a required template field is missing or incomplete
+#     (this is what makes the template "required"), and
+#   - otherwise commits the matching change-log row back onto the PR branch,
+#     so the CSV is always in sync with the description by the time of review.
+#
+# The PR body is untrusted user input: it is passed to the parser only via an
+# `env:` variable, never interpolated into a shell `run:` string, so it can
+# never be executed as a command.
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Fails here (before any commit) if a required field is missing, blank,
+      # or the Change type box isn't checked exactly once -- see the script's
+      # docstring for the full field list.
+      - name: Sync change log from PR description
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: python scripts/sync_change_log_from_pr.py --repo-root .
+
+      # Only same-repo branches can be pushed back to with this workflow's
+      # token; a fork PR still gets the required-field check above, it just
+      # needs a maintainer to run the script (or add the row) before merge.
+      - name: Commit updated change log
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          if ! git diff --quiet -- metadata/database_changes.csv; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add metadata/database_changes.csv
+            git commit -m "Sync change log for PR #${{ github.event.pull_request.number }}"
+            git push origin HEAD:"${{ github.event.pull_request.head.ref }}"
+          else
+            echo "Change log already in sync; nothing to commit."
+          fi

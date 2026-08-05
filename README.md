@@ -32,22 +32,6 @@ modeling group maintaining and re-discovering the same corrections privately.
 * **Per-file provenance** — which sqlite table each file came from, its record
   count, and a content checksum — is recorded in
   `metadata/bootstrap_sources.json`.
-  
-## Proposing and changing records
-
-1. Create a branch.
-2. Edit the file under `database_files/`.
-3. Add a row to `metadata/database_changes.csv` (stable record name, reason,
-   scientific/technical source).
-4. Update `CHANGELOG.md` when appropriate.
-5. Open a pull request.
-
-Validation is automatic, not a manual step: opening a pull request runs file
-validation, schema-drift checking, change-log validation, and the full test
-suite (that's what the scripts under `scripts/` and the workflow in
-`.github/workflows/validate-database.yml` are for). A reviewer must approve and
-every check must pass before merge. See `CONTRIBUTING.md` for the full rules,
-including how to run the same checks locally while iterating on a change.
 
 ## What's in here
 
@@ -152,6 +136,24 @@ revision (SWAT+ Editor v4.0.0 / SWAT+ rev. 62). **This is source provenance
 only.** It is *not* a claim that a database release has been tested against that
 SWAT+ or Editor version. `metadata/compatibility_matrix.csv` records real test
 status, which is `not_tested` in this phase.
+
+## Proposing and changing records
+
+1. Create a branch.
+2. Edit the file under `database_files/`.
+3. Open a pull request and fill in every section of the template (file,
+   record, change type, reason, source).
+
+That's it — the rest is automatic. A bot reads your filled-out PR description
+and commits the matching `metadata/database_changes.csv` row for you; if a
+required field is missing, the `sync-change-log` check fails and tells you
+which one. Opening the PR also runs file validation, schema-drift checking,
+per-record change-log coverage, and the full test suite (that's what the
+scripts under `scripts/` and the workflows in `.github/workflows/` are for). A
+reviewer must approve and every check must pass before merge.
+`CHANGELOG.md` is a release-level summary a maintainer writes when cutting a
+release — it isn't part of the per-PR checklist. See `CONTRIBUTING.md` for the
+full rules, including how the PR template maps to the change log.
 
 ## Releases
 
