@@ -12,10 +12,6 @@ every record stays traceable and validated.
    optional** — nothing you type is required.
 4. A reviewer must approve before merge.
 
-You never touch the change log yourself: a bot figures out which file and
-record(s) you changed, and whether each was added, modified, or removed,
-straight from your diff, and writes the change-log entry for you.
-
 Ordinary database-row changes do **not** require a SWAT+ Editor code change or
 an Editor pull request.
 

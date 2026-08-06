@@ -17,7 +17,6 @@ def _min_repo(tmp_path, manifest_files, db_files=None):
         "manifest_schema_version": 1,
         "source_type": "swatplus_editor_official_reference_dataset",
         "source_repository": "swat-model/swatplus-editor",
-        "compatibility_matrix": f"{METADATA_DIR}/compatibility_matrix.csv",
         "files": manifest_files,
     }
     (tmp_path / METADATA_DIR / "database_manifest.json").write_text(json.dumps(manifest))
@@ -62,8 +61,8 @@ def test_real_repo_validates_clean(repo_root):
     # never rewritten when a file is later edited -- so once any bootstrapped
     # file receives a legitimate post-bootstrap edit (e.g. pesticide.pes gaining
     # pl_uptake), its current checksum will diverge from that recorded value by
-    # design. That divergence is what git history and database_changes.csv are
-    # for; --verify-bootstrap-checksums is a tool for checking a fresh bootstrap
+    # design. That divergence is what git history is for;
+    # --verify-bootstrap-checksums is a tool for checking a fresh bootstrap
     # import immediately after it runs, not an ongoing invariant of the repo.
     P = vdb.validate(repo_root, verify_bootstrap_checksums=False)
     assert P.errors == [], "unexpected errors:\n" + "\n".join(P.errors)
