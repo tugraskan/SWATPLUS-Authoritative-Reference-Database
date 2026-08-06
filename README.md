@@ -105,10 +105,27 @@ nothing to share, so they don't belong in a reference-data repository.
 This repository carries only the other kind: **shared, name-keyed lookup
 tables** whose values are reused as-is across projects — a plant named `corn`
 or a tillage operation named `moldboard_plow` means the same thing in every
-watershed. That's `plants.plt`, `fertilizer.frt`, `tillage.til`, `pesticide.pes`,
-the operation databases, the decision tables, the structural-BMP and land-use
-lookup tables, and `cal_parms.cal` — 33 files today (26 from the official
-dataset, 7 supplemental; see below).
+watershed. 33 files today:
+
+26 from the official SWAT+ Editor dataset:
+
+```
+cal_parms.cal     chem_app.ops      cntable.lum       cons_practice.lum
+fertilizer.frt    filterstrip.str   fire.ops          bmpuser.str
+grassedww.str     graze.ops         harv.ops          irr.ops
+ovn_table.lum     pesticide.pes     plants.plt        septic.sep
+septic.str        snow.sno          sweep.ops         tiledrain.str
+tillage.til       urban.urb         flo_con.dtl       lum.dtl
+res_rel.dtl       scen_lu.dtl
+```
+
+7 supplemental — real SWAT+ inputs the official dataset doesn't carry (see
+"Supplemental files" below):
+
+```
+manure_db.frt     manure_om.frt     transplant.plt    puddle.ops
+salt.slt          pathogens.pth     metals.mtl
+```
 
 A filename appearing in `file.cio` is **not** proof a file is one of these
 lookup tables, and conversely some lookup tables are read by SWAT+ under a
