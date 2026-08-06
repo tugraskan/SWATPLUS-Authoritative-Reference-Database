@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # need merge base for change-log coverage
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -35,16 +33,6 @@ jobs:
       # the model SWAT+ actually reads is caught here rather than at run time.
       - name: Check for drift from the SWAT+ source schema
         run: python internal/scripts/schema_sync.py --repo-root .
-
-      - name: Validate change log
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            git fetch --no-tags origin "${{ github.base_ref }}" || true
-            python internal/scripts/validate_change_log.py --repo-root . \
-              --base-ref "origin/${{ github.base_ref }}"
-          else
-            python internal/scripts/validate_change_log.py --repo-root .
-          fi
 
       - name: Run unit tests
         run: python -m pytest -q

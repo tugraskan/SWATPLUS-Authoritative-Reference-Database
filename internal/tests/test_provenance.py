@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import csv
 import json
 
 from swat_common import parse_header
@@ -43,15 +42,6 @@ def test_real_bootstrap_provenance_present(repo_root):
     # each file carries a content checksum and a record count
     assert all(len(f["content_sha256"]) == 64 for f in prov["files"])
     assert by["plants.plt"]["record_count"] == 266
-
-
-def test_compatibility_matrix_defaults_not_tested(repo_root):
-    path = repo_root / "internal" / "metadata" / "compatibility_matrix.csv"
-    with open(path, newline="", encoding="utf-8") as fh:
-        rows = list(csv.DictReader(fh))
-    assert rows, "compatibility matrix should have seed rows"
-    assert all(r["test_status"] == "not_tested" for r in rows)
-    assert all(r["test_date"].strip() == "" for r in rows)
 
 
 def test_external_provenance_separate_from_bootstrap(repo_root):

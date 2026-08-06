@@ -39,17 +39,14 @@ modeling group maintaining and re-discovering the same corrections privately.
 2. Edit the file under `database_files/`.
 3. Open a pull request.
 
-That's genuinely it. Nothing in the PR template is required — a bot figures
-out which file and record(s) you changed by diffing your branch against
-`main`, and writes the matching change-log row for you. If you know a reason
-or source for the change, the template has optional spots for them, but a PR
-with neither still goes through cleanly. Opening the PR also runs file
-validation, schema-drift checking, and the full test suite (that's what the
-scripts and workflows under [`internal/`](internal/) are for). A reviewer
+That's genuinely it. Nothing in the PR template is required — if you know a
+reason or source for the change, the template has optional spots for them,
+but a PR with neither still goes through cleanly. Opening the PR also runs
+file validation, schema-drift checking, and the full test suite (that's what
+the scripts and workflows under [`internal/`](internal/) are for). A reviewer
 must approve before merge. `internal/CHANGELOG.md` is an ongoing history a
 maintainer updates when it's worth summarizing, not something every PR
-touches. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full rules,
-including how the diff maps to the change log.
+touches. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full rules.
 
 ## What's in here
 
@@ -57,11 +54,10 @@ including how the diff maps to the change log.
 database_files/     the authoritative SWAT+ reference text files
 CONTRIBUTING.md      how to propose a change (start here)
 internal/            everything else: metadata, schemas, scripts, tests, docs
-  metadata/           manifest, provenance, change log, compatibility matrix,
-                      schema-drift waivers
+  metadata/           manifest, provenance, schema-drift waivers
   schemas/            SWAT+ source-derived input schemas, one per SWAT+ release
-  scripts/            validation, schema sync/diff, change-log sync, the
-                      patch-editor-dataset sync tool
+  scripts/            validation, schema sync/diff, the patch-editor-dataset
+                      sync tool
   tests/              unit + integration tests
   docs/               provenance report, editor-integration findings
   CHANGELOG.md         ongoing change history
@@ -161,9 +157,11 @@ pull-request workflow above.
 
 The regenerated files' headers name the official dataset's version and SWAT+
 revision (SWAT+ Editor v4.0.0 / SWAT+ rev. 62). **This is source provenance
-only.** It is *not* a claim that a database release has been tested against that
-SWAT+ or Editor version. `internal/metadata/compatibility_matrix.csv` records
-real test status, which is `not_tested` in this phase.
+only.** It is *not* a claim that a database release has been tested against
+that SWAT+ or Editor version. No testing has been done against a specific
+SWAT+/Editor version yet; if and when it is, record the result in the PR
+description and, if worth calling out project-wide, in
+`internal/CHANGELOG.md`.
 
 ## Syncing changes back to SWAT+ Editor
 

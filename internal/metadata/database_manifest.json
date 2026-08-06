@@ -7,7 +7,6 @@
   "source_dataset_file": "release/build/swatplus_datasets.sqlite",
   "source_dataset_version": "4.0.0",
   "source_swatplus_revision": "62",
-  "compatibility_matrix": "internal/metadata/compatibility_matrix.csv",
   "files": [
     {
       "name": "cal_parms.cal",
