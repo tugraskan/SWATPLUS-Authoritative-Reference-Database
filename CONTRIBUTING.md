@@ -15,6 +15,22 @@ every record stays traceable and validated.
 Ordinary database-row changes do **not** require a SWAT+ Editor code change or
 an Editor pull request.
 
+## Contributing from SWAT+ Editor
+
+If the record you're proposing already lives in a SWAT+ Editor project — a
+plant you added, a fertilizer value you tuned — the editor can open the pull
+request for you, with no git commands. From the editor's Help page, open
+**Contribute Records to the Reference Database**, sign in to GitHub once, pick
+the changed records, and submit. The editor formats each record exactly as
+this repository stores it and checks it before anything is sent — see
+[SWAT+ Editor's own walkthrough](https://github.com/tugraskan/swatplus-editor/blob/main/docs/contributing-to-reference-database.md)
+for the full steps.
+
+This is an alternative to the branch-and-pull-request workflow above, not a
+separate process — both land as an ordinary pull request, reviewed the same
+way. Use whichever is more convenient: the editor if you already have the
+record loaded in a project, a manual edit otherwise.
+
 ## A source is welcome, but not required
 
 If you have one, cite it in the PR template's `Source` section: a publication,

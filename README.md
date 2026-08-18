@@ -39,6 +39,10 @@ modeling group maintaining and re-discovering the same corrections privately.
 2. Edit the file under `database_files/`.
 3. Open a pull request.
 
+If the record already lives in a SWAT+ Editor project, the editor can do all
+three steps for you — see
+[Contributing from SWAT+ Editor](CONTRIBUTING.md#contributing-from-swat-editor).
+
 That's genuinely it. Nothing in the PR template is required — if you know a
 reason or source for the change, the template has optional spots for them,
 but a PR with neither still goes through cleanly. Opening the PR also runs
