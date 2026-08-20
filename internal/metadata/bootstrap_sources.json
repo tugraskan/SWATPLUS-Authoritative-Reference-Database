@@ -1,0 +1,169 @@
+{
+  "description": "Provenance for the authoritative reference files. Each file was serialized directly from a table in the official SWAT+ Editor reference dataset (swatplus_datasets.sqlite) using SWAT+ Editor's own file writers, so it is byte-for-byte what the editor writes into a project's TxtInOut.",
+  "source_type": "swatplus_editor_official_reference_dataset",
+  "source_repository": "swat-model/swatplus-editor",
+  "source_dataset_file": "release/build/swatplus_datasets.sqlite",
+  "source_dataset_version": "4.0.0",
+  "source_dataset_created": "2026-06-16 12:00:41",
+  "source_swatplus_revision": "62",
+  "generated_by": "SWAT+ Editor fileio writers (database='datasets'); meta line stamped deterministically as 'v4.0.0 ... 2026-06-16 12:00 for SWAT+ rev.62'",
+  "files": [
+    {
+      "file_name": "cal_parms.cal",
+      "source_table": "cal_parms_cal",
+      "record_count": 221,
+      "content_sha256": "cf2fcfc22a422e29c86cbb6c9ef0d7f1495170d22fa23b61b26de4cacd5ad0b0"
+    },
+    {
+      "file_name": "plants.plt",
+      "source_table": "plants_plt",
+      "record_count": 266,
+      "content_sha256": "2cbe3852976913c8ace2da62e2f730ea71e3560e923e75aa880015b84b4a27ad"
+    },
+    {
+      "file_name": "fertilizer.frt",
+      "source_table": "fertilizer_frt",
+      "record_count": 59,
+      "content_sha256": "0c1a3f9dfe1536355ad0b088afca230c0999c8c64bf09923a35a26f0facd49ed"
+    },
+    {
+      "file_name": "tillage.til",
+      "source_table": "tillage_til",
+      "record_count": 78,
+      "content_sha256": "4aeacb384c93473b0fa5a7061bf19628be8d41d5a6a04703c4d0a0e58eb47561"
+    },
+    {
+      "file_name": "pesticide.pes",
+      "source_table": "pesticide_pst",
+      "record_count": 233,
+      "content_sha256": "02a2e98e8620f8c9379c0842c40287a48020aaae94b90b7e7dfe164177543b47"
+    },
+    {
+      "file_name": "urban.urb",
+      "source_table": "urban_urb",
+      "record_count": 18,
+      "content_sha256": "6cb90fd05c3839700fe96a92d4f0f5a5155767860df665d3dfcaca5e2d0c127f"
+    },
+    {
+      "file_name": "septic.sep",
+      "source_table": "septic_sep",
+      "record_count": 26,
+      "content_sha256": "80539db6b5b9d87094c9611ef7a473e77de6d678783d2732d98c30882a92f469"
+    },
+    {
+      "file_name": "snow.sno",
+      "source_table": "snow_sno",
+      "record_count": 1,
+      "content_sha256": "4f6a2acb056165c2b8dfdd8f867c0085a8d65e8694e6f3c666d239544873a544"
+    },
+    {
+      "file_name": "bmpuser.str",
+      "source_table": "bmpuser_str",
+      "record_count": 1,
+      "content_sha256": "25e144c3802cbea8b631057e782f760e1b5644b5bb736700d67b9a8c15de11d8"
+    },
+    {
+      "file_name": "filterstrip.str",
+      "source_table": "filterstrip_str",
+      "record_count": 2,
+      "content_sha256": "f060b701955defe443e451b2935e03bc67abf3cf27850d90b6ee5c15e266deea"
+    },
+    {
+      "file_name": "grassedww.str",
+      "source_table": "grassedww_str",
+      "record_count": 3,
+      "content_sha256": "ca4c6d71c60867b6834d36e4c1de345930bf22528ece12182c5d140b604bf981"
+    },
+    {
+      "file_name": "septic.str",
+      "source_table": "septic_str",
+      "record_count": 2,
+      "content_sha256": "3361d5745a8a47d7c50e14f9137c0f4226673abb0b370f6869248a71ce62a798"
+    },
+    {
+      "file_name": "tiledrain.str",
+      "source_table": "tiledrain_str",
+      "record_count": 1,
+      "content_sha256": "9ac8069273df7dcd85e9e111939d4240c74c160d2c5a2815b748fdc00419ded0"
+    },
+    {
+      "file_name": "cntable.lum",
+      "source_table": "cntable_lum",
+      "record_count": 52,
+      "content_sha256": "a4362215f2a2f59192cfcd22dc371e9ed0f4a697e2d151b72f01e3311eb3f3c0"
+    },
+    {
+      "file_name": "cons_practice.lum",
+      "source_table": "cons_prac_lum",
+      "record_count": 38,
+      "content_sha256": "ec13773bbc99cc4a8ed352503e2c4e62d78f9a56f7505f44cbe866a974c9a155"
+    },
+    {
+      "file_name": "ovn_table.lum",
+      "source_table": "ovn_table_lum",
+      "record_count": 20,
+      "content_sha256": "b4e5b17db4d36f2b1591729e2060521cbbb64aa9941a0126ceeb4e08f7be7b6c"
+    },
+    {
+      "file_name": "harv.ops",
+      "source_table": "harv_ops",
+      "record_count": 16,
+      "content_sha256": "25222d3ea913fa11294b6a4a9523151e75ca618c882b920d83db50732861e866"
+    },
+    {
+      "file_name": "graze.ops",
+      "source_table": "graze_ops",
+      "record_count": 12,
+      "content_sha256": "6915ed7648da4a908aeab4191ecc7056ec9fe2961ad5d1c4997cf2756e589195"
+    },
+    {
+      "file_name": "irr.ops",
+      "source_table": "irr_ops",
+      "record_count": 4,
+      "content_sha256": "21c4653382416742b615d074a3c7ec1739e8eeb5020f722e5867bcbe799533d4"
+    },
+    {
+      "file_name": "chem_app.ops",
+      "source_table": "chem_app_ops",
+      "record_count": 12,
+      "content_sha256": "d94b0bd77d331fc09a1f9cd764d9256222c5b60f370d54332b1ffe67e21d5b5e"
+    },
+    {
+      "file_name": "fire.ops",
+      "source_table": "fire_ops",
+      "record_count": 3,
+      "content_sha256": "5d4a399fa5e5c450a86906ae87926fcd5d0499ba15fb4bd8605f991f4476db10"
+    },
+    {
+      "file_name": "sweep.ops",
+      "source_table": "sweep_ops",
+      "record_count": 1,
+      "content_sha256": "1d0bd66c8a1246b87ceb5a3c436b8b9db9e733ce7e01d73adac8b53d083f8863"
+    },
+    {
+      "file_name": "lum.dtl",
+      "source_table": "d_table_dtl",
+      "record_count": 40,
+      "content_sha256": "bd9c5197f49b2da8b89a9d35863d03f837cc423f319c4609fb7ed2ad79176a91"
+    },
+    {
+      "file_name": "res_rel.dtl",
+      "source_table": "d_table_dtl",
+      "record_count": 160,
+      "content_sha256": "5d314eafbe0b22b3ae2b3cb0953f3f1e8c792c24b084211825e2bf8a8cb00bdc"
+    },
+    {
+      "file_name": "scen_lu.dtl",
+      "source_table": "d_table_dtl",
+      "record_count": 13,
+      "content_sha256": "05877d330e7546610a4581dd59ff3c8bb928b63f011ef7f73322908c525591c5"
+    },
+    {
+      "file_name": "flo_con.dtl",
+      "source_table": "d_table_dtl",
+      "record_count": 14,
+      "content_sha256": "f6341e0ec90f26c766e823c96f3519b30f9464a7b4b5e39980f5b3e897c26740"
+    }
+  ],
+  "generated_date": "2026-08-05"
+}

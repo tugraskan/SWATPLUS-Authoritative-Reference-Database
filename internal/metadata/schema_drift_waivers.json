@@ -1,0 +1,45 @@
+{
+  "description": "Accepted or pending differences between the authoritative data and the SWAT+ source-derived schema in schemas/. 'waivers' suppress a CI failure for drift that is known and accepted -- they do not hide it, every run still reports them. 'review_notes' record findings that scripts/schema_sync.py cannot detect automatically (see its module docstring), so they are surfaced on every run instead of being remembered by one person. The core files are serialized verbatim from the official SWAT+ Editor reference dataset (swatplus_datasets.sqlite v4.0.0, SWAT+ rev.62); notes reflect that dataset as the source of record.",
+  "waivers": [
+    {
+      "file": "plants.plt",
+      "kind": "underfilled",
+      "reason": "The official SWAT+ Editor reference dataset (swatplus_datasets.sqlite v4.0.0, SWAT+ rev.62) writes plants.plt with 52 numeric parameters ending at 'rsd_covfac' followed by a free-text 'description' (54 columns). SWAT+ 62's plant read statement continues past rsd_covfac to four carbon-module fields -- meta_frac, str_frac, lig_frac (real) and pl_class -- that the editor does not emit. Source evidence (upstream swat-model/swatplus tag 62.0.0, commit de210d64db4f1d75e110bd6af33ea9c333d27b8a): plant_data_module.f90:9-17 defines the residue-partition fields meta_frac/str_frac/lig_frac and :5-6 defines pl_class; plant_parm_read.f90:53-58 reads either pldb(ic) alone or pldb(ic), pl_class(ic) depending on the basin code (default off), so the trailing fields default on the mainline path. The file therefore runs exactly as SWAT+ Editor ships it to every project. This gap is not specific to this repository: it is an editor-vs-official divergence independently confirmed by swatplus-doc-builder's editor schema report (status 'real_layout_change' for plants.plt; editor block 54 cols vs official 57). Waived because correcting it here would mean diverging from what the editor writes; it resolves when the SWAT+ Editor dataset itself begins emitting the carbon columns.",
+      "raised": "2026-08-05",
+      "action_required": "None locally. Track SWAT+ Editor dataset releases; when swatplus_datasets.sqlite begins writing meta_frac/str_frac/lig_frac/pl_class, re-bootstrap and drop this waiver. The upstream fix belongs in SWAT+ Editor (see swatplus-doc-builder editor red-flag evidence)."
+    }
+  ],
+  "review_notes": [
+    {
+      "file": "pesticide.pes",
+      "note": "The official reference dataset populates pl_uptake for all 233 pesticides with the SWAT+ Editor's uniform migration default of 0.01, not scientifically determined per-pesticide values. The structural drift is resolved -- arity, column order (pl_uptake before description), and types now match SWAT+ 62's pesticide_db (pesticide_data_module.f90). schema_sync.py checks structure, not whether a value is a real measurement, so the placeholder nature of the 0.01 values cannot be caught automatically; it is recorded here so it stays visible until the SWAT+ team publishes real per-pesticide plant-uptake factors. This is the official dataset's own value, so the manifest marks pesticide.pes 'available' rather than needs_review.",
+      "raised": "2026-08-05"
+    },
+    {
+      "file": "flo_con.dtl",
+      "note": "Serialized verbatim from the official dataset's decision tables. The official flo_con.dtl action rows use act_typ='flow_control', and scen_lu.dtl uses 'ch_change' and 'ceap_svi'. A source search did not find 'flow_control' in the SWAT+ 62 mainline tree, so it may be unread there. It is retained as-shipped rather than edited locally: this is the official SWAT+ Editor dataset, and any correction belongs upstream in the editor dataset, not as a local edit that would make this repository diverge from what SWAT+ Editor distributes. schema_sync.py has no coverage for decision tables, so this is recorded for human follow-up with the SWAT+ Editor / model team.",
+      "raised": "2026-08-05",
+      "action_required": "Confirm with the SWAT+ Editor / model team whether flow_control, ch_change, and ceap_svi are valid act_typ/cond_var vocabulary in SWAT+ 62; if not, raise it upstream against swatplus_datasets.sqlite."
+    },
+    {
+      "file": "scen_lu.dtl",
+      "note": "Serialized verbatim from the official dataset (as shipped). See the flo_con.dtl note: the official scen_lu.dtl uses act_typ='ch_change' and a 'ceap_svi' vocabulary that a source search did not find in the SWAT+ 62 mainline tree. Retained as-shipped for the same reason -- this is the official editor dataset, and any correction belongs upstream.",
+      "raised": "2026-08-05"
+    },
+    {
+      "file": "pathogens.pth",
+      "note": "Supplemental, not from the official dataset: the official dataset's pathogens_pth table is empty (SWAT+ Editor ships no default pathogen records). The example/seed set retained here (Little River Experimental Watershed 'Example' rows) is kept so the file is not lost, and remains needs_review because its property VALUES are placeholder example data, not curated measurements, and no real source has been supplied. Structurally it matches SWAT+ 62's pathogen_db (18 fields ending at CONC_MIN).",
+      "raised": "2026-08-05"
+    },
+    {
+      "file": "metals.mtl",
+      "note": "Supplemental, not in the official dataset (SWAT+ Editor does not create a metals_mtl table). Confirmed unread by SWAT+ 62: input_file_module.f90 declares hmetcom_db = 'metals.mtl', but the variable is referenced nowhere else in the source tree, and no derived type defines a kd/half_life/bio_avail record. With its single example 'lead' row, this file has zero effect on any SWAT+ 62 simulation. Retained as a supplement pending a real heavy-metals database.",
+      "raised": "2026-08-05"
+    },
+    {
+      "file": "salt.slt",
+      "note": "Supplemental, not in the official dataset (SWAT+ Editor does not create a salts_slt table). Confirmed unread by SWAT+ 62: input_file_module.f90 declares saltcom_db = 'salt.slt' but it is referenced nowhere else; the salt chemistry routines use Ksp constants hardcoded in salt_data_module.f90, not values read from this file. Four of its five Ksp values match those hardcoded constants; the CaSO4 value (0.0000493) differs from the source default (0.00007888). No functional consequence today; recorded for whenever this file is wired up.",
+      "raised": "2026-08-05"
+    }
+  ]
+}

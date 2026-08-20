@@ -1,0 +1,38 @@
+name: validate-database
+
+# Self-contained validation. This workflow never clones or modifies SWAT+ or
+# SWAT+ Editor, never builds SQLite, and never runs Editor integration tests.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dev dependencies
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Validate authoritative files (manifest, duplicates, manure, provenance)
+        run: python internal/scripts/validate_database_files.py --repo-root .
+
+      # Compares the committed data against the SWAT+ source-derived schema in
+      # schemas/. Fails on drift that is not recorded in
+      # internal/metadata/schema_drift_waivers.json, so a file falling out of step with
+      # the model SWAT+ actually reads is caught here rather than at run time.
+      - name: Check for drift from the SWAT+ source schema
+        run: python internal/scripts/schema_sync.py --repo-root .
+
+      - name: Run unit tests
+        run: python -m pytest -q

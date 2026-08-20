@@ -1,0 +1,3 @@
+metals.mtl: example heavy metal database for SWAT+
+name kd half_life bio_avail
+lead 1.5 365 0.1
