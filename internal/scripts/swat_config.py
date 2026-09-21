@@ -245,7 +245,7 @@ FILE_SCHEMAS = {
                  'bm_tree_acc', 'yrs_mat', 'bm_tree_max', 'ext_co',
                  'leaf_tov_mn', 'leaf_tov_mx', 'bm_dieoff',
                  'rt_st_beg', 'rt_st_end', 'plnt_pop1', 'frac_lai1',
-                 'plnt_pop2', 'frac_lai2', 'frac_sw_gro',
+                 'plnt_pop2', 'frac_lai2', 'rt_depco',
                  'aeration', 'rsd_pctcov', 'rsd_covfac',
                  'description'],
         numeric=list(range(3, 53)),
