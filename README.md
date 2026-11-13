@@ -33,6 +33,24 @@ modeling group maintaining and re-discovering the same corrections privately.
   its original record count, and its original content checksum — is recorded in
   `internal/metadata/bootstrap_sources.json`.
 
+## Branches: `main` and `dev`
+
+* **`main`** matches the latest SWAT+ release (rev. 62) and the SWAT+ Editor
+  dataset (v4.0.x). Only `main` is patched into the Editor dataset.
+* **`dev`** matches the `dev` branch of
+  [swat-model/swatplus](https://github.com/swat-model/swatplus/tree/dev). A
+  file here may use an input layout that is not in a SWAT+ release yet. Each
+  such change names, in its commit and pull request, the swatplus commit that
+  introduced the layout and the swatplus commit it was read-tested on.
+* When a SWAT+ release includes those layouts (and the Editor can read them),
+  `dev` is merged into `main`.
+
+Current `dev` differences from `main`:
+
+| File | swatplus commit | Read-tested on |
+|---|---|---|
+| `plants.plt` | [`9360565`](https://github.com/swat-model/swatplus/commit/9360565) (2026-11-10): 55 columns, `class` added, columns 28/50/52/53 renamed | `e8cbd13`, carbon off |
+
 ## Proposing and changing records
 
 1. Create a branch.
@@ -81,13 +99,13 @@ every pull request. That is what catches a file drifting out of step with the
 model that consumes it, rather than discovering it during a run.
 
 Known differences are recorded in `internal/metadata/schema_drift_waivers.json`
-and reported on every run. **The one that matters today:** the official
-dataset writes `plants.plt` ending at `rsd_covfac` + a free-text `description`,
-while SWAT+ 62 reads four further carbon-module fields (`meta_frac`,
-`str_frac`, `lig_frac`, `pl_class`). Those are on the conditional carbon-module
-read path and default otherwise, so the file runs on the default/mainline path
-exactly as SWAT+ Editor ships it. The gap is **waived** (tracked, not hidden)
-until the editor dataset itself emits those columns. Separately, a review note
+and reported on every run. **The one that matters today:** `plants.plt` has
+the 55-column layout SWAT+ dev reads since its 2026-11-10 update (`leaf_bm_fr`,
+`rt_depco`, `rsd_cov`, `bio_cov` in columns 28, 50, 52, 53 and a `class` column
+before `description`). The committed schema artifact is still SWAT+ 62's, and
+SWAT+ Editor v4.0.x still writes and reads the older 54-column layout, so the
+gap is **waived** (tracked, not hidden) until a SWAT+ release and an Editor
+dataset carry the new layout. Separately, a review note
 records that `pesticide.pes` carries the editor's uniform `0.01` `pl_uptake`
 migration default rather than curated per-pesticide values.
 

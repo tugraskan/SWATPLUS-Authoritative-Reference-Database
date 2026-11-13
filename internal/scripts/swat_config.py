@@ -223,15 +223,15 @@ FILE_SCHEMAS = {
 
     # ---- derived from the committed header rows (see CONTRIBUTING) ----
     "plants.plt": dict(
-        # The official SWAT+ Editor dataset (swatplus_datasets.sqlite v4.0.0)
-        # writes plants.plt with 52 numeric parameters ending at 'rsd_covfac'
-        # followed by a free-text 'description'. SWAT+ 62's read statement
-        # continues past rsd_covfac to four carbon-module fields --
-        # meta_frac, str_frac, lig_frac (all real) and pl_class -- which the
-        # official dataset does not emit. Those trailing fields are read
-        # conditionally (the carbon module / bsn_cc%nam1 path) and default
-        # otherwise, so the official file runs on the default/mainline path;
-        # the arity gap is recorded in metadata/schema_drift_waivers.json.
+        # Layout read by swat-model/swatplus dev since 9360565 ("11/10
+        # updates", 2026-11-10; not in a release yet): 52 numeric parameters,
+        # a text 'class' and a free-text 'description' (55 columns, the
+        # carbon-off layout of plant_parm_read.f90). Four columns kept their
+        # position but changed meaning: 28 usle_c_min -> leaf_bm_fr (lmf_mat),
+        # 50 frac_sw_gro -> rt_depco, 52 rsd_pctcov -> rsd_cov (ero_rsdfac),
+        # 53 rsd_covfac -> bio_cov (ero_biofac). 'class' is plant_db%vclass.
+        # SWAT+ Editor v4.0.x still writes the older 54-column layout; dev
+        # reads that with CLASS = none and defaults for the four columns.
         columns=['name', 'plnt_typ', 'gro_trig', 'nfix_co',
                  'days_mat', 'bm_e', 'harv_idx', 'lai_pot',
                  'frac_hu1', 'lai_max1', 'frac_hu2', 'lai_max2',
@@ -239,14 +239,14 @@ FILE_SCHEMAS = {
                  'rt_dp_max', 'tmp_opt', 'tmp_base', 'frac_n_yld',
                  'frac_p_yld', 'frac_n_em', 'frac_n_50',
                  'frac_n_mat', 'frac_p_em', 'frac_p_50',
-                 'frac_p_mat', 'harv_idx_ws', 'usle_c_min',
+                 'frac_p_mat', 'harv_idx_ws', 'leaf_bm_fr',
                  'stcon_max', 'vpd', 'frac_stcon', 'ru_vpd',
                  'co2_hi', 'bm_e_hi', 'plnt_decomp', 'lai_min',
                  'bm_tree_acc', 'yrs_mat', 'bm_tree_max', 'ext_co',
                  'leaf_tov_mn', 'leaf_tov_mx', 'bm_dieoff',
                  'rt_st_beg', 'rt_st_end', 'plnt_pop1', 'frac_lai1',
-                 'plnt_pop2', 'frac_lai2', 'frac_sw_gro',
-                 'aeration', 'rsd_pctcov', 'rsd_covfac',
+                 'plnt_pop2', 'frac_lai2', 'rt_depco',
+                 'aeration', 'rsd_cov', 'bio_cov', 'class',
                  'description'],
         numeric=list(range(3, 53)),
         text_tail=True,
