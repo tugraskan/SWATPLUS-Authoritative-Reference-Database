@@ -9,6 +9,17 @@ ZIPs. Accepted changes accumulate on `main` and are periodically copied into a
 patched SWAT+ Editor `swatplus_datasets.sqlite` for an upstream Editor pull
 request.
 
+## 2026-11-13 — plants.plt moves to the SWAT+ dev 55-column layout
+
+* `plants.plt` now holds Jeff Arnold's updated plant database (email
+  "plants.plt database", 2026-11-04) in the layout SWAT+ dev reads since
+  `9360565` (2026-11-10): columns 28, 50, 52, 53 are `leaf_bm_fr`, `rt_depco`,
+  `rsd_cov`, `bio_cov`, and `class` comes before `description`. 265 plants;
+  `grbn` (green beans) is not in the new file and was removed.
+* Not yet in a SWAT+ release, and SWAT+ Editor v4.0.x still uses the 54-column
+  layout, so `plants.plt` is not ready for `patch_editor_dataset.py` until the
+  Editor's `plants_plt` table changes. See the plants.plt waiver.
+
 ## 2026-08-06 — Current workflow
 
 ### Repository and review workflow
