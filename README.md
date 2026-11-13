@@ -33,6 +33,24 @@ modeling group maintaining and re-discovering the same corrections privately.
   its original record count, and its original content checksum — is recorded in
   `internal/metadata/bootstrap_sources.json`.
 
+## Branches: `main` and `dev`
+
+* **`main`** matches the latest SWAT+ release (rev. 62) and the SWAT+ Editor
+  dataset (v4.0.x). Only `main` is patched into the Editor dataset.
+* **`dev`** matches the `dev` branch of
+  [swat-model/swatplus](https://github.com/swat-model/swatplus/tree/dev). A
+  file here may use an input layout that is not in a SWAT+ release yet. Each
+  such change names, in its commit and pull request, the swatplus commit that
+  introduced the layout and the swatplus commit it was read-tested on.
+* When a SWAT+ release includes those layouts (and the Editor can read them),
+  `dev` is merged into `main`.
+
+Current `dev` differences from `main`:
+
+| File | swatplus commit | Read-tested on |
+|---|---|---|
+| `plants.plt` | [`9360565`](https://github.com/swat-model/swatplus/commit/9360565) (2026-11-10): 55 columns, `class` added, columns 28/50/52/53 renamed | `e8cbd13`, carbon off |
+
 ## Proposing and changing records
 
 1. Create a branch.
