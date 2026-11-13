@@ -1,0 +1,4 @@
+# Keep the source files exactly as sent (checksums in README.md)
+* -text
+README.md text
+.gitattributes text
