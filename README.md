@@ -47,9 +47,9 @@ modeling group maintaining and re-discovering the same corrections privately.
 
 Current `dev` differences from `main`:
 
-| File | swatplus commit | Read-tested on |
-|---|---|---|
-| `plants.plt` | [`9360565`](https://github.com/swat-model/swatplus/commit/9360565) (2026-11-10): 55 columns, `class` added, columns 28/50/52/53 renamed | `e8cbd13`, carbon off |
+| File | swatplus commit | Read-tested on | Source files |
+|---|---|---|---|
+| `plants.plt` | [`9360565`](https://github.com/swat-model/swatplus/commit/9360565) (2026-11-10): 55 columns, `class` added, columns 28/50/52/53 renamed | `e8cbd13`, carbon off | [Jeff Arnold, 2026-11-04](internal/docs/sources/2026-11-04_plants_plt_jeff_arnold/README.md): database, parameter spreadsheet, notes |
 
 ## Proposing and changing records
 

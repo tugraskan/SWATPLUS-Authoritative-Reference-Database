@@ -30,7 +30,7 @@
       "direct_read": false,
       "bootstrap_provenance_key": "plants.plt",
       "external_provenance_key": null,
-      "notes": "Regenerated from the official SWAT+ Editor reference dataset; see bootstrap_sources.json."
+      "notes": "Bootstrapped from the official SWAT+ Editor reference dataset (see bootstrap_sources.json). On dev: replaced by Jeff Arnold's 2026-11-04 database in the swatplus 9360565 layout; source files in internal/docs/sources/2026-11-04_plants_plt_jeff_arnold/."
     },
     {
       "name": "fertilizer.frt",
