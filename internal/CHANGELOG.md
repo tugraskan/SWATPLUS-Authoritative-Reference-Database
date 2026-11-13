@@ -15,7 +15,9 @@ request.
   "plants.plt database", 2026-11-04) in the layout SWAT+ dev reads since
   `9360565` (2026-11-10): columns 28, 50, 52, 53 are `leaf_bm_fr`, `rt_depco`,
   `rsd_cov`, `bio_cov`, and `class` comes before `description`. 265 plants;
-  `grbn` (green beans) is not in the new file and was removed.
+  `grbn` (green beans) is not in the new file and was removed. His email
+  files are kept unchanged in
+  `internal/docs/sources/2026-11-04_plants_plt_jeff_arnold/`.
 * Not yet in a SWAT+ release, and SWAT+ Editor v4.0.x still uses the 54-column
   layout, so `plants.plt` is not ready for `patch_editor_dataset.py` until the
   Editor's `plants_plt` table changes. See the plants.plt waiver.
